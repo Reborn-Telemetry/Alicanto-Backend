@@ -23,6 +23,44 @@ A{Alicanto} --> B([Apps])
 B([Apps]) --> C([Bus Signals])
 ```
 
+## Aplicacion Bus.
+- Modelos.
+  - Bus.     
+  - Battery24Volts.
+  - Soc.
+  - PackTemperature.
+  - MaxTemperaturePack.
+  - BatteryHealth.
+  - BatteryPackCurrent.
+  - BatteryPackVoltage.
+  - BatteryPackCellMaxVoltage.
+  - BatteryPackCellMinVoltage.
+  - BatteryPackAvgCellVoltage.
+  - Isolation.
+  - PtcOneVoltage.
+  - PtcTwoVoltage.
+  - PositiveTorque.
+  - NegativeTorque
+  - EngineTemperature.
+  - LenzeCurrent.
+  - LenzeEngineSpeed.
+  - Odometer.
+  - Speed.
+  - SystemPressure.
+  - BtmsTemperature.
+  - FusiCode.
+  - ChargeStatus.
+  - GearStatus.
+  - BusState.
+  - BrakePedalStatus.
+  - AirConditionerStatus.
+  - ServiceCompressorStatus.
+  - BtmsStatus.
+  - FusiMessage.
+  - MarkVersion.
+  - JarvisVersion.
+  - ModemInfo.
+
 
 ## Run Locally
 
