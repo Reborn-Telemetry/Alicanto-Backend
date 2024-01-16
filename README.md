@@ -19,8 +19,8 @@ Backend de telemetria de buses electricos, el cual tiene por objetivo servir en 
 ## Django Structure.
 ```mermaid
 flowchart LR
-A{Alicanto} --> B([Apps])
-B([Apps]) --> C([Bus Signals])
+A{Alicanto} --> B[Apps]
+B([Apps]) --> C[Bus Signals]
 ```
 
 ## Aplicacion Bus.
@@ -61,6 +61,8 @@ B([Apps]) --> C([Bus Signals])
   - JarvisVersion.
   - ModemInfo.
 
+La aplicacion bus manejara todas y cada una de las señales que obtenemos de los componentes 
+electricos del bus 
 
 ## Run Locally
 
