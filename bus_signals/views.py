@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 
 def login(request):
-    return render(request, 'bus_signals/login.html')
+    return render(request, 'login.html')
 
 
 def bus_list(request):
