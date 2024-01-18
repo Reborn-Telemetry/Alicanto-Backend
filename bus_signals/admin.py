@@ -36,5 +36,6 @@ admin.site.register(models.FusiMessage)
 admin.site.register(models.MarkVersion)
 admin.site.register(models.JarvisVersion)
 admin.site.register(models.ModemInfo)
+admin.site.register(models.Technician)
 
 
