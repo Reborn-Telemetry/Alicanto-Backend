@@ -1,13 +1,20 @@
 from django.db import models
+import uuid
 
 series_choices = (
     ('1', 'Queltehue'),
     ('2', 'Tricahue'),
     ('3', 'Retrofit'),
 )
+job_choices = (
+    ('1', 'Electro Mecanico'),
+    ('2', 'Electrico'),
+    ('3', 'Electronico'),
+)
 
 
 class Bus(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     bus_name = models.CharField('Name', max_length=10, unique=True, blank=False, null=False)
     sniffer = models.CharField('Sniffer', max_length=10, unique=True, blank=False, null=False)
     plate_number = models.CharField('Plate Number', max_length=10, unique=True, blank=True, null=True)
@@ -592,3 +599,21 @@ class ModemInfo(models.Model):
         verbose_name = 'Modem Info'
         verbose_name_plural = 'Modem Info'
         ordering = ['rem_number']
+
+
+class Technician(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    name = models.CharField('Name', max_length=100)
+    phone = models.CharField('Phone', max_length=20)
+    job = models.CharField('Job', max_length=100, choices=job_choices)
+
+    technician = models.Manager()
+
+    def __str__(self):
+        return f'{self.name} - {self.phone} - {self.job}'
+
+    class Meta:
+        verbose_name = 'Technician'
+        verbose_name_plural = 'Technicians'
+        ordering = ['name']
+
