@@ -4,4 +4,6 @@ from .models import Bus
 class BusForm(ModelForm):
   class Meta:
     model = Bus
-    fields = '__all__' 
+    fields = [
+      'bus_name', 'sniffer', 'plate_number',
+      'bus_series', 'client']
