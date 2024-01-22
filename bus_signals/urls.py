@@ -9,5 +9,7 @@ urlpatterns = [
   path("odometer/", views.odometer, name="odometer"),
   path("bus_detail/<str:pk>/", views.bus_detail, name="bus_detail"),
   path("create_bus/", views.create_bus, name="create_bus"),
+  path("update_bus/<str:pk>/", views.update_bus, name="update_bus"),
+  path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus")
     
 ]
