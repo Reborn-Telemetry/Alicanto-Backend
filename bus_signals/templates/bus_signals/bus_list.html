@@ -1,3 +1,32 @@
-{% extends "main.html" %}
-
-<h1>Lista de buses</h1>
+{% extends "main.html" %} {% load static %} {% block title %} Nuestros Buses
+Link {% endblock title %} {% block content %}
+<h1>Flota Completa</h1>
+<table>
+    <tr>
+        <th>Bus</th>
+        <th>Patente</th>
+        <th>Carga</th>
+        <th>Kilometraje</th>
+        <th>Aislacion</th>
+        <th>Bateria</th>
+        <th>Actualizacion</th>
+        <th>Ver</th>
+        <th>Editar</th>
+        <th>Eliminar</th>
+    </tr>
+    {% for bus in bus %}
+    <tr>
+        <td>{{ bus.bus_name }}</td>
+        <td>{{ bus.plate_number }}</td>
+        <td>{{ bus.lts_soc }}</td>
+        <td>{{ bus.lts_odometer }}</td>
+        <td>{{ bus.lts_isolation }}</td>
+        <td>{{ bus.lts_24_volt }}</td>
+        <td>{{ bus.lts_update }}</td>
+        <td><a href="{% url 'bus_detail' bus.id %}">Ver</a></td>
+        <td>Editar</td>
+        <td>Eliminar</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}
