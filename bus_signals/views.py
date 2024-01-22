@@ -19,6 +19,28 @@ def create_bus(request):
     return render(request, 'bus_signals/bus_form.html', context)
 
 
+def update_bus(request, pk):
+    bus = Bus.bus.get(id=pk)
+    form = BusForm(instance=bus)
+    if request.method == 'POST':
+        form = BusForm(request.POST, instance=bus)
+        if form.is_valid():
+            form.save()
+            return redirect('bus_list')
+    context = {'form': form}
+    return render(request, 'bus_signals/bus_form.html', context)
+
+
+def delete_bus(request, pk):
+    bus = Bus.bus.get(id=pk)
+    if request.method == 'POST':
+        bus.delete()
+        return redirect('bus_list')
+    context = {'object': bus}
+    return render(request, 'delete_object.html', context)
+
+
+
 def bus_detail(request, pk):
     bus = Bus.bus.get(pk=pk)
     context = {'bus': bus}
