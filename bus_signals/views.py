@@ -1,11 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Bus 
+from .forms import BusForm
 
 
 # Create your views here.
 
 def login(request):
     return render(request, 'login.html')
+
+def create_bus(request):
+    form = BusForm()
+    if request.method == 'POST':
+        form = BusForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('bus_list')
+    context = {'form': form}
+    return render(request, 'bus_signals/bus_form.html', context)
+
 
 def bus_detail(request, pk):
     bus = Bus.bus.get(pk=pk)
