@@ -1,4 +1,4 @@
 {% extends "main.html" %} {% load static %} {% block title %} Diccionario fusi
 {% endblock title %} {% block content %}
 <h1>Diccionario fusi</h1>
-{% endblock content %}
+{% for message in fusi %} {{ message }} {% endfor %} {% endblock content %}

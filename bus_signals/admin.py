@@ -33,8 +33,6 @@ admin.site.register(models.AirConditionerStatus)
 admin.site.register(models.ServiceCompressorStatus)
 admin.site.register(models.BtmsStatus)
 admin.site.register(models.FusiMessage)
-admin.site.register(models.MarkVersion)
-admin.site.register(models.JarvisVersion)
 admin.site.register(models.ModemInfo)
 admin.site.register(models.Technician)
 
