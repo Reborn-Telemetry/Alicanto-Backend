@@ -21,6 +21,11 @@ def create_bus(request):
 
 def create_fusi(request):
     form = FusiMessageForm()
+    if request.method == 'POST':
+        form = FusiMessageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('dic_fusi')
     context = {'form': form}
     return render(request, 'bus_signals/fusi_form.html', context)
 
