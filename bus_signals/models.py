@@ -14,8 +14,8 @@ job_choices = (
 )
 
 message_class_choices = (
-    ('1', 'Q1'),
-    ('2', 'Q2'),
+    ('Q1', 'Q1'),
+    ('Q2', 'Q2'),
 )
 
 
@@ -535,14 +535,12 @@ class BtmsStatus(models.Model):
 class FusiMessage(models.Model):
     fusi_code = models.CharField('Fusi Code', max_length=10, unique=True)
     fusi_description = models.CharField('Fusi Description', max_length=200)
-    fusi_level = models.CharField('Fusi Level', max_length=5)
-    fusi_serie = models.CharField('Fusi Serie', max_length=10, blank=True, null=True)
     message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True, null=True)
 
     fusi = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.fusi_code} - {self.fusi_description} - {self.fusi_level} - {self.fusi_serie}'
+        return f'{self.message_class}- {self.fusi_code} - {self.fusi_description}'
 
     class Meta:
         verbose_name = 'Fusi Message'
