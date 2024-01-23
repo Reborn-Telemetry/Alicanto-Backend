@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus 
+from .models import Bus, FusiMessage
 from .forms import BusForm
 
 
@@ -54,7 +54,9 @@ def bus_list(request):
 
 
 def dic_fusi(request):
-    return render(request, 'bus_signals/dic_fusi.html')
+    messages = FusiMessage.fusi.all()
+    context = {'fusi': messages}
+    return render(request, 'bus_signals/dic_fusi.html', context)
 
 
 def odometer(request):

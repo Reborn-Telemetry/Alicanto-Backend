@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 import uuid
 
@@ -12,20 +13,28 @@ job_choices = (
     ('3', 'Electronico'),
 )
 
+message_class_choices = (
+    ('1', 'Q1'),
+    ('2', 'Q2'),
+)
+
 
 class Bus(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     bus_name = models.CharField('Name', max_length=10, unique=True, blank=False, null=False)
     sniffer = models.CharField('Sniffer', max_length=10, unique=True, blank=False, null=False)
-    plate_number = models.CharField('Plate Number', max_length=10, unique=True, blank=True, null=True)
+    plate_number = models.CharField('Plate Number', max_length=10, unique=False, blank=True, null=True)
     bus_series = models.CharField('Serie', max_length=10, choices=series_choices, blank=False, null=False)
-    client = models.CharField('Client', max_length=20, blank=False, null=False)
+    client = models.CharField('Client', max_length=20, blank=False, null=False, default='Link')
     lts_soc = models.FloatField('LTS SOC', default=None, blank=True, null=True)
-    lts_odometer = models.FloatField('LTS Odometer', default=None, blank=True, null=True)
-    lts_isolation = models.FloatField('LTS Isolation', default=None, blank=True, null=True)
-    lts_24_volt = models.FloatField('LTS 24 Volt', default=None, blank=True, null=True)
-    lts_fusi = models.FloatField('LTS FUSI', default=None, blank=True, null=True)
-    lts_update = models.DateTimeField('LTS Update', auto_now=True, blank=True, null=True)
+    lts_odometer = models.FloatField('LTS Odometer', default=0, blank=True, null=True)
+    lts_isolation = models.FloatField('LTS Isolation', default=0, blank=True, null=True)
+    lts_24_volt = models.FloatField('LTS 24 Volt', default=0, blank=True, null=True)
+    lts_fusi = models.FloatField('LTS FUSI', default=0, blank=True, null=True)
+    lts_update = models.DateTimeField('LTS Update', auto_now=False, blank=True, null=True)
+    mark = models.CharField('Mark', max_length=20, blank=True, null=True, default='1.0.0')
+    jarvis = models.CharField('Jarvis', max_length=20, blank=True, null=True, default='1.0.0')
+    vision = models.CharField('Vision', max_length=20, blank=True, null=True, default='1.0.0')
 
     bus = models.Manager()
 
@@ -524,14 +533,11 @@ class BtmsStatus(models.Model):
 
 
 class FusiMessage(models.Model):
-    """
-        Modelo para los codigos de error del bus, codigos Fusi no solo su codigo sino tambien su descripcion,
-        este modelo es para una biblioteca de codigos Fusi
-    """
     fusi_code = models.CharField('Fusi Code', max_length=10, unique=True)
     fusi_description = models.CharField('Fusi Description', max_length=200)
     fusi_level = models.CharField('Fusi Level', max_length=5)
     fusi_serie = models.CharField('Fusi Serie', max_length=10, blank=True, null=True)
+    message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True, null=True)
 
     fusi = models.Manager()
 
@@ -542,43 +548,6 @@ class FusiMessage(models.Model):
         verbose_name = 'Fusi Message'
         verbose_name_plural = 'Fusi Messages'
         ordering = ['fusi_code']
-
-
-class MarkVersion(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
-    mark_version_mayor = models.CharField('Mayor', max_length=5)
-    mark_version_minor = models.CharField('Minor', max_length=5)
-    mark_version_patch = models.CharField('Patch', max_length=5)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-
-    mark_version = models.Manager()
-
-    def __str__(self):
-        return f'{self.id} - {self.mark_version_mayor} - {self.mark_version_minor} - {self.mark_version_patch} - ' \
-               f'{self.bus} - {self.TimeStamp}'
-
-    class Meta:
-        verbose_name = 'Mark Version'
-        verbose_name_plural = 'Mark Versions'
-
-
-class JarvisVersion(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
-    jarvis_version_mayor = models.CharField('Mayor', max_length=5)
-    jarvis_version_minor = models.CharField('Minor', max_length=5)
-    jarvis_version_patch = models.CharField('Patch', max_length=5)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-
-    jarvis_version = models.Manager()
-
-    def __str__(self):
-        return f'{self.id} - {self.jarvis_version_mayor} - {self.jarvis_version_minor} - {self.jarvis_version_patch}' \
-               f' - {self.bus} - {self.TimeStamp}'
-
-    class Meta:
-        verbose_name = 'Jarvis Version'
-        verbose_name_plural = 'Jarvis Versions'
-        ordering = ['TimeStamp']
 
 
 class ModemInfo(models.Model):

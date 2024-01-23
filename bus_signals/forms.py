@@ -6,4 +6,4 @@ class BusForm(ModelForm):
     model = Bus
     fields = [
       'bus_name', 'sniffer', 'plate_number',
-      'bus_series', 'client']
+      'bus_series', 'client', 'vision', 'mark', 'jarvis' ]
