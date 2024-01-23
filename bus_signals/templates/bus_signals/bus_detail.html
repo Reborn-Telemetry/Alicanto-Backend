@@ -2,8 +2,9 @@
 
 <h1>BUS {{ bus.bus_name}}</h1>
 <h5>Sniffer: {{ bus.sniffer}}</h5>
+<a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
 <button>Crear Parte</button>
-<button>Editar Bus</button>
+
 <h3>Patente: {{ bus.plate_number}}</h3>
 <h3>Serie: {{ bus.bus_series }}</h3>
 <h3>Cliente: {{ bus.client }}</h3>
