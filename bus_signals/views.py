@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage
-from .forms import BusForm
+from .forms import BusForm, FusiMessageForm
 
 
 # Create your views here.
@@ -17,6 +17,12 @@ def create_bus(request):
             return redirect('bus_list')
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
+
+
+def create_fusi(request):
+    form = FusiMessageForm()
+    context = {'form': form}
+    return render(request, 'bus_signals/fusi_form.html', context)
 
 
 def update_bus(request, pk):

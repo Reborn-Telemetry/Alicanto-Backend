@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Bus
+from .models import Bus, FusiMessage
 
 class BusForm(ModelForm):
   class Meta:
@@ -7,3 +7,9 @@ class BusForm(ModelForm):
     fields = [
       'bus_name', 'sniffer', 'plate_number',
       'bus_series', 'client', 'vision', 'mark', 'jarvis' ]
+    
+    
+class FusiMessageForm(ModelForm):
+  class Meta:
+    model = FusiMessage
+    fields = '__all__'
