@@ -3,9 +3,9 @@ from django.db import models
 import uuid
 
 series_choices = (
-    ('1', 'Queltehue'),
-    ('2', 'Tricahue'),
-    ('3', 'Retrofit'),
+    ('Queltehue', 'Queltehue'),
+    ('Tricahue', 'Tricahue'),
+    ('Retrofit', 'Retrofit'),
 )
 job_choices = (
     ('1', 'Electro Mecanico'),
