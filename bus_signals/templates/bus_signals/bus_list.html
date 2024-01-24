@@ -24,9 +24,9 @@ Link {% endblock title %} {% block content %}
         <td>{{ bus.lts_isolation }}</td>
         <td>{{ bus.lts_24_volt }}</td>
         <td>{{ bus.lts_update }}</td>
-        <td><a href="{% url 'bus_detail' bus.id %}">Ver</a></td>
-        <td><a href="{% url 'update_bus' bus.id %}">Editar</a></td>
-        <td><a href="{% url 'delete_bus' bus.id %}">Eliminar</a></td>
+        <td><a href="{% url 'bus_detail' bus.id %}"><button>Ver</button></a></td>
+        <td><a href="{% url 'update_bus' bus.id %}"><button>Editar</button></a></td>
+        <td><a href="{% url 'delete_bus' bus.id %}"><button>Eliminar</button></a></td>
     </tr>
     {% endfor %}
 </table>
