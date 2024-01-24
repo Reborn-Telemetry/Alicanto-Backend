@@ -1,9 +1,16 @@
-{% extends "main.html" %} {% load static %} {% block content %}
-
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+<img
+    src="{{ bus.bus_img.url }}"
+    alt="image"
+    style="width: 400px; height: 300px;"
+/>
 <h1>BUS {{ bus.bus_name}}</h1>
 <h5>Sniffer: {{ bus.sniffer}}</h5>
 <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
 <button>Crear Parte</button>
+
 
 <h3>Patente: {{ bus.plate_number}}</h3>
 <h3>Serie: {{ bus.bus_series }}</h3>

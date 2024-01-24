@@ -6,7 +6,7 @@ class BusForm(ModelForm):
     model = Bus
     fields = [
       'bus_name', 'sniffer', 'plate_number',
-      'bus_series', 'client', 'vision', 'mark', 'jarvis' ]
+      'bus_series', 'client', 'vision', 'mark', 'jarvis', 'bus_img']
     
     
 class FusiMessageForm(ModelForm):
