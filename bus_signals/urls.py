@@ -15,3 +15,4 @@ urlpatterns = [
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus")
     
 ]
+
