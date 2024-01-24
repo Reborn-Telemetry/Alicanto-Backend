@@ -11,7 +11,7 @@ def login(request):
 def create_bus(request):
     form = BusForm()
     if request.method == 'POST':
-        form = BusForm(request.POST)
+        form = BusForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('bus_list')
@@ -34,7 +34,7 @@ def update_bus(request, pk):
     bus = Bus.bus.get(id=pk)
     form = BusForm(instance=bus)
     if request.method == 'POST':
-        form = BusForm(request.POST, instance=bus)
+        form = BusForm(request.POST, request.FILES, instance=bus)
         if form.is_valid():
             form.save()
             return redirect('bus_list')
