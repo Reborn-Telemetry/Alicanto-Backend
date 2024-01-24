@@ -42,6 +42,18 @@ def update_bus(request, pk):
     return render(request, 'bus_signals/bus_form.html', context)
 
 
+def update_fusi(request, pk):
+    message = FusiMessage.fusi.get(id=pk)
+    form = FusiMessageForm(instance=message)
+    if request.method == 'POST':
+        form = FusiMessageForm(request.POST, instance=message)
+        if form.is_valid():
+            form.save()
+            return redirect('dic_fusi')
+    context = {'form': form}
+    return render(request, 'bus_signals/fusi_form.html', context)
+
+
 def delete_bus(request, pk):
     bus = Bus.bus.get(id=pk)
     if request.method == 'POST':
