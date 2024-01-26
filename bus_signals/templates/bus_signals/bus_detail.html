@@ -4,7 +4,7 @@
 <img
     src="{{ bus.bus_img.url }}"
     alt="image"
-    style="width: 400px; height: 300px;"
+    style="width: 400px; height: 250px;"
 />
 <h1>BUS {{ bus.bus_name}}</h1>
 <h5>Sniffer: {{ bus.sniffer}}</h5>
@@ -13,6 +13,8 @@
 
 
 <h3>Patente: {{ bus.plate_number}}</h3>
+<h3>Kilometraje: {{ bus.lts_odometer }}</h3>
+<h3>Carga: {{ bus.lts_soc }}</h3>
 <h3>Serie: {{ bus.bus_series }}</h3>
 <h3>Cliente: {{ bus.client }}</h3>
 <h3>Version Mark: {{ bus.mark }}</h3>
@@ -20,7 +22,5 @@
 <h3>Version Vision: {{ bus.vision }}</h3>
 <h3>Baterias 24 Volts: {{ bus.lts_24_volt }}</h3>
 <h3>Aislacion: {{ bus.lts_isolation }}</h3>
-<h3>Kilometraje: {{ bus.lts_odometer }}</h3>
-<h3>Carga: {{ bus.lts_soc }}</h3>
 <h3>Actualizacion: {{ bus.lts_update }}</h3>
 {% endblock content %}

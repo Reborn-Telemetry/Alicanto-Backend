@@ -19,8 +19,21 @@ message_class_choices = (
 )
 
 
+class Profile(models.Model):
+    phone = models.CharField('Phone', max_length=20, blank=True, null=True)
+    hola = models.CharField('Hola', max_length=20, blank=True, null=True)
+
+    profile = models.Manager()
+
+    def __str__(self):
+        return f'{self.user} - {self.phone} - {self.job}'
+
+    class Meta:
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
+
+
 class Bus(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     bus_name = models.CharField('Name', max_length=10, unique=True, blank=False, null=False)
     sniffer = models.CharField('Sniffer', max_length=10, unique=True, blank=False, null=False)
     plate_number = models.CharField('Plate Number', max_length=10, unique=False, blank=True, null=True)
@@ -42,7 +55,7 @@ class Bus(models.Model):
     def __str__(self):
         return (f'{self.bus_name} - {self.sniffer} - {self.plate_number} - {self.bus_series} - {self.client} -'
                 f' {self.lts_soc} - {self.lts_odometer} - {self.lts_isolation} - {self.lts_24_volt} - '
-                f'{self.lts_fusi} - {self.lts_update}')
+                f'{self.lts_fusi} - {self.lts_update} - {self.mark} - {self.jarvis} - {self.vision}')
 
     class Meta:
         verbose_name = 'Bus'
@@ -536,7 +549,8 @@ class BtmsStatus(models.Model):
 class FusiMessage(models.Model):
     fusi_code = models.CharField('Fusi Code', max_length=10, unique=True)
     fusi_description = models.CharField('Fusi Description', max_length=200)
-    message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True, null=True)
+    message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True,
+                                     null=True)
 
     fusi = models.Manager()
 
@@ -584,4 +598,3 @@ class Technician(models.Model):
         verbose_name = 'Technician'
         verbose_name_plural = 'Technicians'
         ordering = ['name']
-
