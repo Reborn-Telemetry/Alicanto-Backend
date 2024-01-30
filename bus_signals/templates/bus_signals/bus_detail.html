@@ -9,6 +9,7 @@
 <h1>BUS {{ bus.bus_name}}</h1>
 <h5>Sniffer: {{ bus.sniffer}}</h5>
 <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
+<a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
 <button>Crear Parte</button>
 
 

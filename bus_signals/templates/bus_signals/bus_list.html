@@ -1,7 +1,6 @@
-{% extends "main.html" %} {% load static %} {% block title %} Nuestros Buses
-Link {% endblock title %} {% block content %}
+{% extends "main.html" %} {% block content %}
 <h1>Flota E-Buses</h1>
-<a href="{% url 'create_bus' %}"><button>Agregar Bus</button></a>
+<!--<a href="{% url 'create_bus' %}"><button>Agregar Bus</button></a>
 <table>
     <tr>
         <th>Bus</th>
@@ -24,10 +23,73 @@ Link {% endblock title %} {% block content %}
         <td>{{ bus.lts_isolation }}</td>
         <td>{{ bus.lts_24_volt }}</td>
         <td>{{ bus.lts_update }}</td>
-        <td><a href="{% url 'bus_detail' bus.id %}"><button>Ver</button></a></td>
-        <td><a href="{% url 'update_bus' bus.id %}"><button>Editar</button></a></td>
-        <td><a href="{% url 'delete_bus' bus.id %}"><button>Eliminar</button></a></td>
+        <td>
+            <a href="{% url 'bus_detail' bus.id %}"><button>Ver</button></a>
+        </td>
+        <td>
+            <a href="{% url 'update_bus' bus.id %}"><button>Editar</button></a>
+        </td>
+        <td>
+            <a href="{% url 'delete_bus' bus.id %}"
+                ><button>Eliminar</button></a
+            >
+        </td>
     </tr>
     {% endfor %}
-</table>
+</table>-->
+<main class="projects">
+   <a href="{% url 'create_bus' %}">
+       <input
+                        class="btn btn--sub btn--lg"
+                        type="submit"
+                        value="Crear Bus"
+                    />
+   </a>
+    <!-- Search Result: DevList -->
+    <section class="projectsList">
+        <div class="container">
+            <div class="grid grid--three">
+                {% for bus in bus %}
+                <div class="column">
+                    <div class="card project">
+                        <a
+                            href="{% url 'bus_detail' bus.id %}"
+                            class="project"
+                        >
+                            <img
+                                class="project__thumbnail"
+                                src="{{ bus.bus_img.url }}"
+                                alt="project thumbnail"
+                                style="width: 50%"
+                            />
+                            <div class="card__body">
+                                <h3 class="project__title">
+                                    {{ bus.bus_name }}
+                                </h3>
+                                <p>
+                                    <a
+                                        class="project__author"
+                                        href="{% url 'bus_detail' bus.id %}"
+                                        >{{ bus.plate_number }}</a
+                                    >
+                                <p>{{ bus.lts_soc }}% - {{ bus.lts_odometer }} Kms.</p>
+                                <br />
+                                <p>Actualizacion : {{bus.lts_update}}</p>
+                                </p>
+                                <div class="project__tags">
+                                    {% for tag in project.tags.all %}
+                                    <span class="tag tag--pill tag--main">
+                                        <small>{{ tag }}</small>
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock content %}

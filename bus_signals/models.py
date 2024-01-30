@@ -598,3 +598,20 @@ class Technician(models.Model):
         verbose_name = 'Technician'
         verbose_name_plural = 'Technicians'
         ordering = ['name']
+
+
+class AwsPathBucket(models.Model):
+    path_sniffer = models.CharField('Path Sniffer', max_length=100)
+    path_name = models.CharField('Path Name', max_length=100)
+    path_internal_date = models.DateTimeField('Path Date', blank=True, null=True)
+    path_reveal_date = models.DateTimeField('Path Date', blank=True, null=True)
+    path_status = models.BooleanField('Path Status', default=False)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.path_sniffer} - {self.path_name} - {self.path_internal_date} - {self.path_reveal_date} - {self.path_status}'
+
+    class Meta:
+        verbose_name = 'Aws Path Bucket'
+        verbose_name_plural = 'Aws Path Buckets'
+        ordering = ['path_sniffer']
