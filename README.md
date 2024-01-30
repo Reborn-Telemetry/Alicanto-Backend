@@ -21,6 +21,8 @@ Backend de telemetria de buses electricos, el cual tiene por objetivo servir en 
 flowchart LR
 A{Alicanto} --> B[Apps]
 B([Apps]) --> C[Bus Signals]
+B([Apps]) --> C[Users]
+
 ```
 
 ## Aplicacion Bus.
