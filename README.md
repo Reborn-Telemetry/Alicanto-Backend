@@ -66,6 +66,10 @@ B([Apps]) --> D[Users]
 La aplicacion bus manejara todas y cada una de las señales que obtenemos de los componentes 
 electricos del bus 
 
+## Aplicacion Bus.
+- Modelos
+   - Profile
+
 ## Run Locally
 
 Clone the project
