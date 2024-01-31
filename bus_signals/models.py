@@ -8,9 +8,9 @@ series_choices = (
     ('Retrofit', 'Retrofit'),
 )
 job_choices = (
-    ('1', 'Electro Mecanico'),
-    ('2', 'Electrico'),
-    ('3', 'Electronico'),
+    ('Electro Mecanico', 'Electro Mecanico'),
+    ('Electrico', 'Electrico'),
+    ('Electronico', 'Electronico'),
 )
 
 message_class_choices = (
@@ -547,7 +547,7 @@ class BtmsStatus(models.Model):
 
 
 class FusiMessage(models.Model):
-    fusi_code = models.CharField('Fusi Code', max_length=10, unique=True)
+    fusi_code = models.CharField('Fusi Code', max_length=10, unique=False, blank=False, null=False)
     fusi_description = models.CharField('Fusi Description', max_length=200)
     message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True,
                                      null=True)
