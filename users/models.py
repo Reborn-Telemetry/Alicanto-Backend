@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from bus_signals.models import Bus, Technician
 
 
 # Create your models here.
@@ -22,3 +23,26 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user.username)
+
+    class Meta:
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
+        ordering = ['created']
+
+    class WorkOrder(models.Model):
+        user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+        bus = models.ForeignKey(Bus, on_delete=models.CASCADE, blank=True, null=True)
+        title = models.CharField(max_length=200, blank=True, null=True)
+        description = models.TextField(blank=True, null=True)
+        technician = models.ForeignKey(Technician, on_delete=models.CASCADE, blank=True, null=True)
+        created = models.DateTimeField(auto_now_add=True)
+
+        def __str__(self):
+            return f'{self.title} - {self.bus} - {self.technician} - {self.created}'
+
+        class Meta:
+            verbose_name = 'Work Order'
+            verbose_name_plural = 'Work Orders'
+            ordering = ['created']
+
+
