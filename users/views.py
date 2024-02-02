@@ -5,3 +5,7 @@ from django.shortcuts import render
 
 def profile(request):
     return render(request, 'users/profile.html')
+
+
+def work_order(request):
+    return render(request, 'users/work_order_form.html')
