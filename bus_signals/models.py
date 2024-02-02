@@ -1,6 +1,6 @@
-from typing import Any
 from django.db import models
 import uuid
+
 
 series_choices = (
     ('Queltehue', 'Queltehue'),
@@ -17,20 +17,6 @@ message_class_choices = (
     ('Q1', 'Q1'),
     ('Q2', 'Q2'),
 )
-
-
-class Profile(models.Model):
-    phone = models.CharField('Phone', max_length=20, blank=True, null=True)
-    hola = models.CharField('Hola', max_length=20, blank=True, null=True)
-
-    profile = models.Manager()
-
-    def __str__(self):
-        return f'{self.user} - {self.phone} - {self.job}'
-
-    class Meta:
-        verbose_name = 'Profile'
-        verbose_name_plural = 'Profiles'
 
 
 class Bus(models.Model):
@@ -103,7 +89,7 @@ class PackTemperature(models.Model):
     pack_temperature = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.pack_temperature_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.pack_temperature_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Pack Temperature'
@@ -119,7 +105,7 @@ class MaxTemperaturePack(models.Model):
     max_temperature_pack = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.max_temperature_pack_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.max_temperature_pack_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Max Temperature Pack'
@@ -135,7 +121,7 @@ class BatteryHealth(models.Model):
     battery_health = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.battery_health_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_health_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Battery Health'
@@ -151,7 +137,7 @@ class BatteryPackCurrent(models.Model):
     battery_pack_current = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.battery_pack_current_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_pack_current_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Battery Pack Current'
@@ -167,7 +153,7 @@ class BatteryPackVoltage(models.Model):
     battery_pack_voltage = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.battery_pack_voltage_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_pack_voltage_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Battery Pack Voltage'
@@ -183,7 +169,7 @@ class BatteryPackCellMaxVoltage(models.Model):
     battery_pack_cell_max_voltage = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.battery_pack_cell_max_voltage_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_pack_cell_max_voltage_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Battery Pack Cell Max Voltage'
@@ -199,7 +185,7 @@ class BatteryPackCellMinVoltage(models.Model):
     battery_pack_cell_min_voltage = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.battery_pack_cell_min_voltage_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_pack_cell_min_voltage_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Battery Pack Cell Min Voltage'
@@ -215,7 +201,7 @@ class BatteryPackAvgCellVoltage(models.Model):
     battery_pack_avg_cell_voltage = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.battery_pack_avg_cell_voltage_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_pack_avg_cell_voltage_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Battery Pack Avg Cell Voltage'
@@ -231,7 +217,7 @@ class Isolation(models.Model):
     isolation = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.isolation_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.isolation_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Isolation'
@@ -247,7 +233,7 @@ class PtcOneVoltage(models.Model):
     ptc_one = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.ptc_one_voltage_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.ptc_one_voltage_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'PTC One Voltage'
@@ -263,7 +249,7 @@ class PtcTwoVoltage(models.Model):
     ptc_two = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.ptc_two_voltage_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.ptc_two_voltage_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'PTC Two Voltage'
@@ -279,7 +265,7 @@ class PositiveTorque(models.Model):
     positive_torque = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.positive_torque_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.positive_torque_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Positive Torque'
@@ -295,7 +281,7 @@ class NegativeTorque(models.Model):
     negative_torque = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.negative_torque_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.negative_torque_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Negative Torque'
@@ -311,7 +297,7 @@ class EngineTemperature(models.Model):
     engine_temperature = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.engine_temperature_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.engine_temperature_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Engine Temperature'
@@ -327,7 +313,7 @@ class LenzeCurrent(models.Model):
     lenze_current = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.lenze_current_value}'
+        return f'{self.TimeStamp} - {self.lenze_current_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Lenze Current'
@@ -343,7 +329,7 @@ class LenzeEngineSpeed(models.Model):
     lenze_engine_speed = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.lenze_engine_speed_value}'
+        return f'{self.TimeStamp} - {self.lenze_engine_speed_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Lenze Engine Speed'
@@ -359,7 +345,7 @@ class Odometer(models.Model):
     odometer = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.odometer_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.odometer_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Odometer'
@@ -375,7 +361,7 @@ class Speed(models.Model):
     speed = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.speed_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.speed_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Speed'
@@ -391,7 +377,7 @@ class SystemPressure(models.Model):
     system_pressure = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.system_pressure_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.system_pressure_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'System Pressure'
@@ -407,7 +393,7 @@ class BtmsTemperature(models.Model):
     btms_temperature = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.btms_temperature_value}'
+        return f'{self.TimeStamp} - {self.btms_temperature_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'BTMS Temperature'
@@ -425,7 +411,7 @@ class FusiCode(models.Model):
     fusi = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.fusi_code} - {self.fusi_state} - {self.fusi_comment} - ' \
+        return f'{self.TimeStamp} - {self.fusi_code} - {self.fusi_state} - {self.fusi_comment} - ' \
                f'{self.failure_odometer} - {self.bus}'
 
     class Meta:
@@ -442,7 +428,7 @@ class ChargeStatus(models.Model):
     charge_status = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.charge_status_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.charge_status_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Charge Status'
@@ -458,7 +444,7 @@ class GearStatus(models.Model):
     gear_status = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.gear_status_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.gear_status_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Gear Status'
@@ -474,7 +460,7 @@ class BusState(models.Model):
     bus_state = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.bus_state_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.bus_state_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Bus State'
@@ -490,7 +476,7 @@ class BrakePedalStatus(models.Model):
     brake_pedal_status = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.brake_pedal_status_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.brake_pedal_status_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Brake Pedal Status'
@@ -506,7 +492,7 @@ class AirConditionerStatus(models.Model):
     air_conditioner_status = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.air_conditioner_status_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.air_conditioner_status_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Air Conditioner Status'
@@ -522,7 +508,7 @@ class ServiceCompressorStatus(models.Model):
     service_compressor = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.service_compressor_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.service_compressor_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'Service Compressor Status'
@@ -538,7 +524,7 @@ class BtmsStatus(models.Model):
     btms_status = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.TimeStamp} - {self.btms_status_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.btms_status_value} - {self.bus}'
 
     class Meta:
         verbose_name = 'BTMS Status'
@@ -548,7 +534,7 @@ class BtmsStatus(models.Model):
 
 class FusiMessage(models.Model):
     fusi_code = models.CharField('Fusi Code', max_length=10, unique=False, blank=False, null=False)
-    fusi_description = models.CharField('Fusi Description', max_length=200)
+    fusi_description = models.CharField('Fusi Description', max_length=500)
     message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True,
                                      null=True)
 
@@ -574,8 +560,7 @@ class ModemInfo(models.Model):
     modem_info = models.Manager()
 
     def __str__(self):
-        return f'{self.id} - {self.imei} - {self.rem_number} - {self.sim_number} - {self.user} - {self.password} -' \
-               f' {self.bus}'
+        return f'{self.imei} - {self.rem_number} - {self.sim_number} - {self.user} - {self.password} - {self.bus}'
 
     class Meta:
         verbose_name = 'Modem Info'
@@ -603,13 +588,14 @@ class Technician(models.Model):
 class AwsPathBucket(models.Model):
     path_sniffer = models.CharField('Path Sniffer', max_length=100)
     path_name = models.CharField('Path Name', max_length=100)
-    path_internal_date = models.DateTimeField('Path Date', blank=True, null=True)
-    path_reveal_date = models.DateTimeField('Path Date', blank=True, null=True)
+    path_internal_date = models.CharField('Path Internal Date', blank=True, null=True, max_length=100)
+    path_reveal_date = models.CharField('Path Reveal Date', blank=True, null=True, max_length=100)
     path_status = models.BooleanField('Path Status', default=False)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.path_sniffer} - {self.path_name} - {self.path_internal_date} - {self.path_reveal_date} - {self.path_status}'
+        return (f'{self.path_sniffer} - {self.path_name} - {self.path_internal_date} - {self.path_reveal_date} - '
+                f'{self.path_status}')
 
     class Meta:
         verbose_name = 'Aws Path Bucket'
