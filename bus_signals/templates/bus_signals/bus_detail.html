@@ -42,7 +42,7 @@
     </tr>
     {% for i in results %}
     <tr>
-        <td>{% if i.0 is None %} 0 {% else %}{{i.0}} Km{% endif %}</td>
+        <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
         <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
         <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
         <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
@@ -57,6 +57,67 @@
         <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
     </tr>
 
+    {% endfor %}
+</table>
+
+<h2>Kilometrajes Diarios</h2>
+
+<table border="1">
+    <tr>
+        <th>Bus</th>
+        <th>Ene Min</th>
+        <th>Ene Max</th>
+        <th>Feb Min</th>
+        <th>Feb Max</th>
+        <th>Mar Min</th>
+        <th>Mar Max</th>
+        <th>Abr Min</th>
+        <th>Abr Max</th>
+        <th>May Min</th>
+        <th>May Max</th>
+        <th>Jun Min</th>
+        <th>Jun Max</th>
+        <th>Jul Min</th>
+        <th>Jul Max</th>
+        <th>Ago Min</th>
+        <th>Ago Max</th>
+        <th>Sep Min</th>
+        <th>Sep Max</th>
+        <th>Oct Min</th>
+        <th>Oct Max</th>
+        <th>Nov Min</th>
+        <th>Nov Max</th>
+        <th>Dic Min</th>
+        <th>Dic Max</th>
+    </tr>
+    {% for i in monthly_result %}
+    <tr>
+        <td>{{ i.0 }}</td>
+        <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
+        <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
+        <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
+        <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
+        <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
+        <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
+        <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
+        <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
+        <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
+        <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
+        <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
+        <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
+        <td>{% if i.13 is None %} 0 {% else %}{{i.13}} Km{% endif %}</td>
+        <td>{% if i.14 is None %} 0 {% else %}{{i.14}} Km{% endif %}</td>
+        <td>{% if i.15 is None %} 0 {% else %}{{i.15}} Km{% endif %}</td>
+        <td>{% if i.16 is None %} 0 {% else %}{{i.16}} Km{% endif %}</td>
+        <td>{% if i.17 is None %} 0 {% else %}{{i.17}} Km{% endif %}</td>
+        <td>{% if i.18 is None %} 0 {% else %}{{i.18}} Km{% endif %}</td>
+        <td>{% if i.19 is None %} 0 {% else %}{{i.19}} Km{% endif %}</td>
+        <td>{% if i.20 is None %} 0 {% else %}{{i.20}} Km{% endif %}</td>
+        <td>{% if i.21 is None %} 0 {% else %}{{i.21}} Km{% endif %}</td>
+        <td>{% if i.22 is None %} 0 {% else %}{{i.22}} Km{% endif %}</td>
+        <td>{% if i.23 is None %} 0 {% else %}{{i.23}} Km{% endif %}</td>
+        <td>{% if i.24 is None %} 0 {% else %}{{i.24}} Km{% endif %}</td>
+    </tr>
     {% endfor %}
 </table>
 
