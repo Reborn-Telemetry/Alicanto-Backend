@@ -1,17 +1,14 @@
-{% extends "main.html" %}
-{% load static %}
-{% block content %}
+{% extends "main.html" %} {% load static %} {% block content %}
 <img
     src="{{ bus.bus_img.url }}"
     alt="image"
-    style="width: 400px; height: 250px;"
+    style="width: 400px; height: 250px"
 />
 <h1>BUS {{ bus.bus_name}}</h1>
 <h5>Sniffer: {{ bus.sniffer}}</h5>
 <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
 <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
-<button>Crear Parte</button>
-
+<a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
 
 <h3>Patente: {{ bus.plate_number}}</h3>
 <h3>Kilometraje: {{ bus.lts_odometer }}</h3>
@@ -24,4 +21,9 @@
 <h3>Baterias 24 Volts: {{ bus.lts_24_volt }}</h3>
 <h3>Aislacion: {{ bus.lts_isolation }}</h3>
 <h3>Actualizacion: {{ bus.lts_update }}</h3>
-{% endblock content %}
+
+{% for order in ot %}
+<p>{{order.title}}</p>
+<p>{{order.description}} - <button href="">Editar Parte</button></p>
+
+{% endfor %} {% endblock content %}
