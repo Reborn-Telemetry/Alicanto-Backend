@@ -23,7 +23,10 @@
 <h3>Actualizacion: {{ bus.lts_update }}</h3>
 
 {% for order in ot %}
-<p>{{order.title}}</p>
-<p>{{order.description}} - <button href="">Editar Parte</button></p>
+<p>{{order.title}} - {{order.id}}</p>
+<p>
+    {{order.description}} -
+    <a href="{% url 'update_ot' order.id %}"><button>Editar Parte</button></a>
 
-{% endfor %} {% endblock content %}
+    {% endfor %} {% endblock content %}
+</p>
