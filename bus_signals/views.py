@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage
 from .forms import BusForm, FusiMessageForm
+from users.models import WorkOrder
+import requests
 
 
 # Create your views here.
 
 def login(request):
     return render(request, 'login.html')
+
 
 def create_bus(request):
     form = BusForm()
@@ -63,10 +66,10 @@ def delete_bus(request, pk):
     return render(request, 'delete_object.html', context)
 
 
-
 def bus_detail(request, pk):
+    ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
-    context = {'bus': bus}
+    context = {'bus': bus, 'ot': ot}
     return render(request, 'bus_signals/bus_detail.html', context)
 
 

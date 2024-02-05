@@ -25,10 +25,10 @@
     </div>
 
     <div class="nav-links">
-        <a href="{% url "bus_list" %}">Flota</a>
-        <a href="{% url "dic_fusi" %}">Diccionario Fusi</a>
-        <a href="{% url "odometer" %}">Kilometrajes</a>
+        <a href="{% url 'bus_list' %}">Flota</a>
+        <a href="{% url 'dic_fusi' %}">Diccionario Fusi</a>
+        <a href="{% url 'odometer' %}">Kilometrajes</a>
         <a href="" target="_blank">GPS Link</a>
-        <a href="" target="_blank">Crear Parte</a>
+        <a href="{% url 'work_order_form' %}">Crear Parte</a>
     </div>
 </div>

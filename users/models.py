@@ -31,7 +31,6 @@ class Profile(models.Model):
 
 
 class WorkOrder(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
