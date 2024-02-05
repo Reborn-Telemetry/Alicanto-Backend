@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage
+from .models import Bus, FusiMessage, Odometer
 from .forms import BusForm, FusiMessageForm
 from users.models import WorkOrder
+from .query_utils import daily_bus_km
 import requests
 
 
@@ -67,9 +68,10 @@ def delete_bus(request, pk):
 
 
 def bus_detail(request, pk):
+    results = daily_bus_km(pk)
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
-    context = {'bus': bus, 'ot': ot}
+    context = {'bus': bus, 'ot': ot, 'results': results}
     return render(request, 'bus_signals/bus_detail.html', context)
 
 
