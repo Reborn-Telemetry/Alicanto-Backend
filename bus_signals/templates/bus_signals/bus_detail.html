@@ -10,17 +10,55 @@
 <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
 <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
 
-<h3>Patente: {{ bus.plate_number}}</h3>
-<h3>Kilometraje: {{ bus.lts_odometer }}</h3>
-<h3>Carga: {{ bus.lts_soc }}</h3>
-<h3>Serie: {{ bus.bus_series }}</h3>
-<h3>Cliente: {{ bus.client }}</h3>
-<h3>Version Mark: {{ bus.mark }}</h3>
-<h3>Version Jarvis: {{ bus.jarvis }}</h3>
-<h3>Version Vision: {{ bus.vision }}</h3>
-<h3>Baterias 24 Volts: {{ bus.lts_24_volt }}</h3>
-<h3>Aislacion: {{ bus.lts_isolation }}</h3>
-<h3>Actualizacion: {{ bus.lts_update }}</h3>
+<h5>Patente: {{ bus.plate_number}}</h5>
+<h5>Kilometraje: {{ bus.lts_odometer }}</h5>
+<h5>Carga: {{ bus.lts_soc }}</h5>
+<h5>Serie: {{ bus.bus_series }}</h5>
+<h5>Cliente: {{ bus.client }}</h5>
+<h5>Version Mark: {{ bus.mark }}</h5>
+<h5>Version Jarvis: {{ bus.jarvis }}</h5>
+<h5>Version Vision: {{ bus.vision }}</h5>
+<h5>Baterias 24 Volts: {{ bus.lts_24_volt }}</h5>
+<h5>Aislacion: {{ bus.lts_isolation }}</h5>
+<h5>Actualizacion: {{ bus.lts_update }}</h5>
+
+<h2>Kilometrajes Diarios</h2>
+
+<table border="1">
+    <tr>
+        <th>Dia</th>
+        <th>Enero</th>
+        <th>Febrero</th>
+        <th>Marzo</th>
+        <th>Abril</th>
+        <th>Mayo</th>
+        <th>Junio</th>
+        <th>Julio</th>
+        <th>Agosto</th>
+        <th>Septiembre</th>
+        <th>Octubre</th>
+        <th>Noviembre</th>
+        <th>Diciembre</th>
+    </tr>
+    {% for i in results %}
+    <tr>
+        <td>{% if i.0 is None %} 0 {% else %}{{i.0}} Km{% endif %}</td>
+        <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
+        <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
+        <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
+        <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
+        <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
+        <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
+        <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
+        <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
+        <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
+        <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
+        <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
+        <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
+    </tr>
+
+    {% endfor %}
+</table>
 
 {% for order in ot %}
 <p>{{order.title}} - {{order.id}}</p>
