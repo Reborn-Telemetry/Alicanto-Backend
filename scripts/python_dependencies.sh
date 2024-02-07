@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-virtualenv /home/ubuntu/env
-source /home/ubuntu/env/bin/activate
+virtualenv /home/ubuntu/venv
+source /home/ubuntu/venv/bin/activate
 pip install -r /home/ubuntu/Alicanto-Backend/requirements.txt
