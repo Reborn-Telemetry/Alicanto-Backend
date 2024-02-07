@@ -4,8 +4,6 @@ environment_variables:
     plaintext:
         DJANGO_SETTINGS_MODULE: config.settings.test
         SECRET_KEY: django-insecure-y_*hy#i!@h95^&-s7#=4(26l6wpno)!1un_ah+l69xb9+w+&(b
-        STREAM_INCOMING_PRIVATE_KEY: changeme
-        STREAM_INCOMING_PUBLIC_KEY: changeme
         OPBEAT_ENABLED: False
 
 phases:
