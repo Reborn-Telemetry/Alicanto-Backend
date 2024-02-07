@@ -121,12 +121,13 @@
     {% endfor %}
 </table>
 
-{% for order in ot %}
-<p>{{order.title}} - {{order.id}}</p>
-<p>
-    {{order.description}} -
-    <a href="{% url 'update_ot' order.id %}"><button>Editar Parte</button></a>
+<h2>Bitacora Bus</h2>
 
-    {% endfor %}
+{% for order in ot %}
+<p>
+    {{order.title}} {{order.description}}
+
+    <a href="{% url 'update_ot' order.id %}"><button>Editar Parte</button></a>
 </p>
-{% endblock content %}
+
+{% endfor %} {% endblock content %}
