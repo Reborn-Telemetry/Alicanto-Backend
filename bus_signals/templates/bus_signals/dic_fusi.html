@@ -1,7 +1,23 @@
-{% extends "main.html" %} {% load static %} {% block title %} Diccionario fusi
-{% endblock title %} {% block content %}
+{% extends "main.html" %} {% load static %} {% block title %} Diccionario fusi {% endblock title %}
+{% block content %}
 <h1>Diccionario fusi</h1>
 <a href="{% url 'create_fusi' %}"><button>Agregar Fusi</button></a>
+<br />
+<form id="searchForm" class="form" action="{% url 'dic_fusi' %}" method="get">
+    <div class="form__field">
+        <label for="formInput#search">Buscar Codigo Fusi </label>
+        <input
+            class="input input--text"
+            id="formInput#search"
+            type="text"
+            name="search_query"
+            value="{{ search_query }}"
+            placeholder="Ingrese : Codigo, Componente, Descripcion, Tipo ECU"
+        />
+    </div>
+
+    <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
+</form>
 
 <table>
     <tr>
