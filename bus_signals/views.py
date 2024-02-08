@@ -124,8 +124,15 @@ def bus_list(request):
 
 @login_required(login_url='login')
 def dic_fusi(request):
-    messages = FusiMessage.fusi.all()
-    context = {'fusi': messages}
+    search_query = ''
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    messages = FusiMessage.fusi.filter(
+        Q(fusi_code__icontains=search_query) |
+        Q(fusi_description__icontains=search_query) |
+        Q(message_class__icontains=search_query)
+    )
+    context = {'fusi': messages, 'search_query': search_query}
     return render(request, 'bus_signals/dic_fusi.html', context)
 
 @login_required(login_url='login')
