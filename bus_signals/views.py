@@ -4,11 +4,29 @@ from .forms import BusForm, FusiMessageForm
 from users.models import WorkOrder
 from .query_utils import daily_bus_km, monthly_bus_km
 import requests
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 
 # Create your views here.
 
-def login(request):
+def login_page(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        try:
+            user = User.objects.get(username=username)
+        except:
+            print('User does not exist')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('bus_list')
+        else:
+            print('Username or password is incorrect')
+
     return render(request, 'login.html')
 
 

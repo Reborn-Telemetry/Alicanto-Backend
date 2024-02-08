@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-{% load static %}
-<html lang="en">
+{% load static %} {% block content %}
+<h1>Bienvenido a Alicanto</h1>
+
+<form action="{% url 'login' %}" method="POST">{% csrf_token %}
+    <input type="text" name="username" placeholder="Usuario" />
+    <input type="password" name="password" placeholder="Contraseña" />
+    <button type="submit" value="Login"=>Ingresar</button>
+
+</form>
+
+{% endblock content %}
+<!--    <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <title>Alicanto Login</title>
@@ -37,3 +47,4 @@
         </div>
     </body>
 </html>
+    -->

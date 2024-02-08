@@ -1,44 +1,9 @@
 {% extends "main.html" %} {% block content %}
 <h1>Flota E-Buses</h1>
-<!--<a href="{% url 'create_bus' %}"><button>Agregar Bus</button></a>
-<table>
-    <tr>
-        <th>Bus</th>
-        <th>Patente</th>
-        <th>Carga</th>
-        <th>Kilometraje</th>
-        <th>Aislacion</th>
-        <th>Bateria</th>
-        <th>Actualizacion</th>
-        <th>Ver</th>
-        <th>Editar</th>
-        <th>Eliminar</th>
-    </tr>
-    {% for bus in bus %}
-    <tr>
-        <td>{{ bus.bus_name }}</td>
-        <td>{{ bus.plate_number }}</td>
-        <td>{{ bus.lts_soc }}</td>
-        <td>{{ bus.lts_odometer }}</td>
-        <td>{{ bus.lts_isolation }}</td>
-        <td>{{ bus.lts_24_volt }}</td>
-        <td>{{ bus.lts_update }}</td>
-        <td>
-            <a href="{% url 'bus_detail' bus.id %}"><button>Ver</button></a>
-        </td>
-        <td>
-            <a href="{% url 'update_bus' bus.id %}"><button>Editar</button></a>
-        </td>
-        <td>
-            <a href="{% url 'delete_bus' bus.id %}"
-                ><button>Eliminar</button></a
-            >
-        </td>
-    </tr>
-    {% endfor %}
-</table>-->
+<a href="{% url 'create_bus' %}">
+
 <main class="projects">
-   <a href="{% url 'create_bus' %}">
+   
        <input
                         class="btn btn--sub btn--lg"
                         type="submit"
