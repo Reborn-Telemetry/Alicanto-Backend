@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-{% load static %} {% block content %}
+<!DOCTYPE html> {% load static %}
+<!-- {% block content %}
 <h1>Bienvenido a Alicanto</h1>
 
 <form action="{% url 'login' %}" method="POST">{% csrf_token %}
@@ -9,8 +9,8 @@
 
 </form>
 
-{% endblock content %}
-<!--    <html lang="en">
+{% endblock content %}-->
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <title>Alicanto Login</title>
@@ -24,7 +24,8 @@
     <body>
         <div class="login">
             <h2 class="active">Iniciar sesion</h2>
-            <form>
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
                 <input type="text" class="text" name="username" />
                 <span>Usuario</span>
 
@@ -47,4 +48,3 @@
         </div>
     </body>
 </html>
-    -->
