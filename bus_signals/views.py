@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 
 
 # Create your views here.
@@ -112,9 +113,12 @@ def bus_list(request):
     search_query = ''
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
-    print('search:', search_query)
-
-    buses = Bus.bus.filter(bus_name__icontains=search_query)
+    buses = Bus.bus.filter(
+        Q(bus_name__icontains=search_query) |
+        Q(bus_series__icontains=search_query) |
+        Q(bus_ecu__icontains=search_query) |
+        Q(client__icontains=search_query) 
+        )
     context = {'bus': buses, 'search_query': search_query}
     return render(request, 'bus_signals/bus_list.html', context)
 

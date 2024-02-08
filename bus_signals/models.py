@@ -35,6 +35,7 @@ class Bus(models.Model):
     jarvis = models.CharField('Jarvis', max_length=20, blank=True, null=True, default='1.0.0')
     vision = models.CharField('Vision', max_length=20, blank=True, null=True, default='1.0.0')
     bus_img = models.ImageField(null=True, blank=True, default='bus.png')
+    bus_ecu = models.CharField('Bus ECU', max_length=20, blank=True, null=True, choices=message_class_choices)
 
     bus = models.Manager()
 
