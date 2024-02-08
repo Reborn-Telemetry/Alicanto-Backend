@@ -109,8 +109,13 @@ def bus_detail(request, pk):
 
 @login_required(login_url='login')
 def bus_list(request):
-    buses = Bus.bus.all()
-    context = {'bus': buses}
+    search_query = ''
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    print('search:', search_query)
+
+    buses = Bus.bus.filter(bus_name__icontains=search_query)
+    context = {'bus': buses, 'search_query': search_query}
     return render(request, 'bus_signals/bus_list.html', context)
 
 @login_required(login_url='login')
