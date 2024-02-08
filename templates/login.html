@@ -1,4 +1,10 @@
-<!DOCTYPE html>{% load static %}
+<!DOCTYPE html>{% extends "main.html" %}{% load static %}{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 <!-- {% block content %}
 <h1>Bienvenido a Alicanto</h1>
 
