@@ -17,24 +17,24 @@
                         type="text"
                         name="search_query"
                         value="{{ search_query }}"
-                        placeholder="Busqueda por nombre de bus"
+                        placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
                     />
                 </div>
 
-                <input class="btn btn--sub btn--lg" type="submit" value="Search" />
+                <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
             </form>
             <div class="grid grid--three">
                 {% for bus in bus %}
                 <div class="column">
                     <div class="card project">
                         <a href="{% url 'bus_detail' bus.id %}" class="project">
-                            <img
-                                class="project__thumbnail"
-                                src="{{ bus.bus_img.url }}"
-                                alt="project thumbnail"
-                                style="width: 50%"
-                            />
                             <div class="card__body">
+                                <img
+                                    class="project__thumbnail"
+                                    src="{{ bus.bus_img.url }}"
+                                    alt="project thumbnail"
+                                    style="width: 50%"
+                                />
                                 <h3 class="project__title">{{ bus.bus_name }}</h3>
                                 <br />
                                 <a class="project__author" href="{% url 'bus_detail' bus.id %}"
