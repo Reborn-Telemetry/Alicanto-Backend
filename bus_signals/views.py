@@ -30,6 +30,10 @@ def login_page(request):
 
     return render(request, 'login.html')
 
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
 @login_required(login_url='login')
 def create_bus(request):
     form = BusForm()
