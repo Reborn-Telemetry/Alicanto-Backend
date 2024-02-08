@@ -1,61 +1,54 @@
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 
 .grid > .column {
-  min-width: 28rem;
-  margin-bottom: 2.5rem;
+    min-width: 28rem;
+    margin-bottom: 2.5rem;
 }
 
+/* Clases para 3 columnas en pantallas pequeñas */
 .grid--three > .column {
-  flex-basis: 100%;
-}
-
-@media screen and (min-width: 800px) {
-  .grid--three {
-    margin-right: -2%;
-  }
-
-  .grid--three > .column {
+    flex-basis: 48%; /* Ajusta según tus necesidades */
     margin-right: 2%;
-  }
-
-  .grid--three > .column {
-    flex-basis: 48%;
-  }
 }
 
 @media screen and (min-width: 1200px) {
-  .grid--three {
-    margin-right: -2.33%;
-  }
+    /* Ajusta el margen para 4 columnas en pantallas más grandes */
+    .grid--three {
+        margin-right: -1.5%;
+    }
 
-  .grid--three > .column {
-    margin-right: 2.33%;
-  }
-
-  .grid--three > .column {
-    flex-basis: 31%;
-  }
+    .grid--three > .column {
+        flex-basis: 31%; /* Ajusta según tus necesidades para 4 columnas */
+        margin-right: 1.5%;
+    }
 }
 
+/* Clases para 4 columnas en pantallas grandes */
+@media screen and (min-width: 1600px) {
+    .grid--four > .column {
+        flex-basis: 23%; /* Ajusta según tus necesidades para 4 columnas */
+        margin-right: 1.5%;
+    }
+}
+
+/* Clases para 2 columnas en pantallas pequeñas */
 .grid--two > .column {
-  flex-basis: 100%;
+    flex-basis: 48%; /* Ajusta según tus necesidades */
+    margin-right: 2%;
 }
 
 @media screen and (min-width: 800px) {
-  .grid--two {
-    margin-right: -2%;
-  }
+    .grid--two {
+        margin-right: -2%;
+    }
 
-  .grid--two > .column {
-    margin-right: 2%;
-  }
-
-  .grid--two > .column {
-    flex-basis: 48%;
-  }
+    .grid--two > .column {
+        flex-basis: 48%; /* Ajusta según tus necesidades */
+        margin-right: 2%;
+    }
 }
