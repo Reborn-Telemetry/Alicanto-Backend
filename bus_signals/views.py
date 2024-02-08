@@ -6,6 +6,7 @@ from .query_utils import daily_bus_km, monthly_bus_km
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -29,7 +30,7 @@ def login_page(request):
 
     return render(request, 'login.html')
 
-
+@login_required(login_url='login')
 def create_bus(request):
     form = BusForm()
     if request.method == 'POST':
@@ -40,7 +41,7 @@ def create_bus(request):
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
 
-
+@login_required(login_url='login')
 def create_fusi(request):
     form = FusiMessageForm()
     if request.method == 'POST':
@@ -51,7 +52,7 @@ def create_fusi(request):
     context = {'form': form}
     return render(request, 'bus_signals/fusi_form.html', context)
 
-
+@login_required(login_url='login')
 def update_bus(request, pk):
     bus = Bus.bus.get(id=pk)
     form = BusForm(instance=bus)
@@ -63,7 +64,7 @@ def update_bus(request, pk):
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
 
-
+@login_required(login_url='login')
 def update_fusi(request, pk):
     message = FusiMessage.fusi.get(id=pk)
     form = FusiMessageForm(instance=message)
@@ -75,7 +76,7 @@ def update_fusi(request, pk):
     context = {'form': form}
     return render(request, 'bus_signals/fusi_form.html', context)
 
-
+@login_required(login_url='login')
 def delete_bus(request, pk):
     bus = Bus.bus.get(id=pk)
     if request.method == 'POST':
@@ -84,7 +85,7 @@ def delete_bus(request, pk):
     context = {'object': bus}
     return render(request, 'delete_object.html', context)
 
-
+@login_required(login_url='login')
 def bus_detail(request, pk):
     montly_result = monthly_bus_km(pk)
     results = daily_bus_km(pk)
@@ -93,18 +94,18 @@ def bus_detail(request, pk):
     context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result}
     return render(request, 'bus_signals/bus_detail.html', context)
 
-
+@login_required(login_url='login')
 def bus_list(request):
     buses = Bus.bus.all()
     context = {'bus': buses}
     return render(request, 'bus_signals/bus_list.html', context)
 
-
+@login_required(login_url='login')
 def dic_fusi(request):
     messages = FusiMessage.fusi.all()
     context = {'fusi': messages}
     return render(request, 'bus_signals/dic_fusi.html', context)
 
-
+@login_required(login_url='login')
 def odometer(request):
     return render(request, 'bus_signals/odometer.html')
