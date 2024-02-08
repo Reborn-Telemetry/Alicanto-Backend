@@ -1,6 +1,6 @@
 #!/usr/bin/bash 
 
-sed -i 's/\[]/\["54.177.61.86"]/' /home/ubuntu/Alicanto-Backend/Alicanto/settings.py
+sed -i 's/\[]/\["54.193.55.43"]/' /home/ubuntu/Alicanto-Backend/Alicanto/settings.py
 
 python manage.py migrate 
 python manage.py makemigrations     
