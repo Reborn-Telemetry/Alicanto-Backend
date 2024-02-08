@@ -1,12 +1,11 @@
-<!DOCTYPE html>{% extends "main.html" %}{% load static %}{% if messages %}
+<!DOCTYPE html>{% load static %}{% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li class="{{ message.tags }}">{{ message }}</li>
+    <li class="{{ message.tags }}" style="color: black">{{ message }}</li>
     {% endfor %}
 </ul>
-{% endif %}
-<!-- {% block content %}
-<h1>Bienvenido a Alicanto</h1>
+{% endif %} {% block content %}
+<!-- <h1>Bienvenido a Alicanto</h1>
 
 <form action="{% url 'login' %}" method="POST">{% csrf_token %}
     <input type="text" name="username" placeholder="Usuario" />
@@ -14,8 +13,7 @@
     <button type="submit" value="Login"=>Ingresar</button>
 
 </form>
-
-{% endblock content %}-->
+-->
 
 <html lang="en">
     <head>
@@ -55,3 +53,5 @@
         </div>
     </body>
 </html>
+
+{% endblock content %}
