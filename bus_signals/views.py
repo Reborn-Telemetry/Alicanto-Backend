@@ -12,6 +12,9 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def login_page(request):
+    if request.user.is_authenticated:
+        return redirect('bus_list')
+    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
