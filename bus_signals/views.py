@@ -7,6 +7,7 @@ import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 # Create your views here.
@@ -22,19 +23,24 @@ def login_page(request):
         try:
             user = User.objects.get(username=username)
         except:
-            print('User does not exist')
+            messages.error(request, 'User does not exist')
+
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
+            messages.success(request, 'user successfully logged in')
             return redirect('bus_list')
         else:
+            messages.error(request, 'username or password incorrect')
             print('Username or password is incorrect')
 
     return render(request, 'login.html')
 
 def logout_user(request):
     logout(request)
+    messages.error(request, 'user successfully logged out')
+
     return redirect('login')
 
 @login_required(login_url='login')
