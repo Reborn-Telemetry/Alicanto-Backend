@@ -3,19 +3,30 @@
 <h1>Reportes Buses</h1>
 <p>Presione el boton del reporte que quiere descargar</p>
 <br />
-<div style="display: flex; gap: 10px; cursor: pointer">
-    <a href="{% url 'pdf-report' %}" class="btn btn-primary">Ultima actualizacion Buses PDF</a>
+<div style="display: flex; gap: 10px; cursor: pointer; flex-direction: column">
+    <p>
+        Informe Ultima Actualizacion Flota :
+        <a href="{% url 'pdf-report' %}" class="btn btn-primary">Descarga .pdf</a>
+    </p>
     <br />
     <br />
-    <a href="{% url 'montly-km-report' %}" class="btn btn-primary">kilometraje mensual buses</a>
+    <p>
+        Informe Kilometraje Mensual Buses :
+        <a href="{% url 'montly-km-report' %}" class="btn btn-primary"> Descarga .pdf</a>
+    </p>
     <br />
     <br />
-    <a href="{% url 'xls-report' %}" class="btn btn-primary">ultima actualizacion buses xls</a>
+    <p>
+        Informe Ultima Actualizacion Flota :
+        <a href="{% url 'xls-report' %}" class="btn btn-primary"> Descarga .xls</a>
+    </p>
+
     <br />
     <br />
-    <a href="{% url 'monthly-bus-report-xls' %}" class="btn btn-primary"
-        >kilometraje mensual buses xls</a
-    >
+    <p>
+        Informe Kilometraje Mensual Buses :
+        <a href="{% url 'monthly-bus-report-xls' %}" class="btn btn-primary">Descarga .xls</a>
+    </p>
 </div>
 
 {% endblock %}
