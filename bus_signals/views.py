@@ -18,12 +18,48 @@ from django.http import FileResponse
 from reportlab.lib.pagesizes import letter, landscape
 from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
+import xlwt
 
 def reports_page(request):
     report = monthly_fleet_km()
     for i in report:
         pass
     return render(request, 'bus_signals/reports.html')
+
+def monthly_bus_report_xls(request):
+    report_data = monthly_fleet_km()
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte km mensual :{formatted_datetime}.xls'
+    buf = io.BytesIO()
+
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
+
+    # Datos de la tabla
+    table_data = [
+        ['Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
+         'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
+         'Sep I', 'Sep F', 'Oct I', 'Oct F', 'Nov I', 'Nov F', 'Dic I', 'Dic F']
+    ]
+
+    for entry in report_data:
+        row = [str(value) if value is not None else '0' for value in entry]
+        table_data.append(row)
+
+    # Estilo de la tabla en Excel
+    style = xlwt.easyxf('font: bold on; align: horiz center')
+
+    # Escribir datos en la hoja de cálculo
+    for row_num, row_data in enumerate(table_data):
+        for col_num, cell_value in enumerate(row_data):
+            worksheet.write(row_num, col_num, cell_value, style)
+
+    # Guardar archivo Excel
+    workbook.save(buf)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename=filename)
 
 def monthly_bus_report(request):
     report_data = monthly_fleet_km()
@@ -47,7 +83,7 @@ def monthly_bus_report(request):
     for entry in report_data:
         row = []
         for value in entry:
-            row.append(str(value) if value is not None else 'N/A')
+            row.append(str(value) if value is not None else '0')
         table_data.append(row)
     
    
@@ -81,6 +117,43 @@ def monthly_bus_report(request):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
+
+def xls_report(request):
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte dia :{formatted_datetime}.xls'
+    buf = io.BytesIO()
+
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
+
+    # Datos de la tabla
+    table_data = [
+        ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
+    ]
+
+    bus_list = Bus.bus.all()
+    for bus in bus_list:
+        formatted_datetime = bus.lts_update.strftime("%d/%m/%Y %H:%M") if bus.lts_update else "sin actualizacion"
+        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer)+ 'km', formatted_datetime]
+        table_data.append(row)
+
+    # Estilo de la tabla en Excel
+    style = xlwt.easyxf('font: bold on; align: horiz center')
+
+
+
+    
+    # Escribir datos en la hoja de cálculo
+    for row_num, row_data in enumerate(table_data):
+        for col_num, cell_value in enumerate(row_data):
+            worksheet.write(row_num, col_num, cell_value, style)
+
+    # Guardar archivo Excel
+    workbook.save(buf)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename=filename)
 
 
 def pdf_report(request):
@@ -128,10 +201,6 @@ def pdf_report(request):
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
-
-
-
-
 
 
 
