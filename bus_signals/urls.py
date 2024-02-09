@@ -16,6 +16,8 @@ urlpatterns = [
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus"),
   path("reports_page/", views.reports_page, name="reports_page"),
   path("pdf-report/", views.pdf_report, name="pdf-report"),
-  path("montly-km-report/", views.monthly_bus_report, name="montly-km-report")
+  path("montly-km-report/", views.monthly_bus_report, name="montly-km-report"),
+  path("xls-report/", views.xls_report, name="xls-report"),
+  path("monthly-bus-report-xls/", views.monthly_bus_report_xls, name="monthly-bus-report-xls"),
 ]
 
