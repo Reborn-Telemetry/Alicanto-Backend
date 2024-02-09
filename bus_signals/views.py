@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer
+from .models import Bus, FusiMessage, Odometer, FusiCode
 from .forms import BusForm, FusiMessageForm
 from users.models import WorkOrder
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
@@ -21,9 +21,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
 
 def reports_page(request):
-    report = monthly_fleet_km()
-    for i in report:
-        pass
     return render(request, 'bus_signals/reports.html')
 
 def monthly_bus_report_xls(request):
@@ -117,7 +114,6 @@ def monthly_bus_report(request):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
 def xls_report(request):
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%d-%m-%Y")
@@ -153,7 +149,6 @@ def xls_report(request):
     buf.seek(0)
 
     return FileResponse(buf, as_attachment=True, filename=filename)
-
 
 def pdf_report(request):
     current_datetime = datetime.now()
@@ -200,8 +195,6 @@ def pdf_report(request):
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
-
-
 
 def login_page(request):
     if request.user.is_authenticated:
@@ -295,7 +288,8 @@ def bus_detail(request, pk):
     results = daily_bus_km(pk)
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
-    context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result}
+    fusi = FusiCode.fusi.filter(bus_id=pk)
+    context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi}
     return render(request, 'bus_signals/bus_detail.html', context)
 
 @login_required(login_url='login')
