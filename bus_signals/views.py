@@ -36,7 +36,7 @@ def monthly_bus_report_xls(request):
     workbook = xlwt.Workbook(encoding='utf-8')
     worksheet = workbook.add_sheet('Report')
 
-    # Datos de la tabla
+
     table_data = [
         ['Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
          'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
@@ -47,15 +47,15 @@ def monthly_bus_report_xls(request):
         row = [str(value) if value is not None else '0' for value in entry]
         table_data.append(row)
 
-    # Estilo de la tabla en Excel
+   
     style = xlwt.easyxf('font: bold on; align: horiz center')
 
-    # Escribir datos en la hoja de cálculo
+   
     for row_num, row_data in enumerate(table_data):
         for col_num, cell_value in enumerate(row_data):
             worksheet.write(row_num, col_num, cell_value, style)
 
-    # Guardar archivo Excel
+    
     workbook.save(buf)
     buf.seek(0)
 
@@ -127,7 +127,7 @@ def xls_report(request):
     workbook = xlwt.Workbook(encoding='utf-8')
     worksheet = workbook.add_sheet('Report')
 
-    # Datos de la tabla
+
     table_data = [
         ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
     ]
@@ -138,18 +138,17 @@ def xls_report(request):
         row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer)+ 'km', formatted_datetime]
         table_data.append(row)
 
-    # Estilo de la tabla en Excel
     style = xlwt.easyxf('font: bold on; align: horiz center')
 
 
 
     
-    # Escribir datos en la hoja de cálculo
+   
     for row_num, row_data in enumerate(table_data):
         for col_num, cell_value in enumerate(row_data):
             worksheet.write(row_num, col_num, cell_value, style)
 
-    # Guardar archivo Excel
+   
     workbook.save(buf)
     buf.seek(0)
 
