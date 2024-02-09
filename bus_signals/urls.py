@@ -14,6 +14,8 @@ urlpatterns = [
   path("update_bus/<str:pk>/", views.update_bus, name="update_bus"),
   path("update_fusi/<str:pk>/", views.update_fusi, name="update_fusi"),
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus"),
-  path("pdf-report/", views.pdf_report, name="pdf-report")
+  path("reports_page/", views.reports_page, name="reports_page"),
+  path("pdf-report/", views.pdf_report, name="pdf-report"),
+  path("montly-km-report/", views.monthly_bus_report, name="montly-km-report")
 ]
 

@@ -1,0 +1,10 @@
+{% extends "main.html" %} {% block content %}
+<h1>Reportes Buses</h1>
+<p>Presione el boton del reporte que quiere descargar</p>
+<br />
+
+<a href="{% url 'pdf-report' %}" class="btn btn-primary">Ultima actualizacion Buses</a>
+<br />
+<br />
+<a href="{% url 'montly-km-report' %}" class="btn btn-primary">kilometraje mensual buses</a>
+{% endblock %}
