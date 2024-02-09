@@ -10,8 +10,87 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 
+# pdf imports 
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 
-# Create your views here.
+import io
+from reportlab.pdfgen import canvas
+from django.http import FileResponse
+from reportlab.lib.pagesizes import letter
+
+import io
+from reportlab.pdfgen import canvas
+from django.http import FileResponse
+from reportlab.lib.pagesizes import letter
+
+import io
+from reportlab.pdfgen import canvas
+from django.http import FileResponse
+from reportlab.lib.pagesizes import letter
+from datetime import datetime
+
+import io
+from reportlab.pdfgen import canvas
+from django.http import FileResponse
+from reportlab.lib.pagesizes import letter
+from datetime import datetime
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
+
+def pdf_report(request):
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte dia :{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+
+
+    table_data = [
+        ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
+    ]
+
+    
+    bus_list = Bus.bus.all()
+    for bus in bus_list:
+        formatted_datetime = bus.lts_update.strftime("%d/%m/%Y %H:%M") if bus.lts_update else "sin actualizacion"
+        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer)+ 'km', formatted_datetime]
+        table_data.append(row)
+
+  
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+    ])
+
+    
+    table = Table(table_data)
+    table.setStyle(style)
+    elements.append(table)
+
+ 
+    image_path = 'static/img/REM.png' 
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)  
+
+   
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+
+
+
+
 
 def login_page(request):
     if request.user.is_authenticated:
