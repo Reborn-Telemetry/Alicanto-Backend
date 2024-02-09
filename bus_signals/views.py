@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage, Odometer
 from .forms import BusForm, FusiMessageForm
 from users.models import WorkOrder
-from .query_utils import daily_bus_km, monthly_bus_km
+from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -14,31 +14,74 @@ from django.db.models import Q
 from django.http import FileResponse
 import io
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
-
-import io
-from reportlab.pdfgen import canvas
 from django.http import FileResponse
-from reportlab.lib.pagesizes import letter
-
-import io
-from reportlab.pdfgen import canvas
-from django.http import FileResponse
-from reportlab.lib.pagesizes import letter
-
-import io
-from reportlab.pdfgen import canvas
-from django.http import FileResponse
-from reportlab.lib.pagesizes import letter
-from datetime import datetime
-
-import io
-from reportlab.pdfgen import canvas
-from django.http import FileResponse
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, landscape
 from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
+
+def reports_page(request):
+    report = monthly_fleet_km()
+    for i in report:
+        pass
+    return render(request, 'bus_signals/reports.html')
+
+def monthly_bus_report(request):
+    report_data = monthly_fleet_km()
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte km mensual :{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+    
+    
+    doc = SimpleDocTemplate(buf, pagesize=landscape(letter))
+    elements = []
+    
+    table_data = [
+        [
+            'Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
+            'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
+            'Sep I', 'Sep F', 'Oct I', 'Oct F', 'Nov I', 'Nov F', 'Dic I', 'Dic F'
+        ]
+    ]
+    
+    for entry in report_data:
+        row = []
+        for value in entry:
+            row.append(str(value) if value is not None else 'N/A')
+        table_data.append(row)
+    
+   
+    cell_width = 17  
+    font_size = 5  
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+        ('BOX', (0, 0), (-1, -1), 1, 'black'), 
+        ('FONTSIZE', (0, 0), (-1, -1), font_size),  
+    ])
+    
+    
+    table = Table(table_data, colWidths=[cell_width * 1.5] * len(table_data[0]))
+    table.setStyle(style)
+    elements.append(table)
+
+    
+    image_path = 'static/img/REM.png'
+    image_width = 200  
+    image_height = 200  
+    image = Image(image_path, width=image_width, height=image_height)
+    elements.insert(0, image)
+
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
 
 def pdf_report(request):
     current_datetime = datetime.now()
