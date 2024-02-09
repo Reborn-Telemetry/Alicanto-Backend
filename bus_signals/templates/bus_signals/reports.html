@@ -3,8 +3,17 @@
 <p>Presione el boton del reporte que quiere descargar</p>
 <br />
 
-<a href="{% url 'pdf-report' %}" class="btn btn-primary">Ultima actualizacion Buses</a>
+<a href="{% url 'pdf-report' %}" class="btn btn-primary">Ultima actualizacion Buses PDF</a>
 <br />
 <br />
 <a href="{% url 'montly-km-report' %}" class="btn btn-primary">kilometraje mensual buses</a>
+<br />
+<br />
+<a href="{% url 'xls-report' %}" class="btn btn-primary">ultima actualizacion buses xls</a>
+<br />
+<br />
+<a href="{% url 'monthly-bus-report-xls' %}" class="btn btn-primary"
+    >kilometraje mensual buses xls</a
+>
+
 {% endblock %}
