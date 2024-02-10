@@ -21,3 +21,9 @@ class WorkOrderForm(ModelForm):
     class Meta:
         model = WorkOrder
         fields = '__all__'
+
+
+class FusiForm(ModelForm):
+    class Meta:
+        model = FusiMessage
+        fields = '__all__'
