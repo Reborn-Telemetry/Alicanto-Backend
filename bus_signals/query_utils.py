@@ -161,8 +161,7 @@ ORDER BY C.bus_name"""
 def monthly_fleet_km():
     connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
     cursor = connection.cursor()
-    query = """SELECT A.bus_id, ENE_MIN, B.ENE_MAX, FEB_MIN, B.FEB_MAX, MAR_MIN, B.MAR_MAX, ABR_MIN, B.ABR_MAX, MAY_MIN, B.MAY_MAX, JUN_MIN, B.JUN_MAX, AGO_MIN, B.AGO_MAX, SEPT_MIN, B.SEPT_MAX, OCT_MIN, B.OCT_MAX, NOV_MIN, B.NOV_MAX, DIC_MIN, B.DIC_MAX
-
+    query = """SELECT C.bus_name, ENE_MIN, B.ENE_MAX, FEB_MIN, B.FEB_MAX, MAR_MIN, B.MAR_MAX, ABR_MIN, B.ABR_MAX, MAY_MIN, B.MAY_MAX, JUN_MIN, B.JUN_MAX, AGO_MIN, B.AGO_MAX, SEPT_MIN, B.SEPT_MAX, OCT_MIN, B.OCT_MAX, NOV_MIN, B.NOV_MAX, DIC_MIN, B.DIC_MAX
 FROM
 (SELECT
     bus_id,
@@ -199,9 +198,7 @@ FROM
     ) A
 GROUP BY
     bus_id) A
-
 LEFT JOIN (
-
 SELECT
     bus_id,
     MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 1 THEN odometer_value END) AS ENE_MAX,
@@ -237,8 +234,8 @@ FROM
     ) A
 GROUP BY
     bus_id) B on A.bus_id=B.bus_id
-
-ORDER BY A.bus_id"""
+left join bus_signals_bus C on A.bus_id=C.id    
+    ORDER BY C.bus_name;"""
     cursor.execute(query)
     results = cursor.fetchall()
     cursor.close()

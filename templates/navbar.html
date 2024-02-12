@@ -17,6 +17,7 @@
 
     <div class="nav-links">
         {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">Dashboard</a>
         <a href="{% url 'bus_list' %}">Flota</a>
         <a href="{% url 'dic_fusi' %}">Diccionario Fusi</a>
         <a href="" target="_blank">GPS Link</a>

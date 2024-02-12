@@ -1,0 +1,75 @@
+{% extends "main.html" %} {% load static %} {% block content %}
+<h1>Dashboard Flota</h1>
+
+<h3>Kilometraje flota: {{km_total}} kms</h3>
+
+<h3>Total Flota: {{total_flota}}</h3>
+
+<h3>Buses en Operacion : *En construccion</h3>
+
+<h3>Buses fuera servicio : *En construccion</h3>
+
+<br />
+<br />
+
+<h2>Autobuses con menos de 65% de carga</h2>
+
+<table>
+    <tr>
+        <th>Bus</th>
+        <th>Carga</th>
+    </tr>
+    {% for i in low_50_soc_count %}
+    <tr>
+        <td>{{i.bus_name}}</td>
+        <td>{{i.lts_soc}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br />
+<br />
+
+<h2>Lista Buses Fuera de servicio</h2>
+
+<table>
+    <tr>
+        <th>Bus</th>
+        <th>ultima actualizacion</th>
+    </tr>
+    <tr>
+        <td>en proceso</td>
+        <td>en proceso</td>
+    </tr>
+</table>
+<br />
+<br />
+
+<h2>Codigos Fusi Activos</h2>
+
+<p><strong>*(editar estado codigos en proceso)</strong></p>
+
+<table>
+    <tr>
+        <th>Fecha</th>
+        <th>Codigo</th>
+        <th>Comentario</th>
+        <th>Km Falla</th>
+        <th>Bus</th>
+    </tr>
+    {% for x in active_fusi %}
+    <tr>
+        <td>{{x.TimeStamp}}</td>
+        <td>{{x.fusi_code}}</td>
+        <td>{{x.fusi_comment}}</td>
+        <td>{{x.failure_odometer}}</td>
+        <td>{{x.bus.bus_name}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br />
+<br />
+
+<h2>Buses con cola de archivos</h2>
+*(En proceso) {% endblock content %}

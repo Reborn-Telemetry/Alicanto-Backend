@@ -7,26 +7,15 @@
     <p>
         Informe Ultima Actualizacion Flota :
         <a href="{% url 'pdf-report' %}" class="btn btn-primary">Descarga .pdf</a>
+        <a href="{% url 'xls-report' %}" class="btn btn-primary"> Descarga .xls</a>
     </p>
     <br />
     <br />
     <p>
         Informe Kilometraje Mensual Buses :
         <a href="{% url 'montly-km-report' %}" class="btn btn-primary"> Descarga .pdf</a>
-    </p>
-    <br />
-    <br />
-    <p>
-        Informe Ultima Actualizacion Flota :
-        <a href="{% url 'xls-report' %}" class="btn btn-primary"> Descarga .xls</a>
-    </p>
-
-    <br />
-    <br />
-    <p>
-        Informe Kilometraje Mensual Buses :
         <a href="{% url 'monthly-bus-report-xls' %}" class="btn btn-primary">Descarga .xls</a>
     </p>
-</div>
 
-{% endblock %}
+    {% endblock %}
+</div>
