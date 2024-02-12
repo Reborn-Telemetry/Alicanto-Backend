@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.db.models import Sum
 
 # pdf imports 
 from django.http import FileResponse
@@ -20,8 +21,32 @@ from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
 
+@login_required(login_url='login')
 def reports_page(request):
     return render(request, 'bus_signals/reports.html')
+
+
+@login_required(login_url='login')
+def dashboard(request):
+    total_flota = Bus.bus.count()
+
+    # Filtra los registros con lts_soc menor que 50
+    low_50_soc_records = Bus.bus.filter(lts_soc__lt=65)
+    active_fusi = FusiCode.fusi.all()
+    # Calcula el total de kilómetros y formatea
+    km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
+    km_total_format = '{:,.0f}'.format(km_total)
+    km_total_format = km_total_format.replace(',', '.')
+
+    # Filtra los registros con lts_soc igual a 0.0 y obtiene la cantidad
+    low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
+
+    context = {
+        'km_total': km_total_format,
+        'low_50_soc_count': low_50_soc_count,
+        'active_fusi': active_fusi, 
+        'total_flota': total_flota}
+    return render(request, 'bus_signals/dashboard.html', context)
 
 def monthly_bus_report_xls(request):
     report_data = monthly_fleet_km()
@@ -214,7 +239,7 @@ def login_page(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'user successfully logged in')
-            return redirect('bus_list')
+            return redirect('dashboard')
         else:
             messages.error(request, 'username or password incorrect')
             print('Username or password is incorrect')
