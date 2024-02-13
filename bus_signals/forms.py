@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Bus, FusiMessage
+from .models import Bus, FusiMessage, FusiCode
 from users.models import WorkOrder
 
 
@@ -25,5 +25,5 @@ class WorkOrderForm(ModelForm):
 
 class FusiForm(ModelForm):
     class Meta:
-        model = FusiMessage
+        model = FusiCode
         fields = '__all__'

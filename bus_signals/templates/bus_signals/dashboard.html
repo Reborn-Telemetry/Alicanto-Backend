@@ -56,6 +56,7 @@
         <th>Comentario</th>
         <th>Km Falla</th>
         <th>Bus</th>
+        <th></th>
     </tr>
     {% for x in active_fusi %}
     <tr>
@@ -64,6 +65,7 @@
         <td>{{x.fusi_comment}}</td>
         <td>{{x.failure_odometer}}</td>
         <td>{{x.bus.bus_name}}</td>
+        <td><a href="{% url 'update-fusi-code' x.id  %}">Editar Codigo Fusi</a></td>
     </tr>
     {% endfor %}
 </table>
