@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage, Odometer, FusiCode
-from .forms import BusForm, FusiMessageForm
+from .forms import BusForm, FusiMessageForm, FusiForm
 from users.models import WorkOrder
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
 import requests
@@ -285,6 +285,20 @@ def update_bus(request, pk):
             return redirect('bus_list')
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
+
+def update_fusicode(request, pk):
+    fusi_code = FusiCode.fusi.get(id=pk)
+    form = FusiForm(instance=fusi_code)
+    if request.method =='POST':
+        form = FusiForm(request.POST, instance=fusi_code)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    context = {'form': form}
+    return render(request, 'bus_signals/fusicode_form.html', context)
+
+
+
 
 @login_required(login_url='login')
 def update_fusi(request, pk):
