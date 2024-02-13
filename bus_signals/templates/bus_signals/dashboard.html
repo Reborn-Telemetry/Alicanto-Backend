@@ -1,31 +1,69 @@
 {% extends "main.html" %} {% load static %} {% block content %}
 <h1>Dashboard Flota</h1>
 
-<h3>Kilometraje flota: {{km_total}} kms</h3>
-
-<h3>Total Flota: {{total_flota}}</h3>
-
-<h3>Buses en Operacion : *En construccion</h3>
-
-<h3>Buses fuera servicio : *En construccion</h3>
+<div style="display: flex; gap: 50px">
+    <div style="display: flex; flex-direction: column">
+        <h3>Kilometraje flota</h3>
+        <h3>{{km_total}} kms</h3>
+    </div>
+    <div style="display: flex; flex-direction: column">
+        <h3>Total Flota</h3>
+        <h3>{{total_flota}}</h3>
+    </div>
+    <div style="display: flex; flex-direction: column">
+        <h3>fusi activos</h3>
+        <h3>{{active_fusi2}}</h3>
+    </div>
+    <div style="display: flex; flex-direction: column">
+        <h3>Buses en Operacion</h3>
+        <h3>*En construccion</h3>
+    </div>
+    <div style="display: flex; flex-direction: column">
+        <h3>Buses FS</h3>
+        <h3>*En construccion</h3>
+    </div>
+</div>
 
 <br />
 <br />
 
-<h2>Autobuses con menos de 65% de carga</h2>
+<div style="display: flex; gap: 100px">
+    <div style="display: flex; flex-direction: column">
+        <h2>Autobuses con menos de 65% de carga</h2>
 
-<table>
-    <tr>
-        <th>Bus</th>
-        <th>Carga</th>
-    </tr>
-    {% for i in low_50_soc_count %}
-    <tr>
-        <td>{{i.bus_name}}</td>
-        <td>{{i.lts_soc}}</td>
-    </tr>
-    {% endfor %}
-</table>
+        <table>
+            <tr>
+                <th>Bus</th>
+                <th>Carga</th>
+                <th>actualizacion</th>
+            </tr>
+            {% for i in low_50_soc_count %}
+            <tr>
+                <td>{{i.bus_name}}</td>
+                <td>{{i.lts_soc}}</td>
+                <td>{{i.lts_update}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div style="display: flex; flex-direction: column">
+        <h2>buses bajo voltaje 24</h2>
+        <table>
+            <tr>
+                <th>Bus</th>
+                <th>Voltaje</th>
+                <th>actualizacion</th>
+            </tr>
+            {% for i in low_battery %}
+            <tr>
+                <td>{{i.bus_name}}</td>
+                <td>{{i.lts_24_volt}}</td>
+                <td>{{i.lts_update}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
 <br />
 <br />
