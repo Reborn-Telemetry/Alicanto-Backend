@@ -28,24 +28,26 @@ def reports_page(request):
 
 @login_required(login_url='login')
 def dashboard(request):
+    active_fusi3 = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
+    active_fusi2 = active_fusi3.count()
     total_flota = Bus.bus.count()
-
-    # Filtra los registros con lts_soc menor que 50
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=65)
     active_fusi = FusiCode.fusi.all()
-    # Calcula el total de kilómetros y formatea
     km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
     km_total_format = '{:,.0f}'.format(km_total)
     km_total_format = km_total_format.replace(',', '.')
-
-    # Filtra los registros con lts_soc igual a 0.0 y obtiene la cantidad
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
-
+    low_battery = Bus.bus.filter(lts_24_volt__lt=20)
+    low_battery = low_battery.exclude(lts_24_volt=0.0)
+    
     context = {
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
         'active_fusi': active_fusi, 
-        'total_flota': total_flota}
+        'total_flota': total_flota,
+        'low_battery': low_battery,
+        'active_fusi2': active_fusi2,
+        }
     return render(request, 'bus_signals/dashboard.html', context)
 
 def monthly_bus_report_xls(request):
@@ -286,6 +288,7 @@ def update_bus(request, pk):
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
 
+@login_required(login_url='login')
 def update_fusicode(request, pk):
     fusi_code = FusiCode.fusi.get(id=pk)
     form = FusiForm(instance=fusi_code)
@@ -296,9 +299,6 @@ def update_fusicode(request, pk):
             return redirect('dashboard')
     context = {'form': form}
     return render(request, 'bus_signals/fusicode_form.html', context)
-
-
-
 
 @login_required(login_url='login')
 def update_fusi(request, pk):

@@ -44,9 +44,7 @@ class Bus(models.Model):
     bus = models.Manager()
 
     def __str__(self):
-        return (f'{self.bus_name} - {self.sniffer} - {self.plate_number} - {self.bus_series} - {self.client} -'
-                f' {self.lts_soc} - {self.lts_odometer} - {self.lts_isolation} - {self.lts_24_volt} - '
-                f'{self.lts_fusi} - {self.lts_update} - {self.mark} - {self.jarvis} - {self.vision}')
+        return f'{self.bus_name} - {self.sniffer}'
 
     class Meta:
         verbose_name = 'Bus'
