@@ -13,6 +13,7 @@ urlpatterns = [
   path("create_bus/", views.create_bus, name="create_bus"),
   path("create_fusi/", views.create_fusi, name="create_fusi"),
   path("update_bus/<str:pk>/", views.update_bus, name="update_bus"),
+  path('update-fusi-code/<str:pk>/', views.update_fusicode, name='update-fusi-code'),
   path("update_fusi/<str:pk>/", views.update_fusi, name="update_fusi"),
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus"),
   path("reports_page/", views.reports_page, name="reports_page"),
