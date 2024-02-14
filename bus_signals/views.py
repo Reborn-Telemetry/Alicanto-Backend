@@ -31,6 +31,8 @@ def dashboard(request):
     active_fusi3 = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     active_fusi2 = active_fusi3.count()
     total_flota = Bus.bus.count()
+    complete_table = Bus.bus.all()
+    complete_table = complete_table.exclude(lts_update=None)
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=65)
     active_fusi = FusiCode.fusi.all()
     km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
@@ -47,6 +49,7 @@ def dashboard(request):
         'total_flota': total_flota,
         'low_battery': low_battery,
         'active_fusi2': active_fusi2,
+        'complete_table': complete_table,
         }
     return render(request, 'bus_signals/dashboard.html', context)
 

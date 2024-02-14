@@ -1,156 +1,159 @@
 {% extends "main.html" %} {% load static %} {% block content %}
-<img src="{{ bus.bus_img.url }}" alt="image" style="width: 400px; height: 250px" />
-<h1>BUS {{ bus.bus_name}}</h1>
-<h5>Sniffer: {{ bus.sniffer}}</h5>
-<a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
-<a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
-<a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
 
-<span class="badge rounded-pill text-bg-secondary">Patente: {{ bus.plate_number}}</span>
-<h5>Kilometraje: {{ bus.lts_odometer }}</h5>
-<h5>Carga: {{ bus.lts_soc }}</h5>
-<h5>Serie: {{ bus.bus_series }}</h5>
-<h5>Cliente: {{ bus.client }}</h5>
-<h5>Version Mark: {{ bus.mark }}</h5>
-<h5>Version Jarvis: {{ bus.jarvis }}</h5>
-<h5>Version Vision: {{ bus.vision }}</h5>
-<h5>Baterias 24 Volts: {{ bus.lts_24_volt }}</h5>
-<h5>Aislacion: {{ bus.lts_isolation }}</h5>
-<h5>Actualizacion: {{ bus.lts_update }}</h5>
+<div class="container text-center" style="margin-left: 300px">
+    <img src="{{ bus.bus_img.url }}" alt="image" style="width: 400px; height: 250px" />
+    <h1>BUS {{ bus.bus_name}}</h1>
+    <h5>Sniffer: {{ bus.sniffer}}</h5>
+    <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
+    <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
+    <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
 
-<h2>Kilometrajes Diarios</h2>
+    <span class="badge rounded-pill text-bg-secondary">Patente: {{ bus.plate_number}}</span>
+    <h5>Kilometraje: {{ bus.lts_odometer }}</h5>
+    <h5>Carga: {{ bus.lts_soc }}</h5>
+    <h5>Serie: {{ bus.bus_series }}</h5>
+    <h5>Cliente: {{ bus.client }}</h5>
+    <h5>Version Mark: {{ bus.mark }}</h5>
+    <h5>Version Jarvis: {{ bus.jarvis }}</h5>
+    <h5>Version Vision: {{ bus.vision }}</h5>
+    <h5>Baterias 24 Volts: {{ bus.lts_24_volt }}</h5>
+    <h5>Aislacion: {{ bus.lts_isolation }}</h5>
+    <h5>Actualizacion: {{ bus.lts_update }}</h5>
 
-<table class="table">
-    <tr>
-        <th>Dia</th>
-        <th>Enero</th>
-        <th>Febrero</th>
-        <th>Marzo</th>
-        <th>Abril</th>
-        <th>Mayo</th>
-        <th>Junio</th>
-        <th>Julio</th>
-        <th>Agosto</th>
-        <th>Septiembre</th>
-        <th>Octubre</th>
-        <th>Noviembre</th>
-        <th>Diciembre</th>
-    </tr>
-    {% for i in results %}
-    <tr>
-        <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
-        <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
-        <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
-        <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
-        <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
-        <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
-        <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
-        <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
-        <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
-        <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
-        <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
-        <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
-        <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
-    </tr>
+    <h2>Kilometrajes Diarios</h2>
+
+    <table class="table">
+        <tr>
+            <th>Dia</th>
+            <th>Enero</th>
+            <th>Febrero</th>
+            <th>Marzo</th>
+            <th>Abril</th>
+            <th>Mayo</th>
+            <th>Junio</th>
+            <th>Julio</th>
+            <th>Agosto</th>
+            <th>Septiembre</th>
+            <th>Octubre</th>
+            <th>Noviembre</th>
+            <th>Diciembre</th>
+        </tr>
+        {% for i in results %}
+        <tr>
+            <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
+            <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
+            <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
+            <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
+            <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
+            <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
+            <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
+            <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
+            <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
+            <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
+            <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
+            <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
+            <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+
+    <h2>Kilometrajes Diarios</h2>
+
+    <table class="table">
+        <tr>
+            <th>Bus</th>
+            <th>Ene Min</th>
+            <th>Ene Max</th>
+            <th>Feb Min</th>
+            <th>Feb Max</th>
+            <th>Mar Min</th>
+            <th>Mar Max</th>
+            <th>Abr Min</th>
+            <th>Abr Max</th>
+            <th>May Min</th>
+            <th>May Max</th>
+            <th>Jun Min</th>
+            <th>Jun Max</th>
+            <th>Jul Min</th>
+            <th>Jul Max</th>
+            <th>Ago Min</th>
+            <th>Ago Max</th>
+            <th>Sep Min</th>
+            <th>Sep Max</th>
+            <th>Oct Min</th>
+            <th>Oct Max</th>
+            <th>Nov Min</th>
+            <th>Nov Max</th>
+            <th>Dic Min</th>
+            <th>Dic Max</th>
+        </tr>
+        {% for i in monthly_result %}
+        <tr>
+            <td>{{ i.0 }}</td>
+            <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
+            <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
+            <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
+            <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
+            <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
+            <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
+            <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
+            <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
+            <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
+            <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
+            <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
+            <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
+            <td>{% if i.13 is None %} 0 {% else %}{{i.13}} Km{% endif %}</td>
+            <td>{% if i.14 is None %} 0 {% else %}{{i.14}} Km{% endif %}</td>
+            <td>{% if i.15 is None %} 0 {% else %}{{i.15}} Km{% endif %}</td>
+            <td>{% if i.16 is None %} 0 {% else %}{{i.16}} Km{% endif %}</td>
+            <td>{% if i.17 is None %} 0 {% else %}{{i.17}} Km{% endif %}</td>
+            <td>{% if i.18 is None %} 0 {% else %}{{i.18}} Km{% endif %}</td>
+            <td>{% if i.19 is None %} 0 {% else %}{{i.19}} Km{% endif %}</td>
+            <td>{% if i.20 is None %} 0 {% else %}{{i.20}} Km{% endif %}</td>
+            <td>{% if i.21 is None %} 0 {% else %}{{i.21}} Km{% endif %}</td>
+            <td>{% if i.22 is None %} 0 {% else %}{{i.22}} Km{% endif %}</td>
+            <td>{% if i.23 is None %} 0 {% else %}{{i.23}} Km{% endif %}</td>
+            <td>{% if i.24 is None %} 0 {% else %}{{i.24}} Km{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Bitacora Bus</h2>
+
+    {% for order in ot %}
+    <p>
+        {{order.title}} {{order.description}}
+
+        <a href="{% url 'update_ot' order.id %}"><button>Editar Parte</button></a>
+    </p>
 
     {% endfor %}
-</table>
+    <h2>Bitacora Codigos Fusi</h2>
+    <table class="table">
+        <tr>
+            <th>Codigo Fusi</th>
+            <th>Km</th>
+            <th>Comentario</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+        {% for i in fusi %}
+        <tr>
+            <td>{{i.fusi_code}}</td>
+            <td>{{i.failure_odometer}}</td>
+            <td>{{i.fusi_comment}}</td>
+            <td>{{i.TimeStamp}}</td>
+            <td>{{i.fusi_state}}</td>
+            <td>
+                <a href="#">
+                    <button>Editar codigo fusi</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
-<h2>Kilometrajes Diarios</h2>
-
-<table class="table">
-    <tr>
-        <th>Bus</th>
-        <th>Ene Min</th>
-        <th>Ene Max</th>
-        <th>Feb Min</th>
-        <th>Feb Max</th>
-        <th>Mar Min</th>
-        <th>Mar Max</th>
-        <th>Abr Min</th>
-        <th>Abr Max</th>
-        <th>May Min</th>
-        <th>May Max</th>
-        <th>Jun Min</th>
-        <th>Jun Max</th>
-        <th>Jul Min</th>
-        <th>Jul Max</th>
-        <th>Ago Min</th>
-        <th>Ago Max</th>
-        <th>Sep Min</th>
-        <th>Sep Max</th>
-        <th>Oct Min</th>
-        <th>Oct Max</th>
-        <th>Nov Min</th>
-        <th>Nov Max</th>
-        <th>Dic Min</th>
-        <th>Dic Max</th>
-    </tr>
-    {% for i in monthly_result %}
-    <tr>
-        <td>{{ i.0 }}</td>
-        <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
-        <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
-        <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
-        <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
-        <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
-        <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
-        <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
-        <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
-        <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
-        <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
-        <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
-        <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
-        <td>{% if i.13 is None %} 0 {% else %}{{i.13}} Km{% endif %}</td>
-        <td>{% if i.14 is None %} 0 {% else %}{{i.14}} Km{% endif %}</td>
-        <td>{% if i.15 is None %} 0 {% else %}{{i.15}} Km{% endif %}</td>
-        <td>{% if i.16 is None %} 0 {% else %}{{i.16}} Km{% endif %}</td>
-        <td>{% if i.17 is None %} 0 {% else %}{{i.17}} Km{% endif %}</td>
-        <td>{% if i.18 is None %} 0 {% else %}{{i.18}} Km{% endif %}</td>
-        <td>{% if i.19 is None %} 0 {% else %}{{i.19}} Km{% endif %}</td>
-        <td>{% if i.20 is None %} 0 {% else %}{{i.20}} Km{% endif %}</td>
-        <td>{% if i.21 is None %} 0 {% else %}{{i.21}} Km{% endif %}</td>
-        <td>{% if i.22 is None %} 0 {% else %}{{i.22}} Km{% endif %}</td>
-        <td>{% if i.23 is None %} 0 {% else %}{{i.23}} Km{% endif %}</td>
-        <td>{% if i.24 is None %} 0 {% else %}{{i.24}} Km{% endif %}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<h2>Bitacora Bus</h2>
-
-{% for order in ot %}
-<p>
-    {{order.title}} {{order.description}}
-
-    <a href="{% url 'update_ot' order.id %}"><button>Editar Parte</button></a>
-</p>
-
-{% endfor %}
-<h2>Bitacora Codigos Fusi</h2>
-<table class="table">
-    <tr>
-        <th>Codigo Fusi</th>
-        <th>Km</th>
-        <th>Comentario</th>
-        <th>Fecha</th>
-        <th>Estado</th>
-        <th></th>
-    </tr>
-    {% for i in fusi %}
-
-    <tr>
-        <td>{{i.fusi_code}}</td>
-        <td>{{i.failure_odometer}}</td>
-        <td>{{i.fusi_comment}}</td>
-        <td>{{i.TimeStamp}}</td>
-        <td>{{i.fusi_state}}</td>
-        <td>
-            <a href="#">
-                <button>Editar codigo fusi</button>
-            </a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
 {% endblock content %}
