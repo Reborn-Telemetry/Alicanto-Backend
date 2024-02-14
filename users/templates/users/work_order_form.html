@@ -1,25 +1,24 @@
 {% extends "main.html" %} {% load static %} {% block content %}
-<h1>Crear Parte</h1>
-<main class="formPage my-xl">
-    <div class="content-box">
-        <div class="formWrapper">
-            <a class="backButton" href="#"><i class="im im-angle-left"></i></a>
-            <form class="form" enctype="multipart/form-data" method="POST">
-                {% csrf_token %}
-                <!-- Input:Text -->
-                {% for field in form %}
-                <div class="form__field">
-                    <label for="formInput#text">{{field.label}}: </label>
-                    {{field}}
-                </div>
-                {% endfor %}
-                <input
-                    class="btn btn--sub btn--lg my-md"
-                    type="submit"
-                    value="Submit"
-                />
-            </form>
+<div class="container text-center" style="margin-left: 300px">
+    <h1>Crear Parte</h1>
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a class="backButton" href="#"><i class="im im-angle-left"></i></a>
+                <form class="form" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <!-- Input:Text -->
+                    {% for field in form %}
+                    <div class="form__field">
+                        <label for="formInput#text">{{field.label}}: </label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+                    <input class="btn btn--sub btn--lg my-md" type="submit" value="Submit" />
+                </form>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
+</div>
+
 {% endblock %}

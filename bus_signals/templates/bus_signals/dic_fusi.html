@@ -1,38 +1,41 @@
 {% extends "main.html" %} {% load static %} {% block title %} Diccionario fusi {% endblock title %}
 {% block content %}
-<h1>Diccionario fusi</h1>
-<a href="{% url 'create_fusi' %}"><button>Agregar Fusi</button></a>
-<br />
-<form id="searchForm" class="form" action="{% url 'dic_fusi' %}" method="get">
-    <div class="form__field">
-        <label for="formInput#search">Buscar Codigo Fusi </label>
-        <input
-            class="input input--text"
-            id="formInput#search"
-            type="text"
-            name="search_query"
-            value="{{ search_query }}"
-            placeholder="Ingrese : Codigo, Componente, Descripcion, Tipo ECU"
-        />
-    </div>
+<div class="container text-center" style="margin-left: 300px">
+    <h1>Diccionario fusi</h1>
+    <a href="{% url 'create_fusi' %}"><button>Agregar Fusi</button></a>
+    <br />
+    <form id="searchForm" class="form" action="{% url 'dic_fusi' %}" method="get">
+        <div class="form__field">
+            <label for="formInput#search">Buscar Codigo Fusi </label>
+            <input
+                class="input input--text"
+                id="formInput#search"
+                type="text"
+                name="search_query"
+                value="{{ search_query }}"
+                placeholder="Ingrese : Codigo, Componente, Descripcion, Tipo ECU"
+            />
+        </div>
 
-    <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
-</form>
+        <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
+    </form>
 
-<table>
-    <tr>
-        <th>Codigo</th>
-        <th>Descripcion</th>
-        <th>Clase</th>
-        <th></th>
-    </tr>
-    {% for i in fusi %}
-    <tr>
-        <td>{{ i.fusi_code }}</td>
-        <td>{{ i.fusi_description }}</td>
-        <td>{{ i.message_class }}</td>
-        <td><a href="{% url 'update_fusi' i.id %}">Editar</a></td>
-    </tr>
-    {% endfor %}
-</table>
+    <table>
+        <tr>
+            <th>Codigo</th>
+            <th>Descripcion</th>
+            <th>Clase</th>
+            <th></th>
+        </tr>
+        {% for i in fusi %}
+        <tr>
+            <td>{{ i.fusi_code }}</td>
+            <td>{{ i.fusi_description }}</td>
+            <td>{{ i.message_class }}</td>
+            <td><a href="{% url 'update_fusi' i.id %}">Editar</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
 {% endblock content %}
