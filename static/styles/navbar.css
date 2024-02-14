@@ -4,18 +4,17 @@
 
 body {
     margin: 0px;
-    font-family: "Montserrat";
 }
 
 .nav {
     height: 50px;
     width: 100%;
-    background-color: #4d4d4d;
+    background-color: white;
     position: relative;
 }
 
 .nav > .nav-header {
-    display: inline;
+    display: flex;
 }
 
 .nav > .nav-header > .nav-title {
@@ -31,7 +30,7 @@ body {
 
 .nav > .nav-links {
     display: inline;
-    float: right;
+    float: left;
     font-size: 18px;
 }
 
@@ -43,7 +42,7 @@ body {
 }
 
 .nav > .nav-links > a:hover {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(249, 247, 247, 0.3);
 }
 
 .nav > #nav-check {
@@ -65,7 +64,7 @@ body {
     }
     .nav > .nav-btn > label:hover,
     .nav #nav-check:checked ~ .nav-btn > label {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(255, 253, 253, 0.3);
     }
     .nav > .nav-btn > label > span {
         display: block;
@@ -77,7 +76,7 @@ body {
         position: absolute;
         display: block;
         width: 100%;
-        background-color: #333;
+        background-color: #fdfafa;
         height: 0px;
         transition: all 0.3s ease-in;
         overflow-y: hidden;

@@ -1,63 +1,67 @@
 {% extends "main.html" %} {% block content %}
-<h1>Flota E-Buses</h1>
 
-<a href="{% url 'create_bus' %}"
-    ><button class="btn btn--sub btn--lg" type="button">Crear Bus</button>
-</a>
+<div class="container text-center" style="margin-left: 300px">
+    <h1>Flota E-Buses</h1>
 
-<main class="projects">
-    <section class="projectsList">
-        <div class="container">
-            <form id="searchForm" class="form" action="{% url 'bus_list' %}" method="get">
-                <div class="form__field">
-                    <label for="formInput#search">Buscar Bus </label>
-                    <input
-                        class="input input--text"
-                        id="formInput#search"
-                        type="text"
-                        name="search_query"
-                        value="{{ search_query }}"
-                        placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
-                    />
-                </div>
+    <a href="{% url 'create_bus' %}"
+        ><button class="btn btn--sub btn--lg" type="button">Crear Bus</button>
+    </a>
 
-                <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
-            </form>
-            <div class="grid grid--three">
-                {% for bus in bus %}
-                <div class="column">
-                    <div class="card project">
-                        <a href="{% url 'bus_detail' bus.id %}" class="project">
-                            <div class="card__body">
-                                <img
-                                    class="project__thumbnail"
-                                    src="{{ bus.bus_img.url }}"
-                                    alt="project thumbnail"
-                                    style="width: 50%"
-                                />
-                                <h3 class="project__title">{{ bus.bus_name }}</h3>
-                                <br />
-                                <a class="project__author" href="{% url 'bus_detail' bus.id %}"
-                                    >{{ bus.plate_number }}</a
-                                >
-                                <p>{{ bus.lts_soc }}% - {{ bus.lts_odometer }} Kms.</p>
-                                <br />
-                                <p>Actualizacion : {{bus.lts_update}}</p>
-
-                                <div class="project__tags">
-                                    {% for tag in project.tags.all %}
-                                    <span class="tag tag--pill tag--main">
-                                        <small>{{ tag }}</small>
-                                    </span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </a>
+    <main class="projects">
+        <section class="projectsList">
+            <div class="container">
+                <form id="searchForm" class="form" action="{% url 'bus_list' %}" method="get">
+                    <div class="form__field">
+                        <label for="formInput#search">Buscar Bus </label>
+                        <input
+                            class="input input--text"
+                            id="formInput#search"
+                            type="text"
+                            name="search_query"
+                            value="{{ search_query }}"
+                            placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
+                        />
                     </div>
+
+                    <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
+                </form>
+                <div class="grid grid--three">
+                    {% for bus in bus %}
+                    <div class="column">
+                        <div class="card project">
+                            <a href="{% url 'bus_detail' bus.id %}" class="project">
+                                <div class="card__body">
+                                    <img
+                                        class="project__thumbnail"
+                                        src="{{ bus.bus_img.url }}"
+                                        alt="project thumbnail"
+                                        style="width: 50%"
+                                    />
+                                    <h3 class="project__title">{{ bus.bus_name }}</h3>
+                                    <br />
+                                    <a class="project__author" href="{% url 'bus_detail' bus.id %}"
+                                        >{{ bus.plate_number }}</a
+                                    >
+                                    <p>{{ bus.lts_soc }}% - {{ bus.lts_odometer }} Kms.</p>
+                                    <br />
+                                    <p>Actualizacion : {{bus.lts_update}}</p>
+
+                                    <div class="project__tags">
+                                        {% for tag in project.tags.all %}
+                                        <span class="tag tag--pill tag--main">
+                                            <small>{{ tag }}</small>
+                                        </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
+</div>
+
 {% endblock content %}
