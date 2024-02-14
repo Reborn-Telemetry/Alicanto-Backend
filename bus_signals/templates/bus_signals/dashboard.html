@@ -95,8 +95,32 @@
                             {% for i in complete_table %}
                             <tr>
                                 <td>{{i.bus_name}}</td>
-                                <td>{{i.lts_soc}}</td>
-                                <td>{{i.bus_series}}</td>
+                                <td>
+                                    {% if i.lts_soc > 60 %}
+                                    <span class="badge rounded-pill text-bg-success"
+                                        >{{ i.lts_soc }} %</span
+                                    >
+                                    {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                    <span class="badge rounded-pill text-bg-warning"
+                                        >{{ i.lts_soc }} %</span
+                                    >
+                                    {% elif i.lts_soc <= 40 %}
+                                    <span class="badge rounded-pill text-bg-danger"
+                                        >{{ i.lts_soc }} %</span
+                                    >
+                                    {% else %} {{ i.lts_soc }} {% endif %}
+                                </td>
+                                <td>
+                                    {% if i.bus_series == 'Queltehue' %}
+                                    <button type="button" class="btn btn-outline-warning btn-sm">
+                                        {{i.bus_series}}
+                                    </button>
+                                    {% elif i.bus_series == 'Tricahue' %}
+                                    <button type="button" class="btn btn-outline-success btn-sm">
+                                        {{i.bus_series}}
+                                    </button>
+                                    {% endif %}
+                                </td>
                                 <td>{{i.lts_odometer}}</td>
                                 <td>{{i.lts_24_volt}}</td>
                                 <td>{{i.lts_update}}</td>
@@ -204,5 +228,7 @@
     <br />
 
     <h2>Buses con cola de archivos</h2>
-    *(En proceso) {% endblock content %}
+    *(En proceso)
+    <!--area codigos fusi-->
 </div>
+{% endblock content %}
