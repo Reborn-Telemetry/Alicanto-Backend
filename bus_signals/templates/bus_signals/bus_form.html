@@ -1,11 +1,6 @@
 {% extends "main.html" %} {% load static %} {% block content %}
-<main class="formPage my-xl">
-    <div class="content-box">
-        <div class="formWrapper">
-            <a class="backButton" href="#"><i class="im im-angle-left"></i></a>
-            <br />
 
-            <form class="form" enctype="multipart/form-data" method="POST">
+            <form enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <!-- Input:Text -->
                 {% for field in form %}
@@ -14,13 +9,7 @@
                     {{field}}
                 </div>
                 {% endfor %}
-                <input
-                    class="btn btn--sub btn--lg my-md"
-                    type="submit"
-                    value="Submit"
-                />
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </form>
-        </div>
-    </div>
-</main>
+
 {% endblock %}

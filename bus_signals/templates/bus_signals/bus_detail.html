@@ -6,7 +6,7 @@
 <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
 <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
 
-<h5>Patente: {{ bus.plate_number}}</h5>
+<span class="badge rounded-pill text-bg-secondary">Patente: {{ bus.plate_number}}</span>
 <h5>Kilometraje: {{ bus.lts_odometer }}</h5>
 <h5>Carga: {{ bus.lts_soc }}</h5>
 <h5>Serie: {{ bus.bus_series }}</h5>
@@ -20,7 +20,7 @@
 
 <h2>Kilometrajes Diarios</h2>
 
-<table border="1">
+<table class="table">
     <tr>
         <th>Dia</th>
         <th>Enero</th>
@@ -58,7 +58,7 @@
 
 <h2>Kilometrajes Diarios</h2>
 
-<table border="1">
+<table class="table">
     <tr>
         <th>Bus</th>
         <th>Ene Min</th>
@@ -128,7 +128,7 @@
 
 {% endfor %}
 <h2>Bitacora Codigos Fusi</h2>
-<table border="1">
+<table class="table">
     <tr>
         <th>Codigo Fusi</th>
         <th>Km</th>
