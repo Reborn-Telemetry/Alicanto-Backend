@@ -7,6 +7,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Kilometraje Flota</h5>
+                        <i class="fa-solid fa-road"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{km_total}} kms</h6>
                     </div>
                 </div>
@@ -16,6 +17,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Total Flota</h5>
+                        <i class="fa-solid fa-bus"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">
                             {{total_flota}} buses
                         </h6>
@@ -27,6 +29,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Fusi activos</h5>
+                        <i class="fa-solid fa-circle-exclamation"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">
                             {{active_fusi2}} Codigos
                         </h6>
@@ -38,6 +41,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Buses en Operacion</h5>
+                        <i class="fa-solid fa-road-circle-check"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">*En construccion</h6>
                     </div>
                 </div>
@@ -48,6 +52,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Fuera de servicio</h5>
+                        <i class="fa-solid fa-road-circle-xmark"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">*En construccion</h6>
                     </div>
                 </div>
@@ -82,7 +87,7 @@
             <div class="row">
                 <div style="display: flex; gap: 20px">
                     <div class="col-7" style="margin-top: 20px">
-                        <h2>buses con menos de 65% de carga</h2>
+                        <h2>Actualizaciones Buses</h2>
                         <table class="table">
                             <tr>
                                 <th>Bus</th>
@@ -125,13 +130,19 @@
                                 <td>{{i.lts_odometer}}</td>
                                 <td>{{i.lts_24_volt}}</td>
                                 <td>{{i.lts_update}}</td>
-                                <td>ir perfil</td>
+                                <td>
+                                    <a href="{% url 'bus_detail' i.id %}"
+                                        ><button type="button" class="btn btn-outline-info">
+                                            <i class="fa-solid fa-arrow-right"></i> Perfil
+                                        </button></a
+                                    >
+                                </td>
                             </tr>
                             {% endfor %}
                         </table>
                     </div>
                     <div class="col-5" style="margin-top: 20px">
-                        <h2>buses con menos de 65% de carga</h2>
+                        <h2>buses con menos de 50% de carga</h2>
 
                         <table class="table">
                             <tr>
