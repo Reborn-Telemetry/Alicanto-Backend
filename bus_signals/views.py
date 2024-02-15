@@ -28,12 +28,14 @@ def reports_page(request):
 
 @login_required(login_url='login')
 def dashboard(request):
+    actual_date = datetime.now()
+    print(actual_date)
     active_fusi3 = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     active_fusi2 = active_fusi3.count()
     total_flota = Bus.bus.count()
     complete_table = Bus.bus.all()
     complete_table = complete_table.exclude(lts_update=None)
-    low_50_soc_records = Bus.bus.filter(lts_soc__lt=65)
+    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     active_fusi = FusiCode.fusi.all()
     km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
     km_total_format = '{:,.0f}'.format(km_total)

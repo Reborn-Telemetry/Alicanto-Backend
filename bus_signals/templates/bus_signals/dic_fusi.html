@@ -32,7 +32,17 @@
             <td>{{ i.fusi_code }}</td>
             <td>{{ i.fusi_description }}</td>
             <td>{{ i.message_class }}</td>
-            <td><a href="{% url 'update_fusi' i.id %}">Editar</a></td>
+            <td>
+                {% if user.username == 'usuario_link' %}
+                <button type="button" class="btn btn-outline-success" disabled>Editar</button>
+                {% else %}
+                <a href="{% url 'update_fusi' i.id %}">
+                    <button type="button" class="btn btn-outline-success" disabled>
+                        Editar
+                    </button></a
+                >
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
