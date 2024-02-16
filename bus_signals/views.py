@@ -43,6 +43,7 @@ def dashboard(request):
     low_battery = low_battery.exclude(lts_24_volt=0.0)
     bus_instance = Bus()
     no_update = Bus.bus.filter(lts_update=None).count()
+    cant_low_50_soc = low_50_soc_count.count()
 
 # Llamar al método delay_data en la instancia creada
     delayed = bus_instance.delay_data()
@@ -57,7 +58,8 @@ def dashboard(request):
         'active_fusi2': active_fusi2,
         'complete_table': complete_table,
         'delayed': delayed,
-        'no_update': no_update
+        'no_update': no_update,
+        'cant_low_50_soc': cant_low_50_soc
         }
     return render(request, 'bus_signals/dashboard.html', context)
 
