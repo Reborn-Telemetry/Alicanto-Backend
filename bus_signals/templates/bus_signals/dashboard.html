@@ -59,23 +59,29 @@
             </div>
 
             <div class="col-3" style="margin-top: 20px">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Buses sin conexion</h5>
-                        <i class="fa-solid fa-link-slash"></i>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{no_update}}</h6>
+                <a href="{% url 'warnings' %}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses sin conexion</h5>
+                            <i class="fa-solid fa-link-slash"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{no_update}}</h6>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="col-3" style="margin-top: 20px">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Buses Carga Baja</h5>
-                        <i class="fa-solid fa-charging-station"></i>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{cant_low_50_soc}}</h6>
+                <a href="{% url 'warnings' %}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses Carga Baja</h5>
+                            <i class="fa-solid fa-charging-station"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">
+                                {{cant_low_50_soc}}
+                            </h6>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-3" style="margin-top: 20px">
                 <div class="card">
@@ -144,36 +150,6 @@
                         </table>
                     </div>
                     <div class="col-5" style="margin-top: 20px">
-                        <h2>buses con menos de 50% de carga</h2>
-
-                        <table class="table">
-                            <tr>
-                                <th>Bus</th>
-                                <th>Carga</th>
-                                <th>actualizacion</th>
-                            </tr>
-                            {% for i in low_50_soc_count %}
-                            <tr>
-                                <td>{{i.bus_name}}</td>
-                                <td>
-                                    {% if i.lts_soc > 60 %}
-                                    <span class="badge rounded-pill text-bg-success"
-                                        >{{ i.lts_soc }} %</span
-                                    >
-                                    {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                                    <span class="badge rounded-pill text-bg-warning"
-                                        >{{ i.lts_soc }} %</span
-                                    >
-                                    {% elif i.lts_soc <= 40 %}
-                                    <span class="badge rounded-pill text-bg-danger"
-                                        >{{ i.lts_soc }} %</span
-                                    >
-                                    {% else %} {{ i.lts_soc }} {% endif %}
-                                </td>
-                                <td>{{i.lts_update}}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
                         <h2>buses bajo voltaje 24</h2>
                         <table class="table">
                             <tr>
@@ -189,19 +165,6 @@
                                     <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
                                     {% endif %}
                                 </td>
-                                <td>{{i.lts_update}}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                        <h2>Buses con cola de archivos</h2>
-                        <table class="table">
-                            <tr>
-                                <th>Bus</th>
-                                <th>actualizacion</th>
-                            </tr>
-                            {% for i in delayed %}
-                            <tr>
-                                <td>{{i.bus_name}}</td>
                                 <td>{{i.lts_update}}</td>
                             </tr>
                             {% endfor %}
