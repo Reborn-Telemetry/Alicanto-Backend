@@ -43,6 +43,10 @@ def dashboard(request):
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
+    bus_instance = Bus()
+
+# Llamar al método delay_data en la instancia creada
+    delayed = bus_instance.delay_data()
     
     context = {
         'km_total': km_total_format,
@@ -52,6 +56,7 @@ def dashboard(request):
         'low_battery': low_battery,
         'active_fusi2': active_fusi2,
         'complete_table': complete_table,
+        'delayed': delayed
         }
     return render(request, 'bus_signals/dashboard.html', context)
 
