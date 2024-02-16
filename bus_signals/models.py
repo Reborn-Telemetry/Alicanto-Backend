@@ -50,7 +50,7 @@ class Bus(models.Model):
     def delay_data(self):
         ahora = datetime.now()
         fecha_limite = ahora - timedelta(days=2)
-        registros = Bus.bus.filter(models.Q(lts_update__isnull=True) | models.Q(lts_update__lt=fecha_limite))
+        registros = Bus.bus.filter(models.Q(lts_update__isnull=False) | models.Q(lts_update__lt=fecha_limite))
         return registros
 
 
