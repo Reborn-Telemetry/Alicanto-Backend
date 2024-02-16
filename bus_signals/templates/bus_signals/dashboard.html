@@ -191,6 +191,19 @@
                             </tr>
                             {% endfor %}
                         </table>
+                        <h2>Buses con cola de archivos</h2>
+                        <table class="table">
+                            <tr>
+                                <th>Bus</th>
+                                <th>actualizacion</th>
+                            </tr>
+                            {% for i in delayed %}
+                            <tr>
+                                <td>{{i.bus_name}}</td>
+                                <td>{{i.lts_update}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
@@ -236,12 +249,6 @@
         </tr>
         {% endfor %}
     </table>
-
-    <br />
-    <br />
-
-    <h2>Buses con cola de archivos</h2>
-    *(En proceso)
-    <!--area codigos fusi-->
 </div>
+
 {% endblock content %}

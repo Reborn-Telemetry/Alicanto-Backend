@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from datetime import datetime, timedelta
 
 
 series_choices = (
@@ -45,6 +46,13 @@ class Bus(models.Model):
 
     def __str__(self):
         return f'{self.bus_name} - {self.sniffer}'
+    
+    def delay_data(self):
+        ahora = datetime.now()
+        fecha_limite = ahora - timedelta(days=2)
+        registros = Bus.bus.filter(models.Q(lts_update__isnull=True) | models.Q(lts_update__lt=fecha_limite))
+        return registros
+
 
     class Meta:
         verbose_name = 'Bus'
