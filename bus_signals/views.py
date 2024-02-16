@@ -28,8 +28,6 @@ def reports_page(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    actual_date = datetime.now()
-    print(actual_date)
     active_fusi3 = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     active_fusi2 = active_fusi3.count()
     total_flota = Bus.bus.count()
@@ -44,9 +42,11 @@ def dashboard(request):
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
     bus_instance = Bus()
+    no_update = Bus.bus.filter(lts_update=None).count()
 
 # Llamar al método delay_data en la instancia creada
     delayed = bus_instance.delay_data()
+
     
     context = {
         'km_total': km_total_format,
@@ -56,7 +56,8 @@ def dashboard(request):
         'low_battery': low_battery,
         'active_fusi2': active_fusi2,
         'complete_table': complete_table,
-        'delayed': delayed
+        'delayed': delayed,
+        'no_update': no_update
         }
     return render(request, 'bus_signals/dashboard.html', context)
 
