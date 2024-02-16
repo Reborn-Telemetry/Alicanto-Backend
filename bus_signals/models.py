@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 
 series_choices = (
@@ -48,7 +49,7 @@ class Bus(models.Model):
         return f'{self.bus_name} - {self.sniffer}'
     
     def delay_data(self):
-        ahora = datetime.now()
+        ahora = timezone.now()
         fecha_limite = ahora - timedelta(days=2)
         registros = Bus.bus.filter(models.Q(lts_update__isnull=False) | models.Q(lts_update__lt=fecha_limite))
         return registros
