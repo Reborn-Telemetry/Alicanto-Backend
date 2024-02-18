@@ -37,40 +37,45 @@ def warnings(request):
 def reports_page(request):
     return render(request, 'bus_signals/reports.html')
 
+def fusi_dashboard(request):
+    open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
+    context = {'active_fusi': open_fusi}
+    return render(request, 'bus_signals/fusi_dashboard.html', context)
+
 
 @login_required(login_url='login')
 def dashboard(request):
-    active_fusi3 = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
-    active_fusi2 = active_fusi3.count()
+    # cantidad de fusi abiertos
+    open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
+    # cantidad de buses en la flota
     total_flota = Bus.bus.count()
+    # datos tabla de buses
     complete_table = Bus.bus.all()
     complete_table = complete_table.exclude(lts_update=None)
-    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
-    active_fusi = FusiCode.fusi.all()
+    # km total de la flota
     km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
     km_total_format = '{:,.0f}'.format(km_total)
     km_total_format = km_total_format.replace(',', '.')
+
+    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
+    # cantidad de buses con bateria 24 baja
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
-
+    # cantidad de buses sin actualizacion
     no_update = Bus.bus.filter(lts_update=None).count()
+    # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count.count()
 
-# Llamar al método delay_data en la instancia creada
-    
-
-    
     context = {
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
-        'active_fusi': active_fusi, 
         'total_flota': total_flota,
         'low_battery': low_battery,
-        'active_fusi2': active_fusi2,
         'complete_table': complete_table,
         'no_update': no_update,
-        'cant_low_50_soc': cant_low_50_soc
+        'cant_low_50_soc': cant_low_50_soc,
+        'open_fusi': open_fusi
         }
     return render(request, 'bus_signals/dashboard.html', context)
 
