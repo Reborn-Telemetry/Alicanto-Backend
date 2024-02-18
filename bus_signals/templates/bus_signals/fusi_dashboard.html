@@ -2,6 +2,27 @@
 <div class="container text-center" style="margin-left: 300px">
     <div class="row">
         <h1>FusiDashboard</h1>
+        <h2>Codigos Fusi Activos</h2>
+        <table class="table">
+            <tr>
+                <th>Fecha</th>
+                <th>Codigo</th>
+                <th>Comentario</th>
+                <th>Km Falla</th>
+                <th>Bus</th>
+                <th></th>
+            </tr>
+            {% for x in active_fusi %}
+            <tr>
+                <td>{{x.TimeStamp}}</td>
+                <td>{{x.fusi_code}}</td>
+                <td>{{x.fusi_comment}}</td>
+                <td>{{x.failure_odometer}}</td>
+                <td>{{x.bus.bus_name}}</td>
+                <td><a href="{% url 'update-fusi-code' x.id  %}">Editar Codigo Fusi</a></td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 {% endblock %}

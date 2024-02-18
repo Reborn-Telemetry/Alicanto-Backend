@@ -28,11 +28,13 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Fusi activos</h5>
-                        <i class="fa-solid fa-circle-exclamation"></i>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">
-                            {{active_fusi2}} Codigos
-                        </h6>
+                        <a href="{% url 'fusi_dashboard' %}">
+                            <h5 class="card-title">Fusi activos</h5>
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">
+                                {{open_fusi}} Codigos
+                            </h6>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -190,30 +192,5 @@
     <br />
     <br />
 
-    <h2>Codigos Fusi Activos</h2>
-
-    <p><strong>*(editar estado codigos en proceso)</strong></p>
-
-    <table>
-        <tr>
-            <th>Fecha</th>
-            <th>Codigo</th>
-            <th>Comentario</th>
-            <th>Km Falla</th>
-            <th>Bus</th>
-            <th></th>
-        </tr>
-        {% for x in active_fusi %}
-        <tr>
-            <td>{{x.TimeStamp}}</td>
-            <td>{{x.fusi_code}}</td>
-            <td>{{x.fusi_comment}}</td>
-            <td>{{x.failure_odometer}}</td>
-            <td>{{x.bus.bus_name}}</td>
-            <td><a href="{% url 'update-fusi-code' x.id  %}">Editar Codigo Fusi</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+    {% endblock content %}
 </div>
-
-{% endblock content %}
