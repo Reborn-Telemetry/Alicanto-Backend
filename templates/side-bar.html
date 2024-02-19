@@ -33,10 +33,14 @@
                 <i class="fa-solid fa-right-from-bracket fa-lg" style="color: #d6d6d6"></i>
                 <a href="{% url 'logout_user' %}" style="color: #ebebeb">Cerrar sesion</a>
             </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-user fa-lg" style="color: #d6d6d6" style="color: #d6d6d6"></i>
-                <a href="" style="color: #ebebeb">{{user.username}}</a>
-            </div>
+            <div class="menuitem"></div>
         </div>
     </div>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <span class="navbar-brand"
+                ><i class="fa-solid fa-user fa-lg"></i> <span>{{user.username}}</span></span
+            >
+        </div>
+    </nav>
 </div>

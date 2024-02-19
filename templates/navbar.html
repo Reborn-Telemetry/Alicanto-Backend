@@ -1,26 +1,7 @@
 {% load static %}
-<link rel="stylesheet" href="../static/styles/nav-bar.css" />
-<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" media="screen" href='{% static "styles/navbar.css" %}' />
-<div class="nav">
-    <input type="checkbox" id="nav-check" />
-    <div class="nav-header">
-        <div class="nav-title">Alicanto {{user.username}}</div>
+<!-- As a heading -->
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Navbar</span>
     </div>
-    <div class="nav-btn">
-        <label for="nav-check">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-    </div>
-
-    <div class="nav-links">
-        {% if user.is_authenticated %}
-
-        <a href="{% url 'logout_user' %}">Logout</a>
-        {% else %}
-        <a href="{% url 'login' %}">Login</a>
-        {% endif %}
-    </div>
-</div>
+</nav>
