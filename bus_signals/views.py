@@ -27,7 +27,9 @@ def warnings(request):
     delayed = bus_instance.delay_data()
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
+    no_update = Bus.bus.filter(lts_update=None)
     context = {
+        'no_update': no_update,
         'delayed': delayed,
         'low_50_soc_count': low_50_soc_count,
         }
@@ -66,6 +68,11 @@ def dashboard(request):
     no_update = Bus.bus.filter(lts_update=None).count()
     # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count.count()
+    # cantidad buses con cola de archivos
+    bus_instance = Bus()
+    delayed = bus_instance.delay_data().count()
+
+
 
     context = {
         'km_total': km_total_format,
@@ -75,7 +82,8 @@ def dashboard(request):
         'complete_table': complete_table,
         'no_update': no_update,
         'cant_low_50_soc': cant_low_50_soc,
-        'open_fusi': open_fusi
+        'open_fusi': open_fusi,
+        'delayed': delayed,
         }
     return render(request, 'bus_signals/dashboard.html', context)
 
