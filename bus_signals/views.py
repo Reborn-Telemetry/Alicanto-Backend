@@ -28,7 +28,10 @@ def warnings(request):
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
     no_update = Bus.bus.filter(lts_update=None)
+    low_battery = Bus.bus.filter(lts_24_volt__lt=20)
+    low_battery = low_battery.exclude(lts_24_volt=0.0)
     context = {
+        'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
         'low_50_soc_count': low_50_soc_count,
@@ -61,9 +64,6 @@ def dashboard(request):
 
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
-    # cantidad de buses con bateria 24 baja
-    low_battery = Bus.bus.filter(lts_24_volt__lt=20)
-    low_battery = low_battery.exclude(lts_24_volt=0.0)
     # cantidad de buses sin actualizacion
     no_update = Bus.bus.filter(lts_update=None).count()
     # cantidad de buses con soc menor a 50
@@ -78,7 +78,6 @@ def dashboard(request):
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
-        'low_battery': low_battery,
         'complete_table': complete_table,
         'no_update': no_update,
         'cant_low_50_soc': cant_low_50_soc,
