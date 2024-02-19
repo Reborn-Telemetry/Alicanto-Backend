@@ -44,6 +44,20 @@
                 {% endfor %}
             </table>
         </div>
+        <div class="col-4" style="margin-top: 20px">
+            <h2>buses sin conexion</h2>
+            <table class="table">
+                <tr>
+                    <th>Bus</th>
+                    <th>Sniffer</th>
+                </tr>
+                {% for i in no_update %}
+                <tr>
+                    <td>{{i.bus_name}}</td>
+                    <td>{{i.sniffer}}</td>
+                </tr>
+                {% endfor %}
+        </div>
     </div>
 
     {% endblock content %}
