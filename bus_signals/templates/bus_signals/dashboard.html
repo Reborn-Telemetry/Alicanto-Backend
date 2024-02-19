@@ -86,12 +86,15 @@
                 </a>
             </div>
             <div class="col-3" style="margin-top: 20px">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Fuera de servicio</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">*En construccion</h6>
+                <a href="{% url 'warnings' %}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses con cola de archivos</h5>
+                            <i class="fa-regular fa-calendar-xmark"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{delayed}}</h6>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="row">
