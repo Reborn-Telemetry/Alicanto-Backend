@@ -1,5 +1,5 @@
 {% extends "main.html" %} {% load static %} {% block content %}
-<div style="margin-left: 300px; color: yellowgreen" class="spinner-border" role="status">
+<div style="margin-left: 300px; color: yellowgreen" class="spinner-grow" role="status">
     <span class="visually-hidden">Loading...</span>
 </div>
 <h1 style="margin-left: 300px">Dashboard Flota</h1>
@@ -20,11 +20,13 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Total Flota</h5>
-                        <i class="fa-solid fa-bus"></i>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">
-                            {{total_flota}} buses
-                        </h6>
+                        <a href="{% url 'bus_list' %}">
+                            <h5 class="card-title">Total Flota</h5>
+                            <i class="fa-solid fa-bus"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">
+                                {{total_flota}} buses
+                            </h6>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -158,27 +160,7 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <div class="col-5" style="margin-top: 20px">
-                        <h2>buses bajo voltaje 24</h2>
-                        <table class="table">
-                            <tr>
-                                <th>Bus</th>
-                                <th>Voltaje</th>
-                                <th>actualizacion</th>
-                            </tr>
-                            {% for i in low_battery %}
-                            <tr>
-                                <td>{{i.bus_name}}</td>
-                                <td>
-                                    {% if i.lts_24_volt < 20 %}
-                                    <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{i.lts_update}}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
+                    <div class="col-5" style="margin-top: 20px"></div>
                 </div>
             </div>
         </div>
