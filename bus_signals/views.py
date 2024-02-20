@@ -49,6 +49,37 @@ def fusi_dashboard(request):
     context = {'active_fusi': open_fusi}
     return render(request, 'bus_signals/fusi_dashboard.html', context)
 
+@login_required(login_url='login')
+def bus_list(request):
+    search_query = ''
+    page = request.GET.get('page')
+    results = 9
+
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    buses = Bus.bus.filter(
+        Q(bus_name__icontains=search_query) |
+        Q(bus_series__icontains=search_query) |
+        Q(bus_ecu__icontains=search_query) |
+        Q(client__icontains=search_query) 
+        )
+    
+
+    paginator = Paginator(buses, results)
+    try:
+        buses = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        buses = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        buses = paginator.page(page)
+
+
+
+    context = {'bus': buses, 'search_query': search_query, 'paginator':paginator}
+    return render(request, 'bus_signals/bus_list.html', context)
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -74,6 +105,18 @@ def dashboard(request):
     bus_instance = Bus()
     delayed = bus_instance.delay_data().count()
 
+    page = request.GET.get('page', 1)
+    results = 10
+    paginator = Paginator(complete_table, results)
+    try:
+        complete_table = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        complete_table = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        complete_table = paginator.page(page)
+
 
 
     context = {
@@ -85,6 +128,7 @@ def dashboard(request):
         'cant_low_50_soc': cant_low_50_soc,
         'open_fusi': open_fusi,
         'delayed': delayed,
+        'paginator': paginator
         }
     return render(request, 'bus_signals/dashboard.html', context)
 
@@ -368,38 +412,6 @@ def bus_detail(request, pk):
     fusi = FusiCode.fusi.filter(bus_id=pk)
     context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi}
     return render(request, 'bus_signals/bus_detail.html', context)
-
-@login_required(login_url='login')
-def bus_list(request):
-    search_query = ''
-    page = request.GET.get('page')
-    results = 9
-
-
-    if request.GET.get('search_query'):
-        search_query = request.GET.get('search_query')
-    buses = Bus.bus.filter(
-        Q(bus_name__icontains=search_query) |
-        Q(bus_series__icontains=search_query) |
-        Q(bus_ecu__icontains=search_query) |
-        Q(client__icontains=search_query) 
-        )
-    
-
-    paginator = Paginator(buses, results)
-    try:
-        buses = paginator.page(page)
-    except PageNotAnInteger:
-        page = 1
-        buses = paginator.page(page)
-    except EmptyPage:
-        page = paginator.num_pages
-        buses = paginator.page(page)
-
-
-
-    context = {'bus': buses, 'search_query': search_query, 'paginator':paginator}
-    return render(request, 'bus_signals/bus_list.html', context)
 
 @login_required(login_url='login')
 def dic_fusi(request):
