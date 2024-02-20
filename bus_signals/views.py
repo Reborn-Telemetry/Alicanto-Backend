@@ -21,6 +21,8 @@ from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 @login_required(login_url='login')
 def warnings(request):
     bus_instance = Bus()
@@ -370,6 +372,10 @@ def bus_detail(request, pk):
 @login_required(login_url='login')
 def bus_list(request):
     search_query = ''
+    page = request.GET.get('page')
+    results = 9
+
+
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
     buses = Bus.bus.filter(
@@ -378,7 +384,21 @@ def bus_list(request):
         Q(bus_ecu__icontains=search_query) |
         Q(client__icontains=search_query) 
         )
-    context = {'bus': buses, 'search_query': search_query}
+    
+
+    paginator = Paginator(buses, results)
+    try:
+        buses = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        buses = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        buses = paginator.page(page)
+
+
+
+    context = {'bus': buses, 'search_query': search_query, 'paginator':paginator}
     return render(request, 'bus_signals/bus_list.html', context)
 
 @login_required(login_url='login')
