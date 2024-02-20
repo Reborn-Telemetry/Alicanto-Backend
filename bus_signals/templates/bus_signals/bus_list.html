@@ -1,18 +1,14 @@
 {% extends "main.html" %} {% block content %}
 
-<div class="container text-center" style="margin-left: 300px">
+<div style="margin-left: 300px">
     <h1>Flota E-Buses</h1>
 
-    <a href="{% url 'create_bus' %}"
-        ><button class="btn btn--sub btn--lg" type="button">Crear Bus</button>
-    </a>
+    <a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
     <!--buscador de buses-->
-    <form id="searchForm" class="form" action="{% url 'bus_list' %}" method="get">
-        <div class="form__field">
-            <label for="formInput#search">Buscar Bus </label>
+    <form action="{% url 'bus_list' %}" method="get">
+        <div>
+            <label>Buscar Bus </label>
             <input
-                class="input input--text"
-                id="formInput#search"
                 type="text"
                 name="search_query"
                 value="{{ search_query }}"
@@ -20,7 +16,7 @@
             />
         </div>
 
-        <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
+        <input type="submit" value="Buscar" />
     </form>
     <!--lista buses-->
     <div class="container text-center">
@@ -58,6 +54,25 @@
             </div>
             {% endfor %}
         </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if bus.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
+                </li>
+                {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{page}}">{{page}}</a>
+                </li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                {% endif %} {% endfor %} {% if bus.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 
     {% endblock content %}
