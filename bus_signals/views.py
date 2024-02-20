@@ -23,6 +23,9 @@ import xlwt
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+
+
+
 @login_required(login_url='login')
 def warnings(request):
     bus_instance = Bus()
