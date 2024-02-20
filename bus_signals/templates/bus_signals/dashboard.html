@@ -159,8 +159,33 @@
                             </tr>
                             {% endfor %}
                         </table>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if complete_table.has_previous %}
+                                <li class="page-item">
+                                    <a
+                                        class="page-link"
+                                        href="?page={{complete_table.previous_page_number}}"
+                                        >Anterior</a
+                                    >
+                                </li>
+                                {% endif %} {% for page in paginator.page_range %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                                {% endfor %} {% if complete_table.has_next %}
+
+                                <li class="page-item">
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ complete_table.next_page_number }}"
+                                        >Siguiente</a
+                                    >
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
                     </div>
-                    <div class="col-5" style="margin-top: 20px"></div>
                 </div>
             </div>
         </div>
