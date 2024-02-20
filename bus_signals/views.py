@@ -32,11 +32,28 @@ def warnings(request):
     no_update = Bus.bus.filter(lts_update=None)
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
+
+    #paginador buses sin conexion
+    page = request.GET.get('page')
+    results = 10
+    paginator_no_update = Paginator(no_update, results)
+
+    try:
+        no_update = paginator_no_update.page(page)
+    except PageNotAnInteger:
+        page = 1
+        no_update = paginator_no_update.page(page)
+    except EmptyPage:
+        page = paginator_no_update.num_pages
+        no_update = paginator_no_update.page(page)
+    # fin paginador buses sin conexion
+
     context = {
         'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
         'low_50_soc_count': low_50_soc_count,
+        'paginator_no_update': paginator_no_update
         }
     return render(request, 'bus_signals/warnings.html', context)
 
@@ -90,6 +107,7 @@ def dashboard(request):
     # datos tabla de buses
     complete_table = Bus.bus.all()
     complete_table = complete_table.exclude(lts_update=None)
+    complete_table = complete_table.order_by('-lts_update')
     # km total de la flota
     km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
     km_total_format = '{:,.0f}'.format(km_total)

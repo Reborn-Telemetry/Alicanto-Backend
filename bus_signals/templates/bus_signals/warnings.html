@@ -77,6 +77,27 @@
                 </tr>
                 {% endfor %}
             </table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if no_update.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{no_update.previous_page_number}}"
+                            >Anterior</a
+                        >
+                    </li>
+                    {% endif %} {% for page in paginator_no_update.page_range %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                    </li>
+                    {% endfor %} {% if no_update.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{no_update.next_page_number}}"
+                            >Siguiente</a
+                        >
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </div>
 
