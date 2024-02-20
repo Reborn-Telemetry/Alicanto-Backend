@@ -105,7 +105,7 @@
 
             <div class="row">
                 <div style="display: flex; gap: 20px">
-                    <div class="col-7" style="margin-top: 20px">
+                    <div class="col-8" style="margin-top: 20px">
                         <h2>Actualizaciones Buses</h2>
                         <table class="table">
                             <tr>
@@ -159,6 +159,7 @@
                             </tr>
                             {% endfor %}
                         </table>
+                        {% if complete_table.has_other_pages %}
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
                                 {% if complete_table.has_previous %}
@@ -185,6 +186,7 @@
                                 {% endif %}
                             </ul>
                         </nav>
+                        {% endif %}
                     </div>
                 </div>
             </div>
