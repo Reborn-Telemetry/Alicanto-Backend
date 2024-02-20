@@ -47,13 +47,29 @@ def warnings(request):
         page = paginator_no_update.num_pages
         no_update = paginator_no_update.page(page)
     # fin paginador buses sin conexion
+    # inicio paginador delayed
+    page2 = request.GET.get('page2')
+    results2 = 10
+    paginator_delayed = Paginator(delayed, results2)
+
+    try:
+        delayed = paginator_delayed.page(page2)
+    except PageNotAnInteger:
+        page2 = 1
+        delayed = paginator_delayed.page(page2)
+    except EmptyPage:
+        page2 = paginator_delayed.num_pages
+        delayed = paginator_delayed.page(page2)
+       
+    # fin paginador delayed
 
     context = {
         'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
         'low_50_soc_count': low_50_soc_count,
-        'paginator_no_update': paginator_no_update
+        'paginator_no_update': paginator_no_update,
+        'paginator_delayed': paginator_delayed
         }
     return render(request, 'bus_signals/warnings.html', context)
 
