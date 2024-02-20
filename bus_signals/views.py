@@ -79,7 +79,19 @@ def reports_page(request):
 
 def fusi_dashboard(request):
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
-    context = {'active_fusi': open_fusi}
+    page = request.GET.get('page')
+    results = 30
+    paginator = Paginator(open_fusi, results)
+    try:
+        open_fusi = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        open_fusi = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        open_fusi = paginator.page(page)
+
+    context = {'active_fusi': open_fusi, 'paginator': paginator}
     return render(request, 'bus_signals/fusi_dashboard.html', context)
 
 @login_required(login_url='login')

@@ -54,6 +54,7 @@
             </div>
             {% endfor %}
         </div>
+        {% if bus.has_other_pages %}
         <nav aria-label="Page navigation example">
             <ul class="pagination">
                 {% if bus.has_previous %}
@@ -73,6 +74,7 @@
                 {% endif %}
             </ul>
         </nav>
+        {% endif %}
     </div>
 
     {% endblock content %}
