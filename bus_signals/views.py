@@ -24,8 +24,6 @@ import xlwt
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
-
-
 @login_required(login_url='login')
 def warnings(request):
     bus_instance = Bus()
@@ -36,7 +34,7 @@ def warnings(request):
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
 
-    #paginador buses sin conexion
+    # paginador buses sin conexion
     page = request.GET.get('page')
     results = 10
     paginator_no_update = Paginator(no_update, results)
@@ -63,7 +61,7 @@ def warnings(request):
     except EmptyPage:
         page2 = paginator_delayed.num_pages
         delayed = paginator_delayed.page(page2)
-       
+
     # fin paginador delayed
 
     context = {
@@ -73,12 +71,14 @@ def warnings(request):
         'low_50_soc_count': low_50_soc_count,
         'paginator_no_update': paginator_no_update,
         'paginator_delayed': paginator_delayed
-        }
+    }
     return render(request, 'bus_signals/warnings.html', context)
+
 
 @login_required(login_url='login')
 def reports_page(request):
     return render(request, 'bus_signals/reports.html')
+
 
 def fusi_dashboard(request):
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
@@ -97,12 +97,12 @@ def fusi_dashboard(request):
     context = {'active_fusi': open_fusi, 'paginator': paginator}
     return render(request, 'bus_signals/fusi_dashboard.html', context)
 
+
 @login_required(login_url='login')
 def bus_list(request):
     search_query = ''
     page = request.GET.get('page')
     results = 9
-
 
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
@@ -110,9 +110,8 @@ def bus_list(request):
         Q(bus_name__icontains=search_query) |
         Q(bus_series__icontains=search_query) |
         Q(bus_ecu__icontains=search_query) |
-        Q(client__icontains=search_query) 
-        )
-    
+        Q(client__icontains=search_query)
+    )
 
     paginator = Paginator(buses, results)
     try:
@@ -124,10 +123,9 @@ def bus_list(request):
         page = paginator.num_pages
         buses = paginator.page(page)
 
-
-
-    context = {'bus': buses, 'search_query': search_query, 'paginator':paginator}
+    context = {'bus': buses, 'search_query': search_query, 'paginator': paginator}
     return render(request, 'bus_signals/bus_list.html', context)
+
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -166,8 +164,6 @@ def dashboard(request):
         page = paginator.num_pages
         complete_table = paginator.page(page)
 
-
-
     context = {
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
@@ -178,8 +174,9 @@ def dashboard(request):
         'open_fusi': open_fusi,
         'delayed': delayed,
         'paginator': paginator
-        }
+    }
     return render(request, 'bus_signals/dashboard.html', context)
+
 
 def monthly_bus_report_xls(request):
     report_data = monthly_fleet_km()
@@ -191,7 +188,6 @@ def monthly_bus_report_xls(request):
     workbook = xlwt.Workbook(encoding='utf-8')
     worksheet = workbook.add_sheet('Report')
 
-
     table_data = [
         ['Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
          'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
@@ -202,19 +198,17 @@ def monthly_bus_report_xls(request):
         row = [str(value) if value is not None else '0' for value in entry]
         table_data.append(row)
 
-   
     style = xlwt.easyxf('font: bold on; align: horiz center')
 
-   
     for row_num, row_data in enumerate(table_data):
         for col_num, cell_value in enumerate(row_data):
             worksheet.write(row_num, col_num, cell_value, style)
 
-    
     workbook.save(buf)
     buf.seek(0)
 
     return FileResponse(buf, as_attachment=True, filename=filename)
+
 
 def monthly_bus_report(request):
     report_data = monthly_fleet_km()
@@ -222,11 +216,10 @@ def monthly_bus_report(request):
     formatted_datetime = current_datetime.strftime("%d-%m-%Y")
     filename = f'reporte km mensual :{formatted_datetime}.pdf'
     buf = io.BytesIO()
-    
-    
+
     doc = SimpleDocTemplate(buf, pagesize=landscape(letter))
     elements = []
-    
+
     table_data = [
         [
             'Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
@@ -234,16 +227,15 @@ def monthly_bus_report(request):
             'Sep I', 'Sep F', 'Oct I', 'Oct F', 'Nov I', 'Nov F', 'Dic I', 'Dic F'
         ]
     ]
-    
+
     for entry in report_data:
         row = []
         for value in entry:
             row.append(str(value) if value is not None else '0')
         table_data.append(row)
-    
-   
-    cell_width = 17  
-    font_size = 5  
+
+    cell_width = 17
+    font_size = 5
     style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
@@ -251,19 +243,17 @@ def monthly_bus_report(request):
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
-        ('BOX', (0, 0), (-1, -1), 1, 'black'), 
-        ('FONTSIZE', (0, 0), (-1, -1), font_size),  
+        ('BOX', (0, 0), (-1, -1), 1, 'black'),
+        ('FONTSIZE', (0, 0), (-1, -1), font_size),
     ])
-    
-    
+
     table = Table(table_data, colWidths=[cell_width * 1.5] * len(table_data[0]))
     table.setStyle(style)
     elements.append(table)
 
-    
     image_path = 'static/img/REM.png'
-    image_width = 200  
-    image_height = 200  
+    image_width = 200
+    image_height = 200
     image = Image(image_path, width=image_width, height=image_height)
     elements.insert(0, image)
 
@@ -271,6 +261,7 @@ def monthly_bus_report(request):
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
+
 
 def xls_report(request):
     current_datetime = datetime.now()
@@ -281,7 +272,6 @@ def xls_report(request):
     workbook = xlwt.Workbook(encoding='utf-8')
     worksheet = workbook.add_sheet('Report')
 
-
     table_data = [
         ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
     ]
@@ -289,24 +279,20 @@ def xls_report(request):
     bus_list = Bus.bus.all()
     for bus in bus_list:
         formatted_datetime = bus.lts_update.strftime("%d/%m/%Y %H:%M") if bus.lts_update else "sin actualizacion"
-        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer)+ 'km', formatted_datetime]
+        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer) + 'km', formatted_datetime]
         table_data.append(row)
 
     style = xlwt.easyxf('font: bold on; align: horiz center')
 
-
-
-    
-   
     for row_num, row_data in enumerate(table_data):
         for col_num, cell_value in enumerate(row_data):
             worksheet.write(row_num, col_num, cell_value, style)
 
-   
     workbook.save(buf)
     buf.seek(0)
 
     return FileResponse(buf, as_attachment=True, filename=filename)
+
 
 def pdf_report(request):
     current_datetime = datetime.now()
@@ -316,19 +302,16 @@ def pdf_report(request):
     doc = SimpleDocTemplate(buf, pagesize=letter)
     elements = []
 
-
     table_data = [
         ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
     ]
 
-    
     bus_list = Bus.bus.all()
     for bus in bus_list:
         formatted_datetime = bus.lts_update.strftime("%d/%m/%Y %H:%M") if bus.lts_update else "sin actualizacion"
-        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer)+ 'km', formatted_datetime]
+        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer) + 'km', formatted_datetime]
         table_data.append(row)
 
-  
     style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
@@ -338,26 +321,24 @@ def pdf_report(request):
         ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
     ])
 
-    
     table = Table(table_data)
     table.setStyle(style)
     elements.append(table)
 
- 
-    image_path = 'static/img/REM.png' 
+    image_path = 'static/img/REM.png'
     image = Image(image_path, width=80, height=80)
-    elements.insert(0, image)  
+    elements.insert(0, image)
 
-   
     doc.build(elements)
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
+
 def login_page(request):
     if request.user.is_authenticated:
         return redirect('bus_list')
-    
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -379,11 +360,13 @@ def login_page(request):
 
     return render(request, 'login.html')
 
+
 def logout_user(request):
     logout(request)
     messages.error(request, 'user successfully logged out')
 
     return redirect('login')
+
 
 @login_required(login_url='login')
 def create_bus(request):
@@ -396,6 +379,7 @@ def create_bus(request):
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
 
+
 @login_required(login_url='login')
 def create_fusi(request):
     form = FusiMessageForm()
@@ -406,6 +390,7 @@ def create_fusi(request):
             return redirect('dic_fusi')
     context = {'form': form}
     return render(request, 'bus_signals/fusi_form.html', context)
+
 
 @login_required(login_url='login')
 def update_bus(request, pk):
@@ -419,17 +404,19 @@ def update_bus(request, pk):
     context = {'form': form}
     return render(request, 'bus_signals/bus_form.html', context)
 
+
 @login_required(login_url='login')
 def update_fusicode(request, pk):
     fusi_code = FusiCode.fusi.get(id=pk)
     form = FusiForm(instance=fusi_code)
-    if request.method =='POST':
+    if request.method == 'POST':
         form = FusiForm(request.POST, instance=fusi_code)
         if form.is_valid():
             form.save()
             return redirect('dashboard')
     context = {'form': form}
     return render(request, 'bus_signals/fusicode_form.html', context)
+
 
 @login_required(login_url='login')
 def update_fusi(request, pk):
@@ -443,6 +430,7 @@ def update_fusi(request, pk):
     context = {'form': form}
     return render(request, 'bus_signals/fusi_form.html', context)
 
+
 @login_required(login_url='login')
 def delete_bus(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -451,6 +439,7 @@ def delete_bus(request, pk):
         return redirect('bus_list')
     context = {'object': bus}
     return render(request, 'delete_object.html', context)
+
 
 @login_required(login_url='login')
 def bus_detail(request, pk):
@@ -462,17 +451,19 @@ def bus_detail(request, pk):
     context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi}
     return render(request, 'bus_signals/bus_detail.html', context)
 
+
 @login_required(login_url='login')
 def dic_fusi(request):
     search_query = ''
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
+
     messages = FusiMessage.fusi.filter(
         Q(fusi_code__icontains=search_query) |
         Q(fusi_description__icontains=search_query) |
         Q(message_class__icontains=search_query)
     )
-    #paginadorfusi
+    # paginadorfusi
     page = request.GET.get('page')
     results = 17
     paginator = Paginator(messages, results)
@@ -484,14 +475,15 @@ def dic_fusi(request):
     except EmptyPage:
         page = paginator.num_pages
         messages = paginator.page(page)
-    #fin paginador fusi
- 
+    # fin paginador fusi
+
     context = {
         'fusi': messages,
         'search_query': search_query,
         'paginator': paginator
-        }
+    }
     return render(request, 'bus_signals/dic_fusi.html', context)
+
 
 @login_required(login_url='login')
 def odometer(request):
