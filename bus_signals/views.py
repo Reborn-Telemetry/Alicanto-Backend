@@ -472,7 +472,25 @@ def dic_fusi(request):
         Q(fusi_description__icontains=search_query) |
         Q(message_class__icontains=search_query)
     )
-    context = {'fusi': messages, 'search_query': search_query}
+    #paginadorfusi
+    page = request.GET.get('page')
+    results = 17
+    paginator = Paginator(messages, results)
+    try:
+        messages = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        messages = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        messages = paginator.page(page)
+    #fin paginador fusi
+ 
+    context = {
+        'fusi': messages,
+        'search_query': search_query,
+        'paginator': paginator
+        }
     return render(request, 'bus_signals/dic_fusi.html', context)
 
 @login_required(login_url='login')

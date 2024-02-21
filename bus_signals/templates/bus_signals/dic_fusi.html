@@ -46,6 +46,27 @@
         </tr>
         {% endfor %}
     </table>
+    <!--paginador-->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if fusi.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{fusi.previous_page_number}}">Anterior</a>
+            </li>
+            {% endif %} {% for page in paginator.page_range %} {% if page == fusi.number %}
+            <li class="page-item active">
+                <a class="page-link" href="?page={{page}}">{{page}}</a>
+            </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% endif %} {% endfor %} {% if fusi.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{fusi.next_page_number}}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <!--fin paginador-->
 </div>
 
 {% endblock content %}
