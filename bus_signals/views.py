@@ -380,6 +380,7 @@ def create_bus(request):
     return render(request, 'bus_signals/bus_form.html', context)
 
 
+
 @login_required(login_url='login')
 def create_fusi(request):
     form = FusiMessageForm()
