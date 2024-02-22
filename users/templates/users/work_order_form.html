@@ -1,4 +1,12 @@
 {% extends "main.html" %} {% load static %} {% block content %}
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 <div class="container text-center" style="margin-left: 300px">
     <h1>Crear Parte</h1>
     <main class="formPage my-xl">
@@ -19,6 +27,49 @@
             </div>
         </div>
     </main>
+</div>
+
+<div>
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+</div>
+<div class="container" style="max-width: 700px">
+    <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Nombre Bus</label>
+            <select
+                class="form-select"
+                style="margin-bottom: 20px"
+                name="bus_series"
+                aria-invalid="true"
+                id="id_bus"
+            >
+                <option selected>Seleccione un bus</option>
+                {% for i in form.bus %}
+                <option value="{{i}}"></option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Titulo</label>
+            <input type="text" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Descripcion</label>
+
+            <textarea
+                class="form-control"
+                style="margin-bottom: 20px"
+                name="description"
+                id="id_description"
+            ></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Reportante</label>
+            <input type="text" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Crear Registro</button>
+    </form>
 </div>
 
 {% endblock %}
