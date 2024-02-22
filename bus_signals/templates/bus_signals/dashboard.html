@@ -1,14 +1,21 @@
 {% extends "main.html" %} {% load static %} {% block content %}
-<div
-    style="margin-left: 300px; color: yellowgreen; margin-top: 30px"
-    class="spinner-grow"
-    role="status"
->
-    <span class="visually-hidden">Loading...</span>
-</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+
 <h1 style="margin-left: 300px">Dashboard Flota</h1>
 
 <div class="container text-center" style="margin-left: 300px">
+    <div style="display:flex; justify-content;flex-end; margin-top: 20px; margin-left:300px">
+        <a href="{% url 'create_bus' %}">
+            <i
+                class="fa-solid fa-circle-plus fa-2xl"
+                style="color: #77bb41; margin-bottom: 40px"
+            ></i
+        ></a>
+    </div>
     <div>
         <div class="row">
             <div class="col-3">
