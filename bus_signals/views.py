@@ -402,7 +402,7 @@ def update_bus(request, pk):
         if form.is_valid():
             form.save()
             return redirect('bus_list')
-    context = {'form': form}
+    context = {'form': form, 'bus': bus}
     return render(request, 'bus_signals/bus_form.html', context)
 
 

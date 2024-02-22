@@ -13,21 +13,27 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
-</div> -->
+</div>-->
+
 <div class="container" style="max-width: 700px">
     <form enctype="multipart/form-data" method="POST">
         {% csrf_token %}
         <div class="mb-3">
             <label class="form-label">Nombre Bus</label>
-            <input type="text" class="form-control" name="bus_name" />
+            <input type="text" class="form-control" name="bus_name" value="{{bus.bus_name}}" />
         </div>
         <div class="mb-3">
             <label class="form-label">Sniffer</label>
-            <input type="text" class="form-control" name="sniffer" />
+            <input type="text" class="form-control" name="sniffer" value="{{bus.sniffer}}" />
         </div>
         <div class="mb-3">
             <label class="form-label">Patente</label>
-            <input type="text" class="form-control" name="plate_number" />
+            <input
+                type="text"
+                class="form-control"
+                name="plate_number"
+                value="{{bus.plate_number}}"
+            />
         </div>
         <div class="mb-3">
             <label class="form-label">Serie Bus</label>
@@ -38,7 +44,7 @@
                 aria-invalid="true"
                 id="id_bus_series"
             >
-                <option selected>Seleccione una serie</option>
+                <option selected>{{bus.bus_series}}</option>
                 <option value="Queltehue">Queltehue</option>
                 <option value="Tricahue">Tricahue</option>
                 <option value="Retrofit">Retrofit</option>
@@ -46,19 +52,19 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Cliente</label>
-            <input type="text" class="form-control" name="client" />
+            <input type="text" class="form-control" name="client" value="{{bus.client}}" />
         </div>
         <div class="mb-3">
             <label class="form-label">Vision</label>
-            <input type="text" class="form-control" name="vision" />
+            <input type="text" class="form-control" name="vision" value="{{bus.vision}}" />
         </div>
         <div class="mb-3">
             <label class="form-label">Mark</label>
-            <input type="text" class="form-control" name="mark" />
+            <input type="text" class="form-control" name="mark" value="{{bus.mark}}" />
         </div>
         <div class="mb-3">
             <label class="form-label">Jarvis</label>
-            <input type="text" class="form-control" name="jarvis" />
+            <input type="text" class="form-control" name="jarvis" value="{{bus.jarvis}}" />
         </div>
         <div class="mb-3">
             <label class="form-label">Imagen Bus</label>
