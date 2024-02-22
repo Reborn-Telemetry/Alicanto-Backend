@@ -3,17 +3,8 @@
 <br />
 <br />
 <br />
-<!--<div class="container text-center" style="margin-left: 300px">
-    <form enctype="multipart/form-data" method="POST">
-        {% csrf_token %} {% for field in form %}
-        <div class="form__field">
-            <label class="form-label">{{field.label}}</label>
-            <div class="mb-3">{{field}}</div>
-        </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    </form>
-</div>-->
+
+<h1 style="margin-left: 300px; margin-bottom: 40px">Ingresar nuevo bus a la flota</h1>
 
 <div class="container" style="max-width: 700px">
     <form enctype="multipart/form-data" method="POST">
@@ -73,30 +64,5 @@
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
 </div>
-
-<!--<div class="container" style="max-width: 700px">
-    <form enctype="multipart/form-data" method="POST">
-        {% csrf_token %} {% for field in form %} {% if field.label == 'Serie' %}
-        <label class="form-label">{{field.label}}</label>
-        <select class="form-select" aria-label="Default select example" style="margin-bottom: 20px">
-            <option selected>Seleccione una serie</option>
-            <option value="1">Queltehue</option>
-            <option value="2">Tricahue</option>
-            <option value="3">Retrofit</option>
-        </select>
-        {% else %}
-        <div class="mb-3">
-            <label class="form-label">{{field.label}}</label>
-            <input type="text" class="form-control" />
-        </div>
-        {% endif %}{% endfor %}
-        <div class="mb-3">
-            <label class="form-label">{{form.label.bus_img}}</label>
-            {{form.bus_img}}
-        </div>
-
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    </form>
-</div>-->
 
 {% endblock %}
