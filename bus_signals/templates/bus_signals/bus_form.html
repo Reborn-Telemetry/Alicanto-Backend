@@ -3,7 +3,7 @@
 <br />
 <br />
 <br />
-<div class="container text-center" style="margin-left: 300px">
+<!--<div class="container text-center" style="margin-left: 300px">
     <form enctype="multipart/form-data" method="POST">
         {% csrf_token %} {% for field in form %}
         <div class="form__field">
@@ -13,9 +13,60 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
+</div> -->
+<div class="container" style="max-width: 700px">
+    <form enctype="multipart/form-data" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Nombre Bus</label>
+            <input type="text" class="form-control" name="bus_name" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Sniffer</label>
+            <input type="text" class="form-control" name="sniffer" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Patente</label>
+            <input type="text" class="form-control" name="plate_number" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Serie Bus</label>
+            <select
+                class="form-select"
+                style="margin-bottom: 20px"
+                name="bus_series"
+                aria-invalid="true"
+                id="id_bus_series"
+            >
+                <option selected>Seleccione una serie</option>
+                <option value="Queltehue">Queltehue</option>
+                <option value="Tricahue">Tricahue</option>
+                <option value="Retrofit">Retrofit</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Cliente</label>
+            <input type="text" class="form-control" name="client" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Vision</label>
+            <input type="text" class="form-control" name="vision" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mark</label>
+            <input type="text" class="form-control" name="mark" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Jarvis</label>
+            <input type="text" class="form-control" name="jarvis" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Imagen Bus</label>
+            {{form.bus_img}}
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
 </div>
-
-<!-- lo que debemos hacer para solucionar este problema es usar el nombre del campo como name y de esta manera el formulario reconozca los campos  tarea para mañana-->
 
 <!--<div class="container" style="max-width: 700px">
     <form enctype="multipart/form-data" method="POST">
