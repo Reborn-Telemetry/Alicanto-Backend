@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.db.models import Sum
-
 # pdf imports 
 from django.http import FileResponse
 import io
@@ -20,7 +19,7 @@ from reportlab.lib.pagesizes import letter, landscape
 from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
-
+# manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
@@ -72,12 +71,12 @@ def warnings(request):
         'paginator_no_update': paginator_no_update,
         'paginator_delayed': paginator_delayed
     }
-    return render(request, 'bus_signals/warnings.html', context)
+    return render(request, 'pages/warnings.html', context)
 
 
 @login_required(login_url='login')
 def reports_page(request):
-    return render(request, 'bus_signals/reports.html')
+    return render(request, 'reports/reports.html')
 
 
 def fusi_dashboard(request):
@@ -95,7 +94,7 @@ def fusi_dashboard(request):
         open_fusi = paginator.page(page)
 
     context = {'active_fusi': open_fusi, 'paginator': paginator}
-    return render(request, 'bus_signals/fusi_dashboard.html', context)
+    return render(request, 'fusi/fusi-dashboard.html', context)
 
 
 @login_required(login_url='login')
@@ -124,7 +123,7 @@ def bus_list(request):
         buses = paginator.page(page)
 
     context = {'bus': buses, 'search_query': search_query, 'paginator': paginator}
-    return render(request, 'bus_signals/bus_list.html', context)
+    return render(request, 'bus/bus-list.html', context)
 
 
 @login_required(login_url='login')
@@ -175,7 +174,7 @@ def dashboard(request):
         'delayed': delayed,
         'paginator': paginator
     }
-    return render(request, 'bus_signals/dashboard.html', context)
+    return render(request, 'pages/dashboard.html', context)
 
 
 def monthly_bus_report_xls(request):
@@ -358,7 +357,7 @@ def login_page(request):
             messages.error(request, 'username or password incorrect')
             print('Username or password is incorrect')
 
-    return render(request, 'login.html')
+    return render(request, 'pages/login.html')
 
 
 def logout_user(request):
@@ -377,7 +376,7 @@ def create_bus(request):
             form.save()
             return redirect('bus_list')
     context = {'form': form}
-    return render(request, 'bus_signals/bus_form.html', context)
+    return render(request, 'bus/bus-form.html', context)
 
 
 
@@ -390,7 +389,7 @@ def create_fusi(request):
             form.save()
             return redirect('dic_fusi')
     context = {'form': form}
-    return render(request, 'bus_signals/fusi_form.html', context)
+    return render(request, 'fusi/fusi-form.html', context)
 
 
 @login_required(login_url='login')
@@ -403,7 +402,7 @@ def update_bus(request, pk):
             form.save()
             return redirect('bus_list')
     context = {'form': form, 'bus': bus}
-    return render(request, 'bus_signals/bus_form.html', context)
+    return render(request, 'bus/bus-form.html', context)
 
 
 @login_required(login_url='login')
@@ -416,7 +415,7 @@ def update_fusicode(request, pk):
             form.save()
             return redirect('dashboard')
     context = {'form': form}
-    return render(request, 'bus_signals/fusicode_form.html', context)
+    return render(request, 'fusi/fusicode-form.html', context)
 
 
 @login_required(login_url='login')
@@ -429,7 +428,7 @@ def update_fusi(request, pk):
             form.save()
             return redirect('dic_fusi')
     context = {'form': form}
-    return render(request, 'bus_signals/fusi_form.html', context)
+    return render(request, 'fusi/fusi-form.html', context)
 
 
 @login_required(login_url='login')
@@ -439,7 +438,7 @@ def delete_bus(request, pk):
         bus.delete()
         return redirect('bus_list')
     context = {'object': bus}
-    return render(request, 'delete_object.html', context)
+    return render(request, 'pages/delete_object.html', context)
 
 
 @login_required(login_url='login')
@@ -450,7 +449,7 @@ def bus_detail(request, pk):
     bus = Bus.bus.get(pk=pk)
     fusi = FusiCode.fusi.filter(bus_id=pk)
     context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi}
-    return render(request, 'bus_signals/bus_detail.html', context)
+    return render(request, 'bus/bus-profile.html', context)
 
 
 @login_required(login_url='login')
@@ -483,9 +482,7 @@ def dic_fusi(request):
         'search_query': search_query,
         'paginator': paginator
     }
-    return render(request, 'bus_signals/dic_fusi.html', context)
+    return render(request, 'fusi/fusi-dictionary.html', context)
 
 
-@login_required(login_url='login')
-def odometer(request):
-    return render(request, 'bus_signals/odometer.html')
+
