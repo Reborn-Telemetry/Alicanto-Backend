@@ -11,7 +11,8 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
-        <title>Alicanto Telemetria</title>
+
+        <title>{% block title %}Alicanto Telemetria{% endblock title %}</title>
     </head>
     <body style="background-color: #f5f7fa">
         {% if messages %}
@@ -20,7 +21,7 @@
             <li class="{{ message.tags }}">{{ message }}</li>
             {% endfor %}
         </ul>
-        {% endif %}{% include "side-bar.html" %} {% block content %} {%endblock content %}
+        {% endif %}{% include "includes/side-bar.html" %} {% block content %} {%endblock content %}
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
