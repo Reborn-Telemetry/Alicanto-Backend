@@ -8,8 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q
-from django.db.models import Sum
+from django.db.models import Q, Count, Sum
 # pdf imports 
 from django.http import FileResponse
 import io
@@ -21,6 +20,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
 # manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 
 @login_required(login_url='login')
@@ -128,6 +128,8 @@ def bus_list(request):
 
 @login_required(login_url='login')
 def dashboard(request):
+    # fusicodes
+    distinct_fusi_code = FusiCode.fusi.values('fusi_code').annotate(total=Count('fusi_code'))
     # cantidad de fusi abiertos
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
     # cantidad de buses en la flota
@@ -172,7 +174,8 @@ def dashboard(request):
         'cant_low_50_soc': cant_low_50_soc,
         'open_fusi': open_fusi,
         'delayed': delayed,
-        'paginator': paginator
+        'paginator': paginator,
+        'distinct_fusi_code': distinct_fusi_code
     }
     return render(request, 'pages/dashboard.html', context)
 

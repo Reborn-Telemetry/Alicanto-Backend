@@ -115,90 +115,103 @@
             </div>
 
             <div class="row">
-                <div style="display: flex; gap: 20px">
-                    <div class="col-8" style="margin-top: 20px">
-                        <h2>Actualizaciones Buses</h2>
-                        <table class="table">
-                            <tr>
-                                <th>Bus</th>
-                                <th>Carga</th>
-                                <th>Serie</th>
-                                <th>Odometro</th>
-                                <th>voltaje</th>
-                                <th>actualizacion</th>
-                                <th>Perfil</th>
-                            </tr>
-                            {% for i in complete_table %}
-                            <tr>
-                                <td>{{i.bus_name}}</td>
-                                <td>
-                                    {% if i.lts_soc > 60 %}
-                                    <span class="badge rounded-pill text-bg-success"
-                                        >{{ i.lts_soc }} %</span
-                                    >
-                                    {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                                    <span class="badge rounded-pill text-bg-warning"
-                                        >{{ i.lts_soc }} %</span
-                                    >
-                                    {% elif i.lts_soc <= 40 %}
-                                    <span class="badge rounded-pill text-bg-danger"
-                                        >{{ i.lts_soc }} %</span
-                                    >
-                                    {% else %} {{ i.lts_soc }} {% endif %}
-                                </td>
-                                <td>
-                                    {% if i.bus_series == 'Queltehue' %}
-                                    <button type="button" class="btn btn-outline-warning btn-sm">
-                                        {{i.bus_series}}
-                                    </button>
-                                    {% elif i.bus_series == 'Tricahue' %}
-                                    <button type="button" class="btn btn-outline-success btn-sm">
-                                        {{i.bus_series}}
-                                    </button>
-                                    {% endif %}
-                                </td>
-                                <td>{{i.lts_odometer}}</td>
-                                <td>{{i.lts_24_volt}}</td>
-                                <td>{{i.lts_update}}</td>
-                                <td>
-                                    <a href="{% url 'bus_detail' i.id %}"
-                                        ><button type="button" class="btn btn-outline-info">
-                                            <i class="fa-solid fa-arrow-right"></i> Perfil
-                                        </button></a
-                                    >
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                        {% if complete_table.has_other_pages %}
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                {% if complete_table.has_previous %}
-                                <li class="page-item">
-                                    <a
-                                        class="page-link"
-                                        href="?page={{complete_table.previous_page_number}}"
-                                        >Anterior</a
-                                    >
-                                </li>
-                                {% endif %} {% for page in paginator.page_range %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                                </li>
-                                {% endfor %} {% if complete_table.has_next %}
-
-                                <li class="page-item">
-                                    <a
-                                        class="page-link"
-                                        href="?page={{ complete_table.next_page_number }}"
-                                        >Siguiente</a
-                                    >
-                                </li>
+                <div class="col-8" style="margin-top: 20px">
+                    <h2>Actualizaciones Buses</h2>
+                    <table class="table">
+                        <tr>
+                            <th>Bus</th>
+                            <th>Carga</th>
+                            <th>Serie</th>
+                            <th>Odometro</th>
+                            <th>voltaje</th>
+                            <th>actualizacion</th>
+                            <th>Perfil</th>
+                        </tr>
+                        {% for i in complete_table %}
+                        <tr>
+                            <td>{{i.bus_name}}</td>
+                            <td>
+                                {% if i.lts_soc > 60 %}
+                                <span class="badge rounded-pill text-bg-success"
+                                    >{{ i.lts_soc }} %</span
+                                >
+                                {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                <span class="badge rounded-pill text-bg-warning"
+                                    >{{ i.lts_soc }} %</span
+                                >
+                                {% elif i.lts_soc <= 40 %}
+                                <span class="badge rounded-pill text-bg-danger"
+                                    >{{ i.lts_soc }} %</span
+                                >
+                                {% else %} {{ i.lts_soc }} {% endif %}
+                            </td>
+                            <td>
+                                {% if i.bus_series == 'Queltehue' %}
+                                <button type="button" class="btn btn-outline-warning btn-sm">
+                                    {{i.bus_series}}
+                                </button>
+                                {% elif i.bus_series == 'Tricahue' %}
+                                <button type="button" class="btn btn-outline-success btn-sm">
+                                    {{i.bus_series}}
+                                </button>
                                 {% endif %}
-                            </ul>
-                        </nav>
-                        {% endif %}
-                    </div>
+                            </td>
+                            <td>{{i.lts_odometer}}</td>
+                            <td>{{i.lts_24_volt}}</td>
+                            <td>{{i.lts_update}}</td>
+                            <td>
+                                <a href="{% url 'bus_detail' i.id %}"
+                                    ><button type="button" class="btn btn-outline-info">
+                                        <i class="fa-solid fa-arrow-right"></i> Perfil
+                                    </button></a
+                                >
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% if complete_table.has_other_pages %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if complete_table.has_previous %}
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?page={{complete_table.previous_page_number}}"
+                                    >Anterior</a
+                                >
+                            </li>
+                            {% endif %} {% for page in paginator.page_range %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                            </li>
+                            {% endfor %} {% if complete_table.has_next %}
+
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?page={{ complete_table.next_page_number }}"
+                                    >Siguiente</a
+                                >
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+                <div class="col-4" style="margin-top: 20px">
+                    <h2>Informe Fusi</h2>
+                    <table class="table">
+                        <tr>
+                            <th>Codigo Fusi</th>
+                            <th>Repeticiones</th>
+                        </tr>
+                        {% for fusi in distinct_fusi_code %}
+                        <tr>
+                            <td>{{fusi.fusi_code}}</td>
+                            <td>{{fusi.total}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         </div>
