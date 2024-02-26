@@ -21,6 +21,9 @@ import xlwt
 # manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
+20502.0, 21777.0, 21780.0, 20500.0, 20508.0, 20510.0, 20504.0, 20520.0, 20515.0, 20501.0]
+
 
 
 @login_required(login_url='login')
@@ -130,6 +133,8 @@ def bus_list(request):
 def dashboard(request):
     # fusicodes
     distinct_fusi_code = FusiCode.fusi.values('fusi_code').annotate(total=Count('fusi_code'))
+    distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
+    
     # cantidad de fusi abiertos
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
     # cantidad de buses en la flota
