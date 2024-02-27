@@ -184,6 +184,10 @@ def dashboard(request):
         page_fusi = paginator_fusi.num_pages
         distinct_fusi_code = paginator_fusi.page(page_fusi)
 
+# top 10 buses fusi code
+    top_buses = FusiCode.fusi.values('bus__bus_name').annotate(num_registros=Count('bus')).order_by('-num_registros')[:10]
+
+
     context = {
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
@@ -195,7 +199,8 @@ def dashboard(request):
         'delayed': delayed,
         'paginator': paginator,
         'paginator_fusi': paginator_fusi,
-        'distinct_fusi_code': distinct_fusi_code
+        'distinct_fusi_code': distinct_fusi_code,
+        'top_buses': top_buses,
     }
     return render(request, 'pages/dashboard.html', context)
 
