@@ -133,7 +133,7 @@ def bus_list(request):
 @login_required(login_url='login')
 def dashboard(request):
     # fusicodes
-    distinct_fusi_code = FusiCode.fusi.values('fusi_code').annotate(total=Count('fusi_code'))
+    distinct_fusi_code = FusiCode.fusi.values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
     
     # cantidad de fusi abiertos
