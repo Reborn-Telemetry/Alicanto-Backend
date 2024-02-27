@@ -124,7 +124,7 @@
                             <th>Serie</th>
                             <th>Odometro</th>
                             <th>voltaje</th>
-                            <th>Fusi Activo</th>
+                            <th>Fusi Activo *in progress</th>
                             <th>actualizacion</th>
                             <th>Perfil</th>
                         </tr>
@@ -159,7 +159,17 @@
                             </td>
                             <td>{{i.lts_odometer}}</td>
                             <td>{{i.lts_24_volt}}</td>
-                            <td>{{i.lts_fusi}}</td>
+                            <td>
+                                {% if i.lts_fusi == 0.0 %}<i
+                                    class="fa-regular fa-circle-check fa-xl"
+                                    style="color: #77bb41"
+                                ></i
+                                >{% else %}
+                                <button type="button" class="btn btn-outline-danger">
+                                    {{i.lts_fusi}}
+                                </button>
+                                {% endif %}
+                            </td>
                             <td>{{i.lts_update}}</td>
                             <td>
                                 <a href="{% url 'bus_detail' i.id %}"
