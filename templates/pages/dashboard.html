@@ -242,6 +242,23 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="row">
+                <div class="col-4" style="margin-top: 20px">
+                    <h2>top 10 buses/codigo fusi</h2>
+                    <table class="table">
+                        <tr>
+                            <th>Bus</th>
+                            <th>Cantidad Codigo Fusi</th>
+                        </tr>
+                        {% for i in top_buses %}
+                        <tr>
+                            <td>{{i.bus__bus_name}}</td>
+                            <td>{{i.num_registros}} codigos</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     {% endblock content %}
