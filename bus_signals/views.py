@@ -84,6 +84,7 @@ def reports_page(request):
 
 def fusi_dashboard(request):
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
+    open_fusi = open_fusi.exclude(fusi_code__in=filter_fusi_code)
     page = request.GET.get('page')
     results = 30
     paginator = Paginator(open_fusi, results)
@@ -170,6 +171,19 @@ def dashboard(request):
         page = paginator.num_pages
         complete_table = paginator.page(page)
 
+    # paginador fusi
+    page_fusi = request.GET.get('page_fusi')
+    results_fusi = 12
+    paginator_fusi = Paginator(distinct_fusi_code, results_fusi)
+    try:
+        distinct_fusi_code = paginator_fusi.page(page_fusi)
+    except PageNotAnInteger:
+        page_fusi = 1
+        distinct_fusi_code = paginator_fusi.page(page_fusi)
+    except EmptyPage:
+        page_fusi = paginator_fusi.num_pages
+        distinct_fusi_code = paginator_fusi.page(page_fusi)
+
     context = {
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
@@ -180,6 +194,7 @@ def dashboard(request):
         'open_fusi': open_fusi,
         'delayed': delayed,
         'paginator': paginator,
+        'paginator_fusi': paginator_fusi,
         'distinct_fusi_code': distinct_fusi_code
     }
     return render(request, 'pages/dashboard.html', context)

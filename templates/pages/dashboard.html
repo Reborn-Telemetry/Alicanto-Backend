@@ -212,6 +212,34 @@
                         </tr>
                         {% endfor %}
                     </table>
+                    {% if distinct_fusi_code.has_other_pages %}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if distinct_fusi_code.has_previous %}
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?page_fusi={{distinct_fusi_code.previous_page_number}}"
+                                    >Anterior</a
+                                >
+                            </li>
+                            {% endif %} {% for page in paginator_fusi.page_range %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page_fusi={{ page }}">{{ page }}</a>
+                            </li>
+                            {% endfor %} {% if distinct_fusi_code.has_next %}
+
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?page_fusi={{ distinct_fusi_code.next_page_number }}"
+                                    >Siguiente</a
+                                >
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
                 </div>
             </div>
         </div>
