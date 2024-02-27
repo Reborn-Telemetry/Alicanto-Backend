@@ -115,7 +115,7 @@
             </div>
 
             <div class="row">
-                <div class="col-8" style="margin-top: 20px">
+                <div class="col-9" style="margin-top: 20px">
                     <h2>Actualizaciones Buses</h2>
                     <table class="table">
                         <tr>
@@ -124,6 +124,7 @@
                             <th>Serie</th>
                             <th>Odometro</th>
                             <th>voltaje</th>
+                            <th>Fusi Activo</th>
                             <th>actualizacion</th>
                             <th>Perfil</th>
                         </tr>
@@ -158,6 +159,7 @@
                             </td>
                             <td>{{i.lts_odometer}}</td>
                             <td>{{i.lts_24_volt}}</td>
+                            <td>{{i.lts_fusi}}</td>
                             <td>{{i.lts_update}}</td>
                             <td>
                                 <a href="{% url 'bus_detail' i.id %}"
@@ -198,7 +200,7 @@
                     </nav>
                     {% endif %}
                 </div>
-                <div class="col-4" style="margin-top: 20px">
+                <div class="col-3" style="margin-top: 20px">
                     <h2>Informe Fusi</h2>
                     <table class="table">
                         <tr>
