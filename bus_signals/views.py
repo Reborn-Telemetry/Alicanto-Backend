@@ -175,6 +175,8 @@ def dashboard(request):
     bus_instance = Bus()
     delayed = bus_instance.delay_data().count()
 
+    operacion = total_flota - cant_fs
+
     page = request.GET.get('page', 1)
     results = 10
     paginator = Paginator(complete_table, results)
@@ -205,6 +207,7 @@ def dashboard(request):
 
 
     context = {
+        'operacion': operacion,
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
