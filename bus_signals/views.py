@@ -21,6 +21,7 @@ import xlwt
 # manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+
 filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
 20502.0, 21777.0, 21780.0, 20500.0, 20508.0, 20510.0, 20504.0, 20520.0, 20515.0, 20501.0]
 
@@ -28,6 +29,13 @@ filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.
 
 @login_required(login_url='login')
 def warnings(request):
+    headers = {
+    'User-Agent': 'Alicanto/1.0',
+}
+    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
+    response = requests.get(api_url, headers=headers)
+    data = response.json()
+    list_fs_bus = data['data']
     bus_instance = Bus()
     delayed = bus_instance.delay_data()
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
@@ -67,6 +75,7 @@ def warnings(request):
     # fin paginador delayed
 
     context = {
+        'list_fs_bus': list_fs_bus,
         'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
@@ -132,6 +141,13 @@ def bus_list(request):
 
 @login_required(login_url='login')
 def dashboard(request):
+    headers = {
+    'User-Agent': 'Alicanto/1.0',
+}
+    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
+    response = requests.get(api_url, headers=headers)
+    data = response.json()
+    cant_fs = len(data['data'])
     # fusicodes
     distinct_fusi_code = FusiCode.fusi.values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
@@ -201,6 +217,7 @@ def dashboard(request):
         'paginator_fusi': paginator_fusi,
         'distinct_fusi_code': distinct_fusi_code,
         'top_buses': top_buses,
+        'cant_fs': cant_fs,
     }
     return render(request, 'pages/dashboard.html', context)
 
