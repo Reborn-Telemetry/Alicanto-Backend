@@ -24,8 +24,27 @@ SECRET_KEY = 'django-insecure-y_*hy#i!@h95^&-s7#=4(26l6wpno)!1un_ah+l69xb9+w+&(b
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = []
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+
 
 
 # Application definition
@@ -39,9 +58,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bus_signals.apps.BusSignalsConfig',
     'users.apps.UsersConfig',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
