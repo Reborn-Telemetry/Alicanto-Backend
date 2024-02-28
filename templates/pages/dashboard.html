@@ -10,11 +10,8 @@
 <div class="container text-center" style="margin-left: 300px">
     <div style="display:flex; justify-content;flex-end; margin-top: 20px; margin-left:300px">
         <a href="{% url 'create_bus' %}">
-            <i
-                class="fa-solid fa-circle-plus fa-2xl"
-                style="color: #77bb41; margin-bottom: 40px"
-            ></i
-        ></a>
+            <span class="material-symbols-outlined"> add_circle</span></a
+        >
     </div>
     <div>
         <div class="row">
@@ -22,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Kilometraje Flota</h5>
-                        <i class="fa-solid fa-road"></i>
+                        <span class="material-symbols-outlined"> speed </span>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{km_total}} kms</h6>
                     </div>
                 </div>
@@ -33,7 +30,7 @@
                     <div class="card-body">
                         <a href="{% url 'bus_list' %}">
                             <h5 class="card-title">Total Flota</h5>
-                            <i class="fa-solid fa-bus"></i>
+                            <span class="material-symbols-outlined"> directions_bus </span>
                             <h6 class="card-subtitle mb-2 text-body-secondary">
                                 {{total_flota}} buses
                             </h6>
@@ -47,7 +44,7 @@
                     <div class="card-body">
                         <a href="{% url 'fusi_dashboard' %}">
                             <h5 class="card-title">Fusi activos</h5>
-                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span class="material-symbols-outlined"> warning </span>
                             <h6 class="card-subtitle mb-2 text-body-secondary">
                                 {{open_fusi}} Codigos
                             </h6>
@@ -60,7 +57,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Buses en Operacion</h5>
-                        <i class="fa-solid fa-road-circle-check"></i>
+                        <span class="material-symbols-outlined"> no_crash </span>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{operacion}}</h6>
                     </div>
                 </div>
@@ -72,7 +69,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Fuera de servicio</h5>
-                            <i class="fa-solid fa-road-circle-xmark"></i>
+                            <span class="material-symbols-outlined"> bus_alert </span>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{ cant_fs }}</h6>
                         </div>
                     </div>
@@ -84,7 +81,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Buses sin conexion</h5>
-                            <i class="fa-solid fa-link-slash"></i>
+                            <span class="material-symbols-outlined"> signal_disconnected </span>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{no_update}}</h6>
                         </div>
                     </div>
@@ -96,7 +93,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Buses Carga Baja</h5>
-                            <i class="fa-solid fa-charging-station"></i>
+                            <span class="material-symbols-outlined"> ev_charger </span>
                             <h6 class="card-subtitle mb-2 text-body-secondary">
                                 {{cant_low_50_soc}}
                             </h6>
@@ -109,7 +106,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Buses con cola de archivos</h5>
-                            <i class="fa-regular fa-calendar-xmark"></i>
+                            <span class="material-symbols-outlined"> departure_board </span>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{delayed}}</h6>
                         </div>
                     </div>
@@ -162,10 +159,11 @@
                             <td>{{i.lts_odometer}}</td>
                             <td>{{i.lts_24_volt}}</td>
                             <td>
-                                {% if i.lts_fusi == 0.0 %}<i
-                                    class="fa-regular fa-circle-check fa-xl"
-                                    style="color: #77bb41"
-                                ></i
+                                {% if i.lts_fusi == 0.0 %}<span
+                                    class="material-symbols-outlined"
+                                    style="color: green"
+                                >
+                                    verified </span
                                 >{% else %}
                                 <button type="button" class="btn btn-outline-danger">
                                     {{i.lts_fusi}}
