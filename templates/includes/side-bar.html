@@ -1,53 +1,37 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" media="screen" href='{% static "styles/side-bar.css" %}' />
-<script src="https://kit.fontawesome.com/0632ec8479.js" crossorigin="anonymous"></script>
-<div id="viewport">
-    <!-- Sidebar -->
-    <div id="sidebar">
-        <div class="logocontainer">
-            <div class="logo"><img src="{% static "img/REM.png" %}" alt="Alicanto"></div>
-            <div class="logotext"></div>
-        </div>
-        <div class="menuitems">
-            <div class="menuitem">
-                <i class="fa-solid fa-house fa-lg" style="color: #ebebeb"></i>
-                <a href="{% url 'dashboard' %}" style="color: #ebebeb">Dashboard</a>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'styles/sidebar.css' %}" />
+    </head>
+    <body>
+        <nav class="sidebar">
+            <header>
+                <div class="image-text">
+                    <span class="image"
+                        ><img class="logo" src="static/img/REM.png" alt="logo"
+                    /></span>
+                    <div class="text header-text">
+                        <span class="name">Alicanto</span>
+                        <span class="profession">Reborn Telemetria</span>
+                    </div>
+                </div>
+                <span class="material-symbols-outlined click-button"> chevron_right </span>
+            </header>
+            <div class="menu-bar">
+                <div class="menu">
+                    <ul class="menu-links">
+                        <li class="nav-link">
+                            <a href=""
+                                ><span class="material-symbols-outlined"> home </span>
+                                <span class="text nav-text">Dashboard</span></a
+                            >
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-chart-simple fa-lg" style="color: #ebebeb"></i>
-                <a href="{% url 'reports_page' %}" style="color: #ebebeb">Reportes</a>
-            </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-bus fa-lg" style="color: #ebebeb"></i>
-                <a href="{% url 'bus_list' %}" style="color: #ebebeb">Flota</a>
-            </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-book fa-lg" style="color: #ebebeb"></i>
-                <a href="{% url 'dic_fusi' %}" style="color: #ebebeb">Diccionario Fusi</a>
-            </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-pen-to-square fa-lg" style="color: #ebebeb"></i>
-                <a href="{% url 'work_order_form' %}" style="color: #ebebeb">Crear Parte</a>
-            </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-person-running fa-lg" style="color: #ebebeb"></i>
-                <a href="{% url 'profile' %}" style="color: #ebebeb">Staff</a>
-            </div>
-            <div class="menuitem">
-                <i class="fa-solid fa-right-from-bracket fa-lg" style="color: #d6d6d6"></i>
-                <a href="{% url 'logout_user' %}" style="color: #ebebeb">Cerrar sesion</a>
-            </div>
-            <div class="menuitem"></div>
-        </div>
-    </div>
-    <nav
-        style="box-shadow: 0px 7px 9px -4px rgba(0, 0, 0, 0.22); position: fixed; width: 100%"
-        class="navbar bg-body-tertiary"
-    >
-        <div class="container-fluid">
-            <span class="navbar-brand"
-                ><i class="fa-solid fa-user fa-lg"></i> <span>{{user.username}}</span></span
-            >
-        </div>
-    </nav>
-</div>
+        </nav>
+    </body>
+</html>
