@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #695cfe;
+    --primary-color-light: #f6f5ff;
+    --toggle-color: #ddd;
+    --text-color: #707070;
+
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+body {
+    height: 100vh;
+    background-color: var(--body-color);
+}
+
+/*reusable*/
+
+.sidebar .text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+.sidebar .image {
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    padding-top: 14px;
+    padding-left: 10px;
+    background: var(--sidebar-color);
+}
+.sidebar li {
+    height: 50px;
+    margin-top: 10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+.sidebar li .material-symbols-outlined {
+    font-size: 22px;
+}
+.sidebar header {
+    position: relative;
+}
+.logo {
+    width: 40px;
+    border-radius: 6px;
+}
+.sidebar header .image-text {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header .image-text .header-text {
+    display: flex;
+    flex-direction: column;
+}
+.header-text .name {
+    font-weight: 600;
+}
+.header-text .profession {
+    margin-top: -2px;
+}
+
+.sidebar .click-button {
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    transform: translateY(-50%);
+    height: 25px;
+    width: 25px;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--sidebar-color);
+    font-size: 22px;
+}
