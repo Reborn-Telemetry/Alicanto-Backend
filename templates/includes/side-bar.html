@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="{% static 'styles/sidebar.css' %}" />
     </head>
     <body>
-        <nav class="sidebar">
+        <nav class="sidebar close">
             <header>
                 <div class="image-text">
                     <span class="image"
@@ -76,8 +76,8 @@
                     </li>
                     <li class="mode">
                         <div class="moon-sun">
-                            <i class="bx bx-moon icon"></i>
-                            <i class="bx bx-sun icon"></i>
+                            <i class="bx bx-moon icon moon"></i>
+                            <i class="bx bx-sun icon sun"></i>
                         </div>
                         <span class="mode-text text">Dark Mode</span>
                         <div class="toggle-switch">
@@ -88,4 +88,5 @@
             </div>
         </nav>
     </body>
+    <script src="{% static 'js/sidebar.js' %}"></script>
 </html>
