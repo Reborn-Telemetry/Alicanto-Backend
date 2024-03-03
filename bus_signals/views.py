@@ -168,7 +168,9 @@ def dashboard(request):
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
     # cantidad de buses sin actualizacion
-    no_update = Bus.bus.filter(lts_update=None).count()
+    no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83']
+    no_update = Bus.bus.filter(lts_update=None)
+    no_update = no_update.exclude(id__in=no_update_list).count()
     # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count.count()
     # cantidad buses con cola de archivos
