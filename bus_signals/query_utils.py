@@ -14,50 +14,52 @@ def daily_bus_km(id_bus):
 )
 SELECT
     all_days.dia,
-    LAST_VALUE(CASE WHEN mes = 1 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS enero,
-    LAST_VALUE(CASE WHEN mes = 2 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS febrero,
-    LAST_VALUE(CASE WHEN mes = 3 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS marzo,
-    LAST_VALUE(CASE WHEN mes = 4 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS abril,
-    LAST_VALUE(CASE WHEN mes = 5 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS mayo,
-    LAST_VALUE(CASE WHEN mes = 6 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS junio,
-    LAST_VALUE(CASE WHEN mes = 7 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS julio,
-    LAST_VALUE(CASE WHEN mes = 8 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS agosto,
-    LAST_VALUE(CASE WHEN mes = 9 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS septiembre,
-    LAST_VALUE(CASE WHEN mes = 10 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS octubre,
-    LAST_VALUE(CASE WHEN mes = 11 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS noviembre,
-    LAST_VALUE(CASE WHEN mes = 12 THEN max_odometer END) OVER (PARTITION BY all_days.dia ORDER BY mes ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS diciembre
-FROM
-    all_days
-
+    MAX(CASE WHEN mes = 1 THEN max_odometer END) AS enero,
+    MAX(CASE WHEN mes = 2 THEN max_odometer END) AS febrero,
+    MAX(CASE WHEN mes = 3 THEN max_odometer END) AS marzo,
+    MAX(CASE WHEN mes = 4 THEN max_odometer END) AS abril,
+    MAX(CASE WHEN mes = 5 THEN max_odometer END) AS mayo,
+    MAX(CASE WHEN mes = 6 THEN max_odometer END) AS junio,
+    MAX(CASE WHEN mes = 7 THEN max_odometer END) AS julio,
+    MAX(CASE WHEN mes = 8 THEN max_odometer END) AS agosto,
+    MAX(CASE WHEN mes = 9 THEN max_odometer END) AS septiembre,
+    MAX(CASE WHEN mes = 10 THEN max_odometer END) AS octubre,
+    MAX(CASE WHEN mes = 11 THEN max_odometer END) AS noviembre,
+    MAX(CASE WHEN mes = 12 THEN max_odometer END) AS diciembre
+FROM all_days
 LEFT JOIN (
     SELECT
         EXTRACT(DAY FROM "TimeStamp") AS dia,
         bus_id,
         odometer_value as max_odometer,
         EXTRACT(MONTH FROM "TimeStamp") AS mes
-    FROM
-       (
-            WITH ranked_data AS (
-                SELECT
-                    bus_id,
-                    odometer_value,
-                    "TimeStamp",
-                    ROW_NUMBER() OVER (PARTITION BY bus_id, DATE_TRUNC('day', "TimeStamp") ORDER BY odometer_value DESC) AS rnk
-                FROM
-                    bus_signals_odometer
-            )
+    FROM (
+        WITH ranked_data AS (
             SELECT
                 bus_id,
                 odometer_value,
-                "TimeStamp"
+                "TimeStamp",
+                ROW_NUMBER() OVER (PARTITION BY bus_id, DATE_TRUNC('day', "TimeStamp") ORDER BY odometer_value DESC) AS rnk
             FROM
-                ranked_data
-            WHERE
-                rnk = 1
-            ORDER BY
-                bus_id, "TimeStamp" DESC
-        ) A WHERE bus_id =%s
-) A ON all_days.dia = A.dia;"""
+                bus_signals_odometer
+        )
+        SELECT
+            bus_id,
+            odometer_value,
+            "TimeStamp"
+        FROM
+            ranked_data
+        WHERE
+            rnk = 1
+        ORDER BY
+            bus_id, "TimeStamp" DESC
+    ) A
+    WHERE bus_id = %s
+
+) A ON all_days.dia = A.dia
+GROUP BY all_days.dia;
+
+"""
     cursor.execute(query, (id_bus,))
     results = cursor.fetchall()
 # Cerrar el cursor y la conexión
