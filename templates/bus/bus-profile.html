@@ -4,9 +4,16 @@
     <img src="{{ bus.bus_img.url }}" alt="image" style="width: 400px; height: 250px" />
     <h1>BUS {{ bus.bus_name}}</h1>
     <h5>Sniffer: {{ bus.sniffer}}</h5>
+    {% if user.username == 'hurbx' %}
     <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
     <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
     <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
+    {% else %}
+    <a href="#"><button>Editar Bus</button></a>
+    <a href="#"><button>Eliminar Bus</button></a>
+    <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
+
+    {% endif %}
 
     <span class="badge rounded-pill text-bg-secondary">Patente: {{ bus.plate_number}}</span>
     <h5>Kilometraje: {{ bus.lts_odometer }}</h5>
