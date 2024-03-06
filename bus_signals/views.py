@@ -40,7 +40,11 @@ def warnings(request):
     delayed = bus_instance.delay_data()
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
+    
     no_update = Bus.bus.filter(lts_update=None)
+    no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83']
+    no_update = no_update.exclude(id__in=no_update_list)
+
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
 
