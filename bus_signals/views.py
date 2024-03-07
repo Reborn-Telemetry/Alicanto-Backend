@@ -20,6 +20,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
 # manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.utils import timezone
 
 
 filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
@@ -154,10 +155,13 @@ def dashboard(request):
     response = requests.get(api_url, headers=headers)
     data = response.json()
     cant_fs = len(data['data'])
-    # fusicodes
-    distinct_fusi_code = FusiCode.fusi.values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
+    # fusicodes monthly
+    current_month = timezone.now().month
+    distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
-    
+    current_datetime = timezone.now()
+    mes_actual = current_datetime.strftime('%B')
+  
     # cantidad de fusi abiertos
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
     # cantidad de buses en la flota
@@ -214,6 +218,7 @@ def dashboard(request):
 
 
     context = {
+        'mes_actual': mes_actual,
         'operacion': operacion,
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
