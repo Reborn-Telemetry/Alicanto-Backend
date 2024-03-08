@@ -165,7 +165,9 @@ def dashboard(request):
     # cantidad de fusi abiertos
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
     # cantidad de buses en la flota
-    total_flota = Bus.bus.count()
+    total_flota = Bus.bus.exclude(id__in=no_update_list)
+    total_flota = total_flota.count()
+    
     # datos tabla de buses
     complete_table = Bus.bus.all()
     complete_table = complete_table.exclude(lts_update=None)
