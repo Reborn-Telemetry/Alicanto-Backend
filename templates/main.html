@@ -11,10 +11,8 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-            rel="stylesheet"
-        />
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
 
         <title>{% block title %}Alicanto Telemetria{% endblock title %}</title>
     </head>
@@ -23,9 +21,119 @@
         <ul class="messages">
             {% for message in messages %}
             <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
+            {% endfor %} {% endif %}
         </ul>
-        {% endif %}{% include "includes/side-bar.html" %} {% block content %} {%endblock content %}
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+                <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                    <div
+                        class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 sidebar"
+                    >
+                        <a
+                            href="/"
+                            class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+                        >
+                            <span class="fs-5 d-none d-sm-inline">
+                                <img alt="logoReborn" src="{% static "img/logo/reblogo.png" %}"
+                                style="width:180px;">
+                                <hr class="hr" />
+                            </span>
+                        </a>
+                        <ul
+                            class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                            id="menu"
+                        >
+                            <li class="nav-item">
+                                <a href="#" class="nav-link align-middle px-0">
+                                    <i class="bx bx-home-alt-2 icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#submenu1"
+                                    data-bs-toggle="collapse"
+                                    class="nav-link px-0 align-middle"
+                                >
+                                    <i class="bx bxs-report icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Reportes</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 align-middle">
+                                    <i class="bx bx-pie-chart-alt-2 icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Disponibilidad</span></a
+                                >
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 align-middle">
+                                    <i class="bx bx-bus icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Flota</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 align-middle">
+                                    <i class="bx bx-book icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Diccionario Fusi</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 align-middle">
+                                    <i class="bx bx-time icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Programacion Buses</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 align-middle">
+                                    <i class="bx bx-edit-alt icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Crear Parte</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 align-middle">
+                                    <i class="bx bx-user-pin icon"></i>
+                                    <span class="ms-1 d-none d-sm-inline">Staff</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <hr />
+                        <div class="dropdown pb-4">
+                            <a
+                                href="#"
+                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                                id="dropdownUser1"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <img
+                                    src="https://github.com/mdo.png"
+                                    alt="hugenerd"
+                                    width="30"
+                                    height="30"
+                                    class="rounded-circle"
+                                />
+                                <span class="d-none d-sm-inline mx-1">{{user.username}}</span>
+                            </a>
+                            <ul
+                                class="dropdown-menu dropdown-menu-dark text-small shadow"
+                                aria-labelledby="dropdownUser1"
+                            >
+                                <li><a class="dropdown-item" href="#">Pelfil</a></li>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li><a class="dropdown-item" href="#">Cerrar Sesion</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col py-3">
+                    <h3>{% block header %}{% endblock header %}</h3>
+                    {% block content %}{% endblock content %}
+                </div>
+            </div>
+        </div>
+
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
