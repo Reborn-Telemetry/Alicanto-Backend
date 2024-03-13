@@ -1,112 +1,95 @@
-{% extends "main.html" %} {% load static %} {% block content %}
-<br />
-<br />
-<br />
-<br />
-<br />
+{% extends "main.html" %} {% load static %} {%block header%}Dashboard Flota.{%endblock header%} {%block content %}
+<link rel="stylesheet" href="{% static 'styles/dashboard.css' %}" />
 
-<h1 style="margin-left: 300px">Dashboard Flota</h1>
-
-<div class="container text-center" style="margin-left: 300px">
-    <div style="display:flex; justify-content;flex-end; margin-top: 20px; margin-left:300px">
-        <a href="{% url 'create_bus' %}">
-            <span class="material-symbols-outlined"> add_circle</span></a
-        >
-    </div>
+<div class="container text-center">
     <div>
         <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-3">
+            <div class="col-sm-12 col-md-4 col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Kilometraje Flota</h5>
-                        <span class="material-symbols-outlined"> speed </span>
+                        <i class="bx bx-tachometer"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{km_total}} kms</h6>
                     </div>
                 </div>
             </div>
             <!--segunda tarjeta -->
-            <div class="col-3">
+            <div class="col-sm-12 col-md-4 col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <a href="{% url 'bus_list' %}">
                             <h5 class="card-title">Total Flota</h5>
-                            <span class="material-symbols-outlined"> directions_bus </span>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">
-                                {{total_flota}} buses
-                            </h6>
+                            <i class="bx bx-bus"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{total_flota}} buses</h6>
                         </a>
                     </div>
                 </div>
             </div>
             <!--tercera tarjeta -->
-            <div class="col-3">
+            <div class="col-sm-12 col-md-4 col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <a href="{% url 'fusi_dashboard' %}">
                             <h5 class="card-title">Fusi activos</h5>
-                            <span class="material-symbols-outlined"> warning </span>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">
-                                {{open_fusi}} Codigos
-                            </h6>
+                            <i class="bx bx-error"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{open_fusi}} Codigos</h6>
                         </a>
                     </div>
                 </div>
             </div>
             <!--cuarta tarjeta -->
-            <div class="col-3">
+            <div class="col-sm-12 col-md-4 col-lg-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Buses en Operacion</h5>
-                        <span class="material-symbols-outlined"> no_crash </span>
+                        <i class="bx bx-check-circle"></i>
                         <h6 class="card-subtitle mb-2 text-body-secondary">{{operacion}}</h6>
                     </div>
                 </div>
             </div>
             <!--fin perimera linea tarjetas-->
 
-            <div class="col-3" style="margin-top: 20px">
+            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Fuera de servicio</h5>
-                            <span class="material-symbols-outlined"> bus_alert </span>
+                            <i class="bx bx-x-circle"></i>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{ cant_fs }}</h6>
                         </div>
                     </div>
                 </a>
             </div>
 
-            <div class="col-3" style="margin-top: 20px">
+            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Buses sin conexion</h5>
-                            <span class="material-symbols-outlined"> signal_disconnected </span>
+                            <i class="bx bx-wifi-off"></i>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{no_update}}</h6>
                         </div>
                     </div>
                 </a>
             </div>
 
-            <div class="col-3" style="margin-top: 20px">
+            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Buses Carga Baja</h5>
-                            <span class="material-symbols-outlined"> ev_charger </span>
-                            <h6 class="card-subtitle mb-2 text-body-secondary">
-                                {{cant_low_50_soc}}
-                            </h6>
+                            <i class="bx bxs-battery-low"></i>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{cant_low_50_soc}}</h6>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-3" style="margin-top: 20px">
+            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Buses con cola de archivos</h5>
-                            <span class="material-symbols-outlined"> departure_board </span>
+                            <i class="bx bx-history"></i>
                             <h6 class="card-subtitle mb-2 text-body-secondary">{{delayed}}</h6>
                         </div>
                     </div>
@@ -114,86 +97,88 @@
             </div>
 
             <div class="row">
-                <div class="col-9" style="margin-top: 20px">
+                <div class="col-sm-12 col-md-4 col-lg-12" style="margin-top: 20px">
                     <h2>Actualizaciones Buses</h2>
-                    <table class="table">
-                        <tr>
-                            <th>Bus</th>
-                            <th>Carga</th>
-                            <th>Serie</th>
-                            <th>Odometro</th>
-                            <th>voltaje</th>
-                            <th>Fusi Activo *in progress</th>
-                            <th>actualizacion</th>
-                            <th>Perfil</th>
-                        </tr>
-                        {% for i in complete_table %}
-                        <tr>
-                            <td>{{i.bus_name}}</td>
-                            <td>
-                                {% if i.lts_soc > 60 %}
-                                <span class="badge rounded-pill text-bg-success"
-                                    >{{ i.lts_soc }} %</span
-                                >
-                                {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                                <span class="badge rounded-pill text-bg-warning"
-                                    >{{ i.lts_soc }} %</span
-                                >
-                                {% elif i.lts_soc <= 40 %}
-                                <span class="badge rounded-pill text-bg-danger"
-                                    >{{ i.lts_soc }} %</span
-                                >
-                                {% else %} {{ i.lts_soc }} {% endif %}
-                            </td>
-                            <td>
-                                {% if i.bus_series == 'Queltehue' %}
-                                <button type="button" class="btn btn-outline-warning btn-sm">
-                                    {{i.bus_series}}
-                                </button>
-                                {% elif i.bus_series == 'Tricahue' %}
-                                <button type="button" class="btn btn-outline-success btn-sm">
-                                    {{i.bus_series}}
-                                </button>
-                                {% endif %}
-                            </td>
-                            <td>{{i.lts_odometer}}</td>
-                            <td>{{i.lts_24_volt}}</td>
-                            <td>
-                                {% if i.lts_fusi == 0.0 %}<span
-                                    class="material-symbols-outlined"
-                                    style="color: green"
-                                >
-                                    verified </span
-                                >{% else %}
-                                <button type="button" class="btn btn-outline-danger">
-                                    {{i.lts_fusi}}
-                                </button>
-                                {% endif %}
-                            </td>
-                            <td>{{i.lts_update}}</td>
-                            <td>
-                                <a href="{% url 'bus_detail' i.id %}"
-                                    ><button type="button" class="btn btn-outline-info">
-                                        <span class="material-symbols-outlined">
-                                            arrow_forward_ios
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>Carga</th>
+                                    <th>Odometro</th>
+                                    <th>Voltaje</th>
+                                    <th>Fusi Activo *in progress</th>
+                                    <th>Actualizacion</th>
+                                    <th>Perfil</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in complete_table %}
+                                <tr>
+                                    <td>{{i.bus_name}}</td>
+                                    <td>
+                                        {% if i.lts_soc > 60 %}
+
+                                        <span
+                                            class="material-symbols-outlined icon"
+                                            style="color: green; display: inline-block; vertical-align: middle"
+                                            >battery_full</span
+                                        >
+                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                            >{{ i.lts_soc }} %</span
+                                        >
+
+                                        {%elif i.lts_soc <= 60 and i.lts_soc > 40%}
+                                        <span
+                                            class="material-symbols-outlined icon"
+                                            style="color: orange; display: inline-block; vertical-align: middle"
+                                        >
+                                            battery_3_bar
                                         </span>
-                                        Perfil
-                                    </button></a
-                                >
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                            >{{ i.lts_soc }} %</span
+                                        >
+                                        {% elif i.lts_soc <= 40 %}
+                                        <span
+                                            class="material-symbols-outlined icon"
+                                            style="color: red; display: inline-block; vertical-align: middle"
+                                        >
+                                            battery_1_bar
+                                        </span>
+                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                            >{{ i.lts_soc }} %</span
+                                        >
+                                        {% else %} {{ i.lts_soc }} {% endif %}
+                                    </td>
+                                    <td>{{i.lts_odometer}}</td>
+                                    <td>{{i.lts_24_volt}}</td>
+                                    <td>
+                                        {% if i.lts_fusi == 0.0 %}
+                                        <span class="material-symbols-outlined" style="color: green">verified </span>
+                                        {% else %}
+                                        <button type="button" class="btn btn-outline-danger">{{i.lts_fusi}}</button>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.lts_update}}</td>
+                                    <td>
+                                        <a href="{% url 'bus_detail' i.id %}">
+                                            <button type="button" class="btn btn-outline-info">
+                                                <span class="material-symbols-outlined">arrow_forward_ios</span>
+                                                Perfil
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     {% if complete_table.has_other_pages %}
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             {% if complete_table.has_previous %}
                             <li class="page-item">
-                                <a
-                                    class="page-link"
-                                    href="?page={{complete_table.previous_page_number}}"
-                                    >Anterior</a
-                                >
+                                <a class="page-link" href="?page={{complete_table.previous_page_number}}">Anterior</a>
                             </li>
                             {% endif %} {% for page in paginator.page_range %}
                             <li class="page-item">
@@ -202,11 +187,7 @@
                             {% endfor %} {% if complete_table.has_next %}
 
                             <li class="page-item">
-                                <a
-                                    class="page-link"
-                                    href="?page={{ complete_table.next_page_number }}"
-                                    >Siguiente</a
-                                >
+                                <a class="page-link" href="?page={{ complete_table.next_page_number }}">Siguiente</a>
                             </li>
                             {% endif %}
                         </ul>
@@ -232,9 +213,7 @@
                         <ul class="pagination">
                             {% if distinct_fusi_code.has_previous %}
                             <li class="page-item">
-                                <a
-                                    class="page-link"
-                                    href="?page_fusi={{distinct_fusi_code.previous_page_number}}"
+                                <a class="page-link" href="?page_fusi={{distinct_fusi_code.previous_page_number}}"
                                     >Anterior</a
                                 >
                             </li>
@@ -245,9 +224,7 @@
                             {% endfor %} {% if distinct_fusi_code.has_next %}
 
                             <li class="page-item">
-                                <a
-                                    class="page-link"
-                                    href="?page_fusi={{ distinct_fusi_code.next_page_number }}"
+                                <a class="page-link" href="?page_fusi={{ distinct_fusi_code.next_page_number }}"
                                     >Siguiente</a
                                 >
                             </li>
