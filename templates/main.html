@@ -30,12 +30,17 @@
                         class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 sidebar"
                     >
                         <a
-                            href="/"
+                            href="{% url 'dashboard' %}"
                             class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
                         >
                             <span class="fs-5 d-none d-sm-inline">
-                                <img alt="logoReborn" src="{% static "img/logo/reblogo.png" %}"
-                                style="width:180px;">
+                                <div
+                                    class="d-flex justify-content-center align-items-center"
+                                    style="width: 100%"
+                                >
+                                    <img alt="logoReborn" src="{% static "img/logo/reblogo.png" %}"
+                                    style="width:180px;">
+                                </div>
                                 <hr class="hr" />
                             </span>
                         </a>
@@ -44,14 +49,14 @@
                             id="menu"
                         >
                             <li class="nav-item">
-                                <a href="#" class="nav-link align-middle px-0">
+                                <a href="{% url 'dashboard' %}" class="nav-link align-middle px-0">
                                     <i class="bx bx-home-alt-2 icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Dashboard</span>
                                 </a>
                             </li>
                             <li>
                                 <a
-                                    href="#submenu1"
+                                    href="{% url 'reports_page' %}"
                                     data-bs-toggle="collapse"
                                     class="nav-link px-0 align-middle"
                                 >
@@ -60,19 +65,22 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0 align-middle">
+                                <a
+                                    href="{% url 'reports_page' %}"
+                                    class="nav-link px-0 align-middle"
+                                >
                                     <i class="bx bx-pie-chart-alt-2 icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Disponibilidad</span></a
                                 >
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0 align-middle">
+                                <a href="{% url 'bus_list' %}" class="nav-link px-0 align-middle">
                                     <i class="bx bx-bus icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Flota</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0 align-middle">
+                                <a href="{% url 'dic_fusi' %}" class="nav-link px-0 align-middle">
                                     <i class="bx bx-book icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Diccionario Fusi</span>
                                 </a>
@@ -80,17 +88,20 @@
                             <li>
                                 <a href="#" class="nav-link px-0 align-middle">
                                     <i class="bx bx-time icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Programacion Buses</span>
+                                    <span class="ms-1 d-none d-sm-inline">Prog. Buses</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0 align-middle">
+                                <a
+                                    href="{% url 'work_order_form' %}"
+                                    class="nav-link px-0 align-middle"
+                                >
                                     <i class="bx bx-edit-alt icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Crear Parte</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0 align-middle">
+                                <a href="{% url 'profile' %}" class="nav-link px-0 align-middle">
                                     <i class="bx bx-user-pin icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Staff</span>
                                 </a>
@@ -122,7 +133,11 @@
                                 <li>
                                     <hr class="dropdown-divider" />
                                 </li>
-                                <li><a class="dropdown-item" href="#">Cerrar Sesion</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'logout_user' %}"
+                                        >Cerrar Sesion</a
+                                    >
+                                </li>
                             </ul>
                         </div>
                     </div>
