@@ -1,0 +1,11 @@
+.texticon {
+    color: black;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: -20px;
+    font-weight: 450;
+}
+
+.icon {
+    font-size: 30px;
+}

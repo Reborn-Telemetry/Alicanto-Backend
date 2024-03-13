@@ -14,9 +14,11 @@
         <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
 
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
         <title>{% block title %}Alicanto Telemetria{% endblock title %}</title>
     </head>
-    <body>
+    <body style="background-color: #ededed">
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -34,12 +36,9 @@
                             class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
                         >
                             <span class="fs-5 d-none d-sm-inline">
-                                <div
-                                    class="d-flex justify-content-center align-items-center"
-                                    style="width: 100%"
-                                >
-                                    <img alt="logoReborn" src="{% static "img/logo/reblogo.png" %}"
-                                    style="width:180px; margin-left:30px">
+                                <div class="d-flex justify-content-center align-items-center" style="width: 100%">
+                                    <img alt="logoReborn" src="{% static "img/logo/reblogo.png" %}" style="width:180px;
+                                    margin-left:30px">
                                 </div>
                                 <hr class="hr" />
                             </span>
@@ -65,10 +64,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="{% url 'reports_page' %}"
-                                    class="nav-link px-0 align-middle"
-                                >
+                                <a href="{% url 'reports_page' %}" class="nav-link px-0 align-middle">
                                     <i class="bx bx-pie-chart-alt-2 icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Disponibilidad</span></a
                                 >
@@ -92,10 +88,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="{% url 'work_order_form' %}"
-                                    class="nav-link px-0 align-middle"
-                                >
+                                <a href="{% url 'work_order_form' %}" class="nav-link px-0 align-middle">
                                     <i class="bx bx-edit-alt icon"></i>
                                     <span class="ms-1 d-none d-sm-inline">Crear Parte</span>
                                 </a>
@@ -134,16 +127,14 @@
                                     <hr class="dropdown-divider" />
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'logout_user' %}"
-                                        >Cerrar Sesion</a
-                                    >
+                                    <a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col py-3">
-                    <h3>{% block header %}{% endblock header %}</h3>
+                    <h2 class="header">{% block header %}{% endblock header %}</h2>
                     {% block content %}{% endblock content %}
                 </div>
             </div>
