@@ -19,15 +19,25 @@
     <head>
         <meta charset="UTF-8" />
         <title>Alicanto Login</title>
-        <link
-            href="https://fonts.googleapis.com/css?family=Montserrat"
-            rel="stylesheet"
-            type="text/css"
-        />
-        <link rel="stylesheet" href="../static/styles/login.css" />
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="{% static 'styles/login.css' %}" />
     </head>
     <body>
-        <div class="login">
+        <section>
+            <div class="container">
+                <div class="login-form">
+                    <h1>Alicanto Telemetria</h1>
+                    <form action="{% url 'login' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="username" placeholder="Nombre de Usuario" />
+                        <input type="password" name="password" placeholder="Contraseña" />
+                        <input type="submit" name="" value="Aceptar" />
+                    </form>
+                </div>
+            </div>
+        </section>
+        <!--
+            <div class="login">
             <h2 class="active">Iniciar sesion</h2>
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
@@ -51,5 +61,6 @@
                 <p class="trademark2">Alicanto Telemetría Reborn</p>
             </form>
         </div>
+        -->
     </body>
 </html>
