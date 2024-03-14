@@ -9,7 +9,7 @@
     <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
     <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
     {% else %}
-    <a href="#"><button>Editar Bus</button></a>
+    <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
     <a href="#"><button>Eliminar Bus</button></a>
     <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
 
