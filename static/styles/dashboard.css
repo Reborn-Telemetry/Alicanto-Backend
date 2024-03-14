@@ -9,3 +9,10 @@
 .icon {
     font-size: 30px;
 }
+
+.timestamp {
+    font-size: 15px;
+    max-width: 180px;
+    display: flex;
+    text-align: center;
+}
