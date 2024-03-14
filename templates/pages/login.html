@@ -29,7 +29,7 @@
                     <h1>Alicanto Telemetria</h1>
                     <form action="{% url 'login' %}" method="POST">
                         {% csrf_token %}
-                        <input type="text" name="username" placeholder="Nombre de Usuario" />
+                        <input type="text" name="username" placeholder="Usuario" />
                         <input type="password" name="password" placeholder="Contraseña" />
                         <input type="submit" name="" value="Aceptar" />
                     </form>
