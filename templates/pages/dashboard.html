@@ -101,13 +101,13 @@
                     <h2>Actualizaciones Buses</h2>
                     <div class="table-responsive">
                         <table class="table">
-                            <thead>
+                            <thead style="text-align: center">
                                 <tr>
                                     <th>Bus</th>
                                     <th>Carga</th>
-                                    <th>Odometro</th>
+                                    <th style="text-align: center">Odometro</th>
                                     <th>Voltaje</th>
-                                    <th>Fusi Activo *in progress</th>
+                                    <th>Fusi Activo</th>
                                     <th>Actualizacion</th>
                                     <th>Perfil</th>
                                 </tr>
@@ -116,7 +116,7 @@
                                 {% for i in complete_table %}
                                 <tr>
                                     <td>{{i.bus_name}}</td>
-                                    <td>
+                                    <td style="text-align: center">
                                         {% if i.lts_soc > 60 %}
 
                                         <span
@@ -150,7 +150,11 @@
                                         >
                                         {% else %} {{ i.lts_soc }} {% endif %}
                                     </td>
-                                    <td>{{i.lts_odometer}}</td>
+                                    <td>
+                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                            >{{ i.lts_odometer }} Km.</span
+                                        >
+                                    </td>
                                     <td>{{i.lts_24_volt}}</td>
                                     <td>
                                         {% if i.lts_fusi == 0.0 %}
@@ -159,13 +163,12 @@
                                         <button type="button" class="btn btn-outline-danger">{{i.lts_fusi}}</button>
                                         {% endif %}
                                     </td>
-                                    <td>{{i.lts_update}}</td>
+                                    <td><div class="timestamp">{{i.lts_update}}</div></td>
                                     <td>
                                         <a href="{% url 'bus_detail' i.id %}">
-                                            <button type="button" class="btn btn-outline-info">
-                                                <span class="material-symbols-outlined">arrow_forward_ios</span>
-                                                Perfil
-                                            </button>
+                                            <span class="badge rounded-pill text-bg-danger"
+                                                ><i class="bx bx-bus"></i> Perfil</span
+                                            >
                                         </a>
                                     </td>
                                 </tr>
