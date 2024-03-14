@@ -1,11 +1,6 @@
-{% extends "main.html" %} {% block content %}
-<br />
-<br />
-<br />
-<br />
-<div style="margin-left: 300px">
-    <h1>Flota E-Buses</h1>
+{% extends "main.html" %}{%block header%}Flota E-Buses{%endblock header%} {% block content %}
 
+<div>
     <a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
     <!--buscador de buses-->
     <form action="{% url 'bus_list' %}" method="get">
@@ -29,11 +24,7 @@
                 <div class="card mb-4" style="max-width: 540px">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img
-                                src="{{ bus.bus_img.url }}"
-                                class="img-fluid rounded-start"
-                                alt="bus image"
-                            />
+                            <img src="{{ bus.bus_img.url }}" class="img-fluid rounded-start" alt="bus image" />
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -45,9 +36,7 @@
                                         {{bus.lts_odometer}} Kms.
                                     </p>
                                     <p class="card-text">
-                                        <small class="text-body-secondary"
-                                            >{{bus.lts_update}}</small
-                                        >
+                                        <small class="text-body-secondary">{{bus.lts_update}}</small>
                                     </p>
                                 </a>
                             </div>

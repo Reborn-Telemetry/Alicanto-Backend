@@ -1,8 +1,7 @@
-{% extends "main.html" %} {% load static %} {% block content %}
+{% extends "main.html" %} {% load static %}{%block header%}BUS {{ bus.bus_name}}{%endblock header%} {% block content %}
 
-<div class="container text-center" style="margin-left: 300px">
+<div class="container text-center">
     <img src="{{ bus.bus_img.url }}" alt="image" style="width: 400px; height: 250px" />
-    <h1>BUS {{ bus.bus_name}}</h1>
     <h5>Sniffer: {{ bus.sniffer}}</h5>
     {% if user.username == 'hurbx' %}
     <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
