@@ -58,7 +58,9 @@
                     <a class="page-link" href="?page={{page}}">{{page}}</a>
                 </li>
                 {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{page}}">{{page}}</a>
+                </li>
                 {% endif %} {% endfor %} {% if bus.has_next %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
