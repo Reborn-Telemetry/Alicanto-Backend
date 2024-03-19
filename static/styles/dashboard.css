@@ -3,7 +3,7 @@
     display: inline-block;
     vertical-align: middle;
     margin-left: -20px;
-    font-weight: 450;
+    font-weight: 400;
 }
 
 .icon {
@@ -12,7 +12,7 @@
 
 .timestamp {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 400;
     max-width: 180px;
     display: flex;
     text-align: center;
@@ -22,6 +22,12 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: #ededed;
 }
+.card-header {
+    --bs-card-cap-color: #0f8bfd;
+    font-weight: 700;
+    font-size: 25px;
+    padding: 10px;
+}
 
 .table {
     --bs-table-bg: transparent;
@@ -30,6 +36,7 @@
     font-weight: 500;
     font-size: 18px;
 }
+
 td .fusi {
     display: flex;
     flex-direction: column;
@@ -60,7 +67,7 @@ td .volt {
 }
 
 .battok span {
-    color: #2c9b42;
+    color: black;
     font-size: 1rem;
 }
 
@@ -74,6 +81,23 @@ td .volt {
     font-size: 1rem;
 }
 
+.navpag {
+    margin-top: -70px;
+}
+.container-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.button-pro {
+    --bs-btn-border-radius: 50px;
+}
+.profile {
+    font-size: 20px;
+}
 .page-link {
     background: transparent;
+    --bs-pagination-active-bg: #0f8bfd;
+    --bs-pagination-active-border-color: #0f8bfd;
 }
