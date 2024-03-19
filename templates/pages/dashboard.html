@@ -1,10 +1,10 @@
 {% extends "main.html" %} {% load static %} {%block header%}Dashboard Flota.{%endblock header%} {%block content %}
 <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}" />
 
-<div class="container text-center">
+<div class="container">
     <div>
         <div class="row">
-            <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Kilometraje Flota</h5>
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <!--segunda tarjeta -->
-            <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
                         <a href="{% url 'bus_list' %}">
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <!--tercera tarjeta -->
-            <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
                         <a href="{% url 'fusi_dashboard' %}">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <!--cuarta tarjeta -->
-            <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Buses en Operacion</h5>
@@ -49,7 +49,7 @@
             </div>
             <!--fin perimera linea tarjetas-->
 
-            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
+            <div class="col-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
@@ -61,7 +61,7 @@
                 </a>
             </div>
 
-            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
+            <div class="col-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
@@ -73,7 +73,7 @@
                 </a>
             </div>
 
-            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
+            <div class="col-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
@@ -84,7 +84,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-sm-12 col-md-4 col-lg-3" style="margin-top: 20px">
+            <div class="col-3" style="margin-top: 20px">
                 <a href="{% url 'warnings' %}">
                     <div class="card">
                         <div class="card-body">
@@ -96,107 +96,117 @@
                 </a>
             </div>
 
-            <div class="row">
-                <div class="col-sm-12 col-md-4 col-lg-12" style="margin-top: 20px">
-                    <h2>Actualizaciones Buses</h2>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead style="text-align: center">
-                                <tr>
-                                    <th>Bus</th>
-                                    <th>Carga</th>
-                                    <th style="text-align: center">Odometro</th>
-                                    <th>Voltaje</th>
-                                    <th>Fusi Activo</th>
-                                    <th>Actualizacion</th>
-                                    <th>Perfil</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in complete_table %}
-                                <tr>
-                                    <td>{{i.bus_name}}</td>
-                                    <td style="text-align: center">
-                                        {% if i.lts_soc > 60 %}
+            <div class="col-12" style="margin-top: 20px">
+                <div class="card">
+                    <h5 class="card-header">Actualizaciones Buses</h5>
+                    <div class="card-body">
+                        <div class="col-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Bus</th>
+                                        <th>Carga</th>
+                                        <th>Odometro</th>
+                                        <th>Voltaje</th>
+                                        <th>Fusi Activo</th>
+                                        <th>Actualizacion</th>
+                                        <th>Perfil</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for i in complete_table %}
+                                    <tr>
+                                        <td>{{i.bus_name}}</td>
+                                        <td>
+                                            {% if i.lts_soc > 60 %}
 
-                                        <span
-                                            class="material-symbols-outlined icon"
-                                            style="color: green; display: inline-block; vertical-align: middle"
-                                            >battery_full</span
-                                        >
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_soc }} %</span
-                                        >
-
-                                        {%elif i.lts_soc <= 60 and i.lts_soc > 40%}
-                                        <span
-                                            class="material-symbols-outlined icon"
-                                            style="color: orange; display: inline-block; vertical-align: middle"
-                                        >
-                                            battery_3_bar
-                                        </span>
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_soc }} %</span
-                                        >
-                                        {% elif i.lts_soc <= 40 %}
-                                        <span
-                                            class="material-symbols-outlined icon"
-                                            style="color: red; display: inline-block; vertical-align: middle"
-                                        >
-                                            battery_1_bar
-                                        </span>
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_soc }} %</span
-                                        >
-                                        {% else %} {{ i.lts_soc }} {% endif %}
-                                    </td>
-                                    <td>
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_odometer }} Km.</span
-                                        >
-                                    </td>
-                                    <td>{{i.lts_24_volt}}</td>
-                                    <td>
-                                        {% if i.lts_fusi == 0.0 %}
-                                        <span class="material-symbols-outlined" style="color: green">verified </span>
-                                        {% else %}
-                                        <button type="button" class="btn btn-outline-danger">{{i.lts_fusi}}</button>
-                                        {% endif %}
-                                    </td>
-                                    <td><div class="timestamp">{{i.lts_update}}</div></td>
-                                    <td>
-                                        <a href="{% url 'bus_detail' i.id %}">
-                                            <span class="badge rounded-pill text-bg-danger"
-                                                ><i class="bx bx-bus"></i> Perfil</span
+                                            <span
+                                                class="material-symbols-outlined icon"
+                                                style="color: green; display: inline-block; vertical-align: middle"
+                                                >battery_full</span
                                             >
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% if complete_table.has_other_pages %}
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            {% if complete_table.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{complete_table.previous_page_number}}">Anterior</a>
-                            </li>
-                            {% endif %} {% for page in paginator.page_range %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                            </li>
-                            {% endfor %} {% if complete_table.has_next %}
+                                            <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                                >{{ i.lts_soc }} %</span
+                                            >
 
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ complete_table.next_page_number }}">Siguiente</a>
-                            </li>
+                                            {%elif i.lts_soc <= 60 and i.lts_soc > 40%}
+                                            <span
+                                                class="material-symbols-outlined icon"
+                                                style="color: orange; display: inline-block; vertical-align: middle"
+                                            >
+                                                battery_3_bar
+                                            </span>
+                                            <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                                >{{ i.lts_soc }} %</span
+                                            >
+                                            {% elif i.lts_soc <= 40 %}
+                                            <span
+                                                class="material-symbols-outlined icon"
+                                                style="color: red; display: inline-block; vertical-align: middle"
+                                            >
+                                                battery_1_bar
+                                            </span>
+                                            <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                                >{{ i.lts_soc }} %</span
+                                            >
+                                            {% else %} {{ i.lts_soc }} {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="texticon" style="display: inline-block; vertical-align: middle"
+                                                >{{ i.lts_odometer }} Km.</span
+                                            >
+                                        </td>
+                                        <td>{{i.lts_24_volt}}</td>
+                                        <td>
+                                            {% if i.lts_fusi == 0.0 %}
+                                            <span class="material-symbols-outlined" style="color: green"
+                                                >verified
+                                            </span>
+                                            {% else %}
+                                            <button type="button" class="btn btn-outline-danger">{{i.lts_fusi}}</button>
+                                            {% endif %}
+                                        </td>
+                                        <td><div class="timestamp">{{i.lts_update}}</div></td>
+                                        <td>
+                                            <a href="{% url 'bus_detail' i.id %}">
+                                                <span class="badge rounded-pill text-bg-danger"
+                                                    ><i class="bx bx-bus"></i> Perfil</span
+                                                >
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% if complete_table.has_other_pages %}
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    {% if complete_table.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{complete_table.previous_page_number}}"
+                                            >Anterior</a
+                                        >
+                                    </li>
+                                    {% endif %} {% for page in paginator.page_range %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                    </li>
+                                    {% endfor %} {% if complete_table.has_next %}
+
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ complete_table.next_page_number }}"
+                                            >Siguiente</a
+                                        >
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
                             {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
+                        </div>
+                    </div>
                 </div>
+
                 <div class="col-3" style="margin-top: 20px">
                     <h2>Informe Fusi {{mes_actual}}</h2>
                     <table class="table">
