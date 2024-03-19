@@ -98,7 +98,7 @@
 
             <!--iniciotabla actualizaciones de buses -->
 
-            <div class="col-12" style="margin-top: 20px">
+            <div class="col-12" style="margin-top: 50px">
                 <div class="card">
                     <h5 class="card-header">Actualizaciones Buses</h5>
                     <div class="card-body">
@@ -108,7 +108,7 @@
                                     <tr>
                                         <th>Bus</th>
                                         <th>Carga</th>
-                                        <th>Odometro</th>
+                                        <th>Kilometraje</th>
                                         <th>24 Volts</th>
                                         <th>Fusi</th>
                                         <th>Actualizacion</th>
@@ -183,9 +183,9 @@
                                         <td>
                                             <div class="fusi">
                                                 {% if i.lts_fusi == 0.0 %}
-                                                <i class="bx bxs-check-circle ok"></i>
+                                                <i class="bx bx-check-circle ok"></i>
                                                 {% else %}
-                                                <i class="bx bxs-error-circle notok"></i>
+                                                <i class="bx bx-info-circle notok"></i>
                                                 {{i.lts_fusi}} {% endif %}
                                             </div>
                                         </td>
@@ -204,9 +204,11 @@
                                         <!--Inicio perfil-->
                                         <td>
                                             <a href="{% url 'bus_detail' i.id %}">
-                                                <span class="badge rounded-pill text-bg-danger"
-                                                    ><i class="bx bx-bus"></i> Perfil</span
-                                                >
+                                                <button type="button" class="btn btn-outline-info button-pro">
+                                                    <div class="container-button">
+                                                        Perfil <i class="bx bx-right-arrow-circle profile"></i>
+                                                    </div>
+                                                </button>
                                             </a>
                                         </td>
                                         <!--Fin perfil-->
@@ -216,8 +218,8 @@
                             </table>
 
                             {% if bus.has_other_pages %}
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination">
+                            <nav class="navpag" aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
                                     {% if bus.has_previous %}
                                     <li class="page-item">
                                         <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
