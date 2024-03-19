@@ -188,7 +188,7 @@
                                                 {% if i.lts_fusi == 0.0 %}
                                                 <i class="bx bxs-check-circle ok"></i>
                                                 {% else %}
-                                                <i class="bx bx-error-circle notok"></i>
+                                                <i class="bx bxs-error-circle notok"></i>
                                                 {{i.lts_fusi}} {% endif %}
                                             </div>
                                         </td>
@@ -244,66 +244,6 @@
                             {% endif %}
                         </div>
                     </div>
-                </div>
-
-                <div class="col-3" style="margin-top: 20px">
-                    <h2>Informe Fusi {{mes_actual}}</h2>
-                    <table class="table">
-                        <tr>
-                            <th>Codigo Fusi</th>
-                            <th>Repeticiones</th>
-                        </tr>
-                        {% for fusi in distinct_fusi_code %}
-                        <tr>
-                            <td>{{fusi.fusi_code}}</td>
-                            <td>{{fusi.total}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    {% if distinct_fusi_code.has_other_pages %}
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            {% if distinct_fusi_code.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page_fusi={{distinct_fusi_code.previous_page_number}}"
-                                    >Anterior</a
-                                >
-                            </li>
-                            {% endif %} {% for page in paginator_fusi.page_range %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page_fusi={{ page }}">{{ page }}</a>
-                            </li>
-                            {% endfor %} {% if distinct_fusi_code.has_next %}
-
-                            <li class="page-item">
-                                <a class="page-link" href="?page_fusi={{ distinct_fusi_code.next_page_number }}"
-                                    >Siguiente</a
-                                >
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4" style="margin-top: 20px">
-                    <h2>top 10 buses/codigo fusi *en desarrollo</h2>
-                    <table class="table">
-                        <tr>
-                            <th>Bus</th>
-                            <th>Cantidad Codigo Fusi</th>
-                        </tr>
-                        {% for i in top_buses %}
-                        <tr>
-                            <td>{{i.bus__bus_name}}</td>
-                            <td>{{i.num_registros}} codigos</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <div class="col-4" style="margin-top: 20px">
-                    <div id="tabla-container"></div>
                 </div>
             </div>
         </div>
