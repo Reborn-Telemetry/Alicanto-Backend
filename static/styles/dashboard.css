@@ -1,7 +1,3 @@
-:root {
-    --bs-table-bg: red; /* Color de fondo para la tabla */
-}
-
 .texticon {
     color: black;
     display: inline-block;
@@ -28,4 +24,32 @@
 
 .table {
     --bs-table-bg: transparent;
+}
+.busname {
+    font-weight: 500;
+    font-size: 1.3rem;
+}
+td .fusi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: rgb(213, 35, 35);
+}
+.ok {
+    color: #2c9b42;
+    font-size: 2rem;
+}
+.notok {
+    color: rgb(213, 35, 35);
+    font-size: 2rem;
+}
+
+.charging {
+    color: #2c9b42;
+    font-size: 2rem;
+}
+.notcharging {
+    color: rgb(214, 220, 40);
+    font-size: 2rem;
 }
