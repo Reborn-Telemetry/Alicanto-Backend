@@ -225,7 +225,7 @@ def dashboard(request):
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
-        'complete_table': complete_table,
+        'bus': complete_table,
         'no_update': no_update,
         'cant_low_50_soc': cant_low_50_soc,
         'open_fusi': open_fusi,
