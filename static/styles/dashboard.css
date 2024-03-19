@@ -59,24 +59,9 @@ td .volt {
     font-size: 2rem;
 }
 
-.battok {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
 .battok span {
     color: #2c9b42;
     font-size: 1rem;
-}
-
-.battmed {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
 }
 
 .battmed span {
@@ -84,13 +69,6 @@ td .volt {
     font-size: 1rem;
 }
 
-.batlow {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
 .batlow span {
     color: #d52525;
     font-size: 1rem;
