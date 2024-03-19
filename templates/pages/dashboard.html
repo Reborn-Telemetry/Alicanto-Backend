@@ -109,7 +109,7 @@
                                         <th>Bus</th>
                                         <th>Carga</th>
                                         <th>Odometro</th>
-                                        <th>Voltaje</th>
+                                        <th>24 Volts</th>
                                         <th>Fusi</th>
                                         <th>Actualizacion</th>
                                         <th>Cargando</th>
@@ -156,12 +156,33 @@
                                             {% else %} {{ i.lts_soc }} {% endif %}
                                         </td>
                                         <!--Fin soc-->
+                                        <!--Inicio odometro-->
                                         <td>
                                             <span class="texticon" style="display: inline-block; vertical-align: middle"
                                                 >{{ i.lts_odometer }} Km.</span
                                             >
                                         </td>
-                                        <td>{{i.lts_24_volt}}</td>
+                                        <!--Fin odometro-->
+                                        <!--Inicio voltaje-->
+                                        <td>
+                                            {% if i.lts_24_volt >= 22 %}
+                                            <div class="battok">
+                                                <i class="bx bxs-car-battery"></i>
+                                                <span>{{ i.lts_24_volt }} V</span>
+                                            </div>
+                                            {% elif i.lts_24_volt >= 19 %}
+                                            <div class="battmed">
+                                                <i class="bx bxs-car-battery"></i>
+                                                <span>{{ i.lts_24_volt }} V</span>
+                                            </div>
+                                            {% else %}
+                                            <div class="batlow">
+                                                <i class="bx bxs-car-battery"></i>
+                                                <span>{{ i.lts_24_volt }} V</span>
+                                            </div>
+                                            {% endif %}
+                                        </td>
+                                        <!--Fin voltaje-->
                                         <td>
                                             <div class="fusi">
                                                 {% if i.lts_fusi == 0.0 %}
