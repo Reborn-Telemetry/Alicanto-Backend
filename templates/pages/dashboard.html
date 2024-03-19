@@ -167,17 +167,14 @@
                                         <td>
                                             {% if i.lts_24_volt >= 22 %}
                                             <div class="battok">
-                                                <i class="bx bxs-car-battery"></i>
                                                 <span>{{ i.lts_24_volt }} [v]</span>
                                             </div>
                                             {% elif i.lts_24_volt >= 19 %}
                                             <div class="battmed">
-                                                <i class="bx bxs-car-battery"></i>
                                                 <span>{{ i.lts_24_volt }} [v]</span>
                                             </div>
                                             {% else %}
                                             <div class="batlow">
-                                                <i class="bx bxs-car-battery"></i>
                                                 <span>{{ i.lts_24_volt }} [v]</span>
                                             </div>
                                             {% endif %}

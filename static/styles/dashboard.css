@@ -66,14 +66,11 @@ td .volt {
     align-items: center;
     gap: 5px;
 }
-.battok i {
-    color: #2c9b42;
-    font-size: 2rem;
-}
 .battok span {
-    color: #0b0b0b;
+    color: #2c9b42;
     font-size: 1rem;
 }
+
 .battmed {
     display: flex;
     flex-direction: column;
@@ -82,12 +79,8 @@ td .volt {
     gap: 5px;
 }
 
-.battmed i {
-    color: #f0a500;
-    font-size: 2rem;
-}
 .battmed span {
-    color: #0b0b0b;
+    color: #f0a500;
     font-size: 1rem;
 }
 
@@ -98,12 +91,8 @@ td .volt {
     align-items: center;
     gap: 5px;
 }
-.batlow i {
-    color: #d52525;
-    font-size: 2rem;
-}
 .batlow span {
-    color: #0b0b0b;
+    color: #d52525;
     font-size: 1rem;
 }
 
