@@ -1,3 +1,7 @@
+:root {
+    --bs-table-bg: red; /* Color de fondo para la tabla */
+}
+
 .texticon {
     color: black;
     display: inline-block;
@@ -15,4 +19,13 @@
     max-width: 180px;
     display: flex;
     text-align: center;
+}
+
+.card {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: #ededed;
+}
+
+.table {
+    --bs-table-bg: transparent;
 }
