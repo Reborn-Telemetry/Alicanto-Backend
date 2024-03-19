@@ -1,4 +1,4 @@
-{% extends "main.html" %} {% load static %} {% block header %}Dashboard{% endblock header %} {%block content %}
+{% extends "main.html" %} {% load static %} {% block header %}Dashboard{% endblock header %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}" />
 
 <div class="container">
@@ -117,7 +117,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
-                                    {% for i in complete_table %}
+                                    {% for i in bus %}
                                     <tr>
                                         <td class="busname">{{i.bus_name}}</td>
                                         <!--Inicio soc-->
@@ -215,25 +215,24 @@
                                 </tbody>
                             </table>
 
-                            {% if complete_table.has_other_pages %}
+                            {% if bus.has_other_pages %}
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination">
-                                    {% if complete_table.has_previous %}
+                                    {% if bus.has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{complete_table.previous_page_number}}"
-                                            >Anterior</a
-                                        >
+                                        <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
                                     </li>
-                                    {% endif %} {% for page in paginator.page_range %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                    {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="?page={{page}}">{{page}}</a>
                                     </li>
-                                    {% endfor %} {% if complete_table.has_next %}
-
+                                    {% else %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ complete_table.next_page_number }}"
-                                            >Siguiente</a
-                                        >
+                                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                    </li>
+                                    {% endif %} {% endfor %} {% if bus.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
                                     </li>
                                     {% endif %}
                                 </ul>
