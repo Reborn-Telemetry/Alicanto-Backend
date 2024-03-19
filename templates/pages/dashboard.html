@@ -1,4 +1,4 @@
-{% extends "main.html" %} {% load static %} {%block header%}Dashboard Flota.{%endblock header%} {%block content %}
+{% extends "main.html" %} {% load static %} {% block header %}Dashboard{% endblock header %} {%block content %}
 <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}" />
 
 <div class="container">
@@ -168,17 +168,17 @@
                                             {% if i.lts_24_volt >= 22 %}
                                             <div class="battok">
                                                 <i class="bx bxs-car-battery"></i>
-                                                <span>{{ i.lts_24_volt }} V</span>
+                                                <span>{{ i.lts_24_volt }} [v]</span>
                                             </div>
                                             {% elif i.lts_24_volt >= 19 %}
                                             <div class="battmed">
                                                 <i class="bx bxs-car-battery"></i>
-                                                <span>{{ i.lts_24_volt }} V</span>
+                                                <span>{{ i.lts_24_volt }} [v]</span>
                                             </div>
                                             {% else %}
                                             <div class="batlow">
                                                 <i class="bx bxs-car-battery"></i>
-                                                <span>{{ i.lts_24_volt }} V</span>
+                                                <span>{{ i.lts_24_volt }} [v]</span>
                                             </div>
                                             {% endif %}
                                         </td>
@@ -199,8 +199,8 @@
                                         <!--Fin timestamp-->
                                         <!--Inicio cargando-->
                                         <td>
-                                            <i class="bx bxs-bolt-circle notcharging"></i>
-                                            <i class="bx bxs-ev-station charging"></i>
+                                            <i class="bx bxs-battery-charging charging"></i>
+                                            <i class="bx bxs-bolt charging"></i>
                                             in process
                                         </td>
                                         <!--Fin cargando-->
