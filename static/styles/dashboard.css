@@ -31,10 +31,18 @@
 }
 td .fusi {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    color: rgb(213, 35, 35);
+}
+
+td .volt {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 .ok {
     color: #2c9b42;
@@ -55,13 +63,14 @@ td .fusi {
 }
 .battok {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
 }
 .battok i {
     color: #2c9b42;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 .battok span {
     color: #0b0b0b;
@@ -69,6 +78,7 @@ td .fusi {
 }
 .battmed {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
@@ -76,7 +86,7 @@ td .fusi {
 
 .battmed i {
     color: #f0a500;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 .battmed span {
     color: #0b0b0b;
@@ -85,13 +95,14 @@ td .fusi {
 
 .batlow {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
 }
 .batlow i {
     color: #d52525;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 .batlow span {
     color: #0b0b0b;
