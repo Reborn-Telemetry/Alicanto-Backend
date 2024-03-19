@@ -12,6 +12,7 @@
 
 .timestamp {
     font-size: 15px;
+    font-weight: 700;
     max-width: 180px;
     display: flex;
     text-align: center;
@@ -57,10 +58,7 @@ td .volt {
     color: #2c9b42;
     font-size: 2rem;
 }
-.notcharging {
-    color: rgb(214, 220, 40);
-    font-size: 2rem;
-}
+
 .battok {
     display: flex;
     flex-direction: column;
@@ -107,4 +105,8 @@ td .volt {
 .batlow span {
     color: #0b0b0b;
     font-size: 1rem;
+}
+
+.page-link {
+    background: transparent;
 }
