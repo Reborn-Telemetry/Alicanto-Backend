@@ -96,6 +96,8 @@
                 </a>
             </div>
 
+            <!--iniciotabla actualizaciones de buses -->
+
             <div class="col-12" style="margin-top: 20px">
                 <div class="card">
                     <h5 class="card-header">Actualizaciones Buses</h5>
@@ -108,15 +110,17 @@
                                         <th>Carga</th>
                                         <th>Odometro</th>
                                         <th>Voltaje</th>
-                                        <th>Fusi Activo</th>
+                                        <th>Fusi</th>
                                         <th>Actualizacion</th>
+                                        <th>Cargando</th>
                                         <th>Perfil</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
                                     {% for i in complete_table %}
                                     <tr>
-                                        <td>{{i.bus_name}}</td>
+                                        <td class="busname">{{i.bus_name}}</td>
+                                        <!--Inicio soc-->
                                         <td>
                                             {% if i.lts_soc > 60 %}
 
@@ -151,6 +155,7 @@
                                             >
                                             {% else %} {{ i.lts_soc }} {% endif %}
                                         </td>
+                                        <!--Fin soc-->
                                         <td>
                                             <span class="texticon" style="display: inline-block; vertical-align: middle"
                                                 >{{ i.lts_odometer }} Km.</span
@@ -158,15 +163,27 @@
                                         </td>
                                         <td>{{i.lts_24_volt}}</td>
                                         <td>
-                                            {% if i.lts_fusi == 0.0 %}
-                                            <span class="material-symbols-outlined" style="color: green"
-                                                >verified
-                                            </span>
-                                            {% else %}
-                                            <button type="button" class="btn btn-outline-danger">{{i.lts_fusi}}</button>
-                                            {% endif %}
+                                            <div class="fusi">
+                                                {% if i.lts_fusi == 0.0 %}
+                                                <i class="bx bxs-check-circle ok"></i>
+                                                {% else %}
+                                                <i class="bx bx-error-circle notok"></i>
+                                                {{i.lts_fusi}} {% endif %}
+                                            </div>
                                         </td>
-                                        <td><div class="timestamp">{{i.lts_update}}</div></td>
+                                        <!--Inicio timestamp-->
+                                        <td>
+                                            <div class="timestamp">{{i.lts_update}}</div>
+                                        </td>
+                                        <!--Fin timestamp-->
+                                        <!--Inicio cargando-->
+                                        <td>
+                                            <i class="bx bxs-bolt-circle notcharging"></i>
+                                            <i class="bx bxs-ev-station charging"></i>
+                                            in process
+                                        </td>
+                                        <!--Fin cargando-->
+                                        <!--Inicio perfil-->
                                         <td>
                                             <a href="{% url 'bus_detail' i.id %}">
                                                 <span class="badge rounded-pill text-bg-danger"
@@ -174,6 +191,7 @@
                                                 >
                                             </a>
                                         </td>
+                                        <!--Fin perfil-->
                                     </tr>
                                     {% endfor %}
                                 </tbody>
