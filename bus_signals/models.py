@@ -353,7 +353,7 @@ class LenzeEngineSpeed(models.Model):
 
 class Odometer(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    odometer_value = models.FloatField('Odometer Value', blank=True)
+    odometer_value = models.FloatField('Odometer Value', null=True, blank=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
 
     odometer = models.Manager()
