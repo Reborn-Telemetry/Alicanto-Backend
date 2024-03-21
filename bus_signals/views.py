@@ -95,7 +95,9 @@ def warnings(request):
 
 @login_required(login_url='login')
 def reports_page(request):
-    return render(request, 'reports/reports.html')
+    bus = Bus.bus.all()
+    context = {'bus': bus}
+    return render(request, 'reports/reports.html', context)
 
 
 def fusi_dashboard(request):

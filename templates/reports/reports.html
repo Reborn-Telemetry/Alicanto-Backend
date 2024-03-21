@@ -96,26 +96,25 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th scope="col">Bus</th>
                                 <th scope="col">Informe</th>
                                 <th scope="col">Descripcion</th>
                                 <th scope="col">PDF</th>
                                 <th scope="col">XLS</th>
                             </tr>
                         </thead>
+
                         <tbody class="table-group-divider">
+                            {% for i in bus %}
                             <tr>
-                                <th scope="row">Actualizaciones Flota</th>
+                                <th scope="row">{{i.bus_name}}</th>
                                 <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Kilometraje Anual Flota</th>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                         </tbody>
+                        {% endfor %}
                     </table>
                 </div>
             </div>
