@@ -1,8 +1,57 @@
-{% extends "main.html" %} {% load static %} {% block content %}
+{% extends "main.html" %} {% load static %} {% block header %}Dashboard Alertas{% endblock header %} {% block content %}
+<link rel="stylesheet" href="{% static 'styles/warnings.css' %}" />
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h5 class="card-header">Buses bajo 50% Bateria</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Bus</th>
+                                        <th>Carga</th>
+                                        <th>Actualizacion</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for i in low_50_soc_count %}
+                                    <tr>
+                                        <td>{{ i.bus_name }}</td>
+                                        <td>
+                                            {% if i.lts_soc > 60 %}
+                                            <span class="badge rounded-pill text-bg-success">{{ i.lts_soc }} %</span>
+                                            {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                            <span class="badge rounded-pill text-bg-warning">{{ i.lts_soc }} %</span>
+                                            {% elif i.lts_soc <= 40 %}
+                                            <span class="badge rounded-pill text-bg-danger">{{ i.lts_soc }} %</span>
+                                            {% else %} {{ i.lts_soc }} {% endif %}
+                                        </td>
+                                        <td>{{ i.lts_update }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <img
+                                src="https://plus.unsplash.com/premium_photo-1661297441050-cd5f9980051d?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                alt="bateria baja"
+                                class="w-100"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--separador-->
 <div class="container text-center" style="margin-left: 300px">
     <div class="row">
-        <h1>Dashboard Alertas</h1>
-        <h2>Buses con cola de archivos</h2>
         <div class="col-4" style="margin-top: 20px">
             <table class="table">
                 <tr>
@@ -36,166 +85,140 @@
             </nav>
         </div>
 
-        <div class="col-4" style="margin-top: 20px">
-            <h2>buses con menos de 50% de carga</h2>
-
-            <table class="table">
-                <tr>
-                    <th>Bus</th>
-                    <th>Carga</th>
-                    <th>actualizacion</th>
-                </tr>
-                {% for i in low_50_soc_count %}
-                <tr>
-                    <td>{{i.bus_name}}</td>
-                    <td>
-                        {% if i.lts_soc > 60 %}
-                        <span class="badge rounded-pill text-bg-success">{{ i.lts_soc }} %</span>
-                        {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                        <span class="badge rounded-pill text-bg-warning">{{ i.lts_soc }} %</span>
-                        {% elif i.lts_soc <= 40 %}
-                        <span class="badge rounded-pill text-bg-danger">{{ i.lts_soc }} %</span>
-                        {% else %} {{ i.lts_soc }} {% endif %}
-                    </td>
-                    <td>{{i.lts_update}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <h2>buses bajo voltaje 24</h2>
-            <table class="table">
-                <tr>
-                    <th>Bus</th>
-                    <th>Voltaje</th>
-                    <th>actualizacion</th>
-                </tr>
-                {% for i in low_battery %}
-                <tr>
-                    <td>{{i.bus_name}}</td>
-                    <td>
-                        {% if i.lts_24_volt < 20 %}
-                        <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
-                        {% endif %}
-                    </td>
-                    <td>{{i.lts_update}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="col-4" style="margin-top: 20px">
-            <h2>buses sin conexion</h2>
-            <table class="table">
-                <tr>
-                    <th>Bus</th>
-                    <th>Sniffer</th>
-                </tr>
-                {% for i in no_update %}
-                <tr>
-                    <td>{{i.bus_name}}</td>
-                    <td>{{i.sniffer}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    {% if no_update.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{no_update.previous_page_number}}">Anterior</a>
-                    </li>
-                    {% endif %} {% for page in paginator_no_update.page_range %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{page}}">{{page}}</a>
-                    </li>
-                    {% endfor %} {% if no_update.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{no_update.next_page_number}}">Siguiente</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-4" style="margin-top: 20px">
-            <h2>Buses FS</h2>
-            <table class="table">
-                <tr>
-                    <th>Bus</th>
-                    <th>Estado</th>
-                </tr>
-                {% for i in list_fs_bus %}
-                <tr>
-                    <td style="text-transform: capitalize">{{i.vehicle}}</td>
-                    <td>
-                        {% if i.state == 2 %}
-                        <span class="badge rounded-pill text-bg-danger"> En Reparacion</span>
-
-                        {% elif i.state == 3 %}
-                        <span class="badge rounded-pill text-bg-warning">En Mantencion</span>
-                        {%endif%}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-4" style="margin-top: 20px">
-            <h2>top 10 buses/codigo fusi *en desarrollo</h2>
-            <table class="table">
-                <tr>
-                    <th>Bus</th>
-                    <th>Cantidad Codigo Fusi</th>
-                </tr>
-                {% for i in top_buses %}
-                <tr>
-                    <td>{{i.bus__bus_name}}</td>
-                    <td>{{i.num_registros}} codigos</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="col-4" style="margin-top: 20px">
-            <div id="tabla-container"></div>
-        </div>
-    </div>
-
-    <div class="col-3" style="margin-top: 20px">
-        <h2>Informe Fusi {{mes_actual}}</h2>
+        <h2>buses bajo voltaje 24</h2>
         <table class="table">
             <tr>
-                <th>Codigo Fusi</th>
-                <th>Repeticiones</th>
+                <th>Bus</th>
+                <th>Voltaje</th>
+                <th>actualizacion</th>
             </tr>
-            {% for fusi in distinct_fusi_code %}
+            {% for i in low_battery %}
             <tr>
-                <td>{{fusi.fusi_code}}</td>
-                <td>{{fusi.total}}</td>
+                <td>{{i.bus_name}}</td>
+                <td>
+                    {% if i.lts_24_volt < 20 %}
+                    <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
+                    {% endif %}
+                </td>
+                <td>{{i.lts_update}}</td>
             </tr>
             {% endfor %}
         </table>
-        {% if distinct_fusi_code.has_other_pages %}
+    </div>
+    <div class="col-4" style="margin-top: 20px">
+        <h2>buses sin conexion</h2>
+        <table class="table">
+            <tr>
+                <th>Bus</th>
+                <th>Sniffer</th>
+            </tr>
+            {% for i in no_update %}
+            <tr>
+                <td>{{i.bus_name}}</td>
+                <td>{{i.sniffer}}</td>
+            </tr>
+            {% endfor %}
+        </table>
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                {% if distinct_fusi_code.has_previous %}
+                {% if no_update.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page_fusi={{distinct_fusi_code.previous_page_number}}">Anterior</a>
+                    <a class="page-link" href="?page={{no_update.previous_page_number}}">Anterior</a>
                 </li>
-                {% endif %} {% for page in paginator_fusi.page_range %}
+                {% endif %} {% for page in paginator_no_update.page_range %}
                 <li class="page-item">
-                    <a class="page-link" href="?page_fusi={{ page }}">{{ page }}</a>
+                    <a class="page-link" href="?page={{page}}">{{page}}</a>
                 </li>
-                {% endfor %} {% if distinct_fusi_code.has_next %}
-
+                {% endfor %} {% if no_update.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page_fusi={{ distinct_fusi_code.next_page_number }}">Siguiente</a>
+                    <a class="page-link" href="?page={{no_update.next_page_number}}">Siguiente</a>
                 </li>
                 {% endif %}
             </ul>
         </nav>
-        {% endif %}
     </div>
-
-    {% endblock content %}
 </div>
+
+<div class="row">
+    <div class="col-4" style="margin-top: 20px">
+        <h2>Buses FS</h2>
+        <table class="table">
+            <tr>
+                <th>Bus</th>
+                <th>Estado</th>
+            </tr>
+            {% for i in list_fs_bus %}
+            <tr>
+                <td style="text-transform: capitalize">{{i.vehicle}}</td>
+                <td>
+                    {% if i.state == 2 %}
+                    <span class="badge rounded-pill text-bg-danger"> En Reparacion</span>
+
+                    {% elif i.state == 3 %}
+                    <span class="badge rounded-pill text-bg-warning">En Mantencion</span>
+                    {%endif%}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-4" style="margin-top: 20px">
+        <h2>top 10 buses/codigo fusi *en desarrollo</h2>
+        <table class="table">
+            <tr>
+                <th>Bus</th>
+                <th>Cantidad Codigo Fusi</th>
+            </tr>
+            {% for i in top_buses %}
+            <tr>
+                <td>{{i.bus__bus_name}}</td>
+                <td>{{i.num_registros}} codigos</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-4" style="margin-top: 20px">
+        <div id="tabla-container"></div>
+    </div>
+</div>
+
+<div class="col-3" style="margin-top: 20px">
+    <h2>Informe Fusi {{mes_actual}}</h2>
+    <table class="table">
+        <tr>
+            <th>Codigo Fusi</th>
+            <th>Repeticiones</th>
+        </tr>
+        {% for fusi in distinct_fusi_code %}
+        <tr>
+            <td>{{fusi.fusi_code}}</td>
+            <td>{{fusi.total}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% if distinct_fusi_code.has_other_pages %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if distinct_fusi_code.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page_fusi={{distinct_fusi_code.previous_page_number}}">Anterior</a>
+            </li>
+            {% endif %} {% for page in paginator_fusi.page_range %}
+            <li class="page-item">
+                <a class="page-link" href="?page_fusi={{ page }}">{{ page }}</a>
+            </li>
+            {% endfor %} {% if distinct_fusi_code.has_next %}
+
+            <li class="page-item">
+                <a class="page-link" href="?page_fusi={{ distinct_fusi_code.next_page_number }}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock content %}
