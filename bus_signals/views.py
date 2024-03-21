@@ -43,6 +43,8 @@ def warnings(request):
     delayed = bus_instance.delay_data()
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
+
+    top_buses = FusiCode.fusi.values('bus__bus_name').annotate(num_registros=Count('bus')).order_by('-num_registros')[:10]
     
     no_update = Bus.bus.filter(lts_update=None)
     
@@ -50,6 +52,14 @@ def warnings(request):
 
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
+
+
+     # fusicodes monthly
+    current_month = timezone.now().month
+    distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
+    distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
+    current_datetime = timezone.now()
+    mes_actual = current_datetime.strftime('%B')
 
     # paginador buses sin conexion
     page = request.GET.get('page')
@@ -80,15 +90,33 @@ def warnings(request):
         delayed = paginator_delayed.page(page2)
 
     # fin paginador delayed
+        
+         # paginador fusi
+    page_fusi = request.GET.get('page_fusi')
+    results_fusi = 12
+    paginator_fusi = Paginator(distinct_fusi_code, results_fusi)
+    try:
+        distinct_fusi_code = paginator_fusi.page(page_fusi)
+    except PageNotAnInteger:
+        page_fusi = 1
+        distinct_fusi_code = paginator_fusi.page(page_fusi)
+    except EmptyPage:
+        page_fusi = paginator_fusi.num_pages
+        distinct_fusi_code = paginator_fusi.page(page_fusi)
+
 
     context = {
+         'mes_actual': mes_actual,
         'list_fs_bus': list_fs_bus,
         'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
         'low_50_soc_count': low_50_soc_count,
         'paginator_no_update': paginator_no_update,
-        'paginator_delayed': paginator_delayed
+        'paginator_delayed': paginator_delayed,
+        'top_buses': top_buses,
+        'distinct_fusi_code': distinct_fusi_code,
+          'paginator_fusi': paginator_fusi,
     }
     return render(request, 'pages/warnings.html', context)
 
@@ -157,12 +185,7 @@ def dashboard(request):
     response = requests.get(api_url, headers=headers)
     data = response.json()
     cant_fs = len(data['data'])
-    # fusicodes monthly
-    current_month = timezone.now().month
-    distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
-    distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
-    current_datetime = timezone.now()
-    mes_actual = current_datetime.strftime('%B')
+   
   
     # cantidad de fusi abiertos
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
@@ -204,25 +227,10 @@ def dashboard(request):
         page = paginator.num_pages
         complete_table = paginator.page(page)
 
-    # paginador fusi
-    page_fusi = request.GET.get('page_fusi')
-    results_fusi = 12
-    paginator_fusi = Paginator(distinct_fusi_code, results_fusi)
-    try:
-        distinct_fusi_code = paginator_fusi.page(page_fusi)
-    except PageNotAnInteger:
-        page_fusi = 1
-        distinct_fusi_code = paginator_fusi.page(page_fusi)
-    except EmptyPage:
-        page_fusi = paginator_fusi.num_pages
-        distinct_fusi_code = paginator_fusi.page(page_fusi)
-
-# top 10 buses fusi code
-    top_buses = FusiCode.fusi.values('bus__bus_name').annotate(num_registros=Count('bus')).order_by('-num_registros')[:10]
 
 
     context = {
-        'mes_actual': mes_actual,
+       
         'operacion': operacion,
         'km_total': km_total_format,
         'low_50_soc_count': low_50_soc_count,
@@ -233,8 +241,7 @@ def dashboard(request):
         'open_fusi': open_fusi,
         'delayed': delayed,
         'paginator': paginator,
-        'paginator_fusi': paginator_fusi,
-        'distinct_fusi_code': distinct_fusi_code,
+      
         'top_buses': top_buses,
         'cant_fs': cant_fs,
     }
@@ -300,7 +307,7 @@ def monthly_bus_report(request):
     cell_width = 17
     font_size = 5
     style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('BACKGROUND', (0, 0), (-1, 0), 'white'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -315,8 +322,8 @@ def monthly_bus_report(request):
     elements.append(table)
 
     image_path = 'static/img/REM.png'
-    image_width = 200
-    image_height = 200
+    image_width = 150
+    image_height = 150
     image = Image(image_path, width=image_width, height=image_height)
     elements.insert(0, image)
 
