@@ -8,6 +8,18 @@
     background-color: #ededed;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 10px;
+    position: relative; /* Agregado */
+}
+.indicator {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    color: #686868;
+    width: auto;
+    position: absolute; /* Agregado */
+    bottom: 2; /* Ajusta la posición desde abajo */
+    right: 15px; /* Ajusta la posición desde la derecha */
+    font-size: 1.8rem;
 }
 
 .dashboard-card {
@@ -62,13 +74,13 @@
     font-size: 1.6rem;
     margin: 0;
     background: transparent;
+    margin-bottom: -10px;
 }
 
 .card-content .card-description {
     font-size: 0.9rem;
     margin: 0;
 }
-
 /* Dashboard */
 .texticon {
     color: black;
@@ -99,6 +111,7 @@
     font-weight: 700;
     font-size: 25px;
     padding: 10px;
+    display: flex;
 }
 
 .table {
