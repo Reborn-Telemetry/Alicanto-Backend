@@ -241,8 +241,6 @@ def dashboard(request):
         'open_fusi': open_fusi,
         'delayed': delayed,
         'paginator': paginator,
-      
-        'top_buses': top_buses,
         'cant_fs': cant_fs,
     }
     return render(request, 'pages/dashboard.html', context)

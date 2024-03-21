@@ -47,9 +47,33 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12"></div>
+    </div>
 </div>
 
 <!--separador-->
+<h2>buses bajo voltaje 24</h2>
+<table class="table">
+    <tr>
+        <th>Bus</th>
+        <th>Voltaje</th>
+        <th>actualizacion</th>
+    </tr>
+    {% for i in low_battery %}
+    <tr>
+        <td>{{i.bus_name}}</td>
+        <td>
+            {% if i.lts_24_volt < 20 %}
+            <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
+            {% endif %}
+        </td>
+        <td>{{i.lts_update}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<!--separador-->
+
 <div class="container text-center" style="margin-left: 300px">
     <div class="row">
         <div class="col-4" style="margin-top: 20px">
@@ -84,26 +108,6 @@
                 </ul>
             </nav>
         </div>
-
-        <h2>buses bajo voltaje 24</h2>
-        <table class="table">
-            <tr>
-                <th>Bus</th>
-                <th>Voltaje</th>
-                <th>actualizacion</th>
-            </tr>
-            {% for i in low_battery %}
-            <tr>
-                <td>{{i.bus_name}}</td>
-                <td>
-                    {% if i.lts_24_volt < 20 %}
-                    <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
-                    {% endif %}
-                </td>
-                <td>{{i.lts_update}}</td>
-            </tr>
-            {% endfor %}
-        </table>
     </div>
     <div class="col-4" style="margin-top: 20px">
         <h2>buses sin conexion</h2>
