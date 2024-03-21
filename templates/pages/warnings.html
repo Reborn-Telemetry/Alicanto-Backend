@@ -1,6 +1,7 @@
 {% extends "main.html" %} {% load static %} {% block header %}Dashboard Alertas{% endblock header %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/warnings.css' %}" />
 <div class="container">
+    <!--inicio primera tarjeta-->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -47,68 +48,103 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12"></div>
+    <!--fin primera tarjeta-->
+    <!--inicio primera tarjeta intermedia-->
+    <div style="margin-top: 30px" class="row">
+        <div class="col-6">
+            <div class="card">
+                <h5 class="card-header">Buses con pendientes de subida</h5>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Bus</th>
+                                <th>actualizacion</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for i in delayed %}
+                            <tr>
+                                <td>{{i.bus_name}}</td>
+                                <td>{{i.lts_update}}</td>
+                            </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!--paginador va aqui-->
+                    <nav class="navpag" aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if delayed.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page2={{delayed.previous_page_number}}">Anterior</a>
+                            </li>
+                            {% endif %} {% for page in paginator_delayed.page_range %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page2={{page}}">{{page}}</a>
+                            </li>
+                            {% endfor %} {% if delayed.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page2={{delayed.next_page_number}}">Siguiente</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
     </div>
+    <!--fin primera tarjeta intermedia-->
+    <!--inicio segunda tarjeta intermedia-->
+    <!--fin segunda tarjeta intermedia-->
+
+    <!--inicio segunda tarjeta-->
+    <div style="margin-top: 30px" class="row">
+        <div class="col-12">
+            <div class="card">
+                <h5 class="card-header">Buses bajo 24 volts</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table">
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>Voltaje</th>
+                                    <th>actualizacion</th>
+                                </tr>
+                                {% for i in low_battery %}
+                                <tr>
+                                    <td>{{i.bus_name}}</td>
+                                    <td>
+                                        {% if i.lts_24_volt < 20 %}
+                                        <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.lts_update}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <img
+                                src="https://plus.unsplash.com/premium_photo-1661297441050-cd5f9980051d?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                alt="bateria baja"
+                                class="w-100"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--fin segunda tarjeta-->
 </div>
 
 <!--separador-->
-<h2>buses bajo voltaje 24</h2>
-<table class="table">
-    <tr>
-        <th>Bus</th>
-        <th>Voltaje</th>
-        <th>actualizacion</th>
-    </tr>
-    {% for i in low_battery %}
-    <tr>
-        <td>{{i.bus_name}}</td>
-        <td>
-            {% if i.lts_24_volt < 20 %}
-            <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
-            {% endif %}
-        </td>
-        <td>{{i.lts_update}}</td>
-    </tr>
-    {% endfor %}
-</table>
+
 <!--separador-->
 
 <div class="container text-center" style="margin-left: 300px">
-    <div class="row">
-        <div class="col-4" style="margin-top: 20px">
-            <table class="table">
-                <tr>
-                    <th>Bus</th>
-                    <th>actualizacion</th>
-                </tr>
-                {% for i in delayed %}
-                <tr>
-                    <td>{{i.bus_name}}</td>
-                    <td>{{i.lts_update}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <!--paginador va aqui-->
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    {% if delayed.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page2={{delayed.previous_page_number}}">Anterior</a>
-                    </li>
-                    {% endif %} {% for page in paginator_delayed.page_range %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page2={{page}}">{{page}}</a>
-                    </li>
-                    {% endfor %} {% if delayed.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page2={{delayed.next_page_number}}">Siguiente</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
     <div class="col-4" style="margin-top: 20px">
         <h2>buses sin conexion</h2>
         <table class="table">
