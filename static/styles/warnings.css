@@ -1,0 +1,15 @@
+.card {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: #ededed;
+}
+.card-header {
+    --bs-card-cap-color: #0f8bfd;
+    font-weight: 700;
+    font-size: 25px;
+    padding: 10px;
+    display: flex;
+}
+
+.table {
+    --bs-table-bg: transparent;
+}

@@ -1,136 +1,137 @@
 {% extends "main.html" %} {% load static %} {% block header %}Reportes Buses{% endblock header %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/reports.css' %}" />
-<div class="container text-center">
-    <div class="col-12" style="margin-top: 50px">
-        <div class="card">
-            <h5 class="card-header title">Reportes Flota</h5>
-            <div class="card-body">
-                <div class="col-12">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Informe</th>
-                                <th scope="col">Descripcion</th>
-                                <th scope="col">PDF</th>
-                                <th scope="col">XLS</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            <!--inicio primer informe-->
-                            <tr>
-                                <th scope="row">Actualizaciones Flota</th>
-                                <td>
-                                    Instantanea de la tabla presente en el dashboard principal, la cual muestra el
-                                    ultimo <br />
-                                    valor de la carga de baterias, el ultimo kilometraje registrado en la base de datos,
-                                    la fecha en la que se realizo<br />
-                                    la actualizacion de todos estos valores para cada uno de los buses
-                                </td>
-                                <td>
-                                    <a href="{% url 'pdf-report' %}" class="btn btn-primary"
-                                        ><i class="bx bx-download"></i
-                                    ></a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'xls-report' %}" class="btn btn-primary"
-                                        ><i class="bx bx-download"></i
-                                    ></a>
-                                </td>
-                            </tr>
-                            <!--fin primer informe-->
-                            <!--inicio segundo informe-->
-                            <tr>
-                                <th scope="row">Kilometraje Anual Flota</th>
-                                <td>
-                                    Informe donde despliega el valor inicial y final del kilometraje para cada uno de
-                                    los meses del año, de toda la flota
-                                </td>
-                                <td>
-                                    <a href="{% url 'montly-km-report' %}" class="btn btn-primary">
-                                        <i class="bx bx-download"></i
-                                    ></a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'monthly-bus-report-xls' %}" class="btn btn-primary"
-                                        ><i class="bx bx-download"></i
-                                    ></a>
-                                </td>
-                            </tr>
-                            <!--fin segundo informe-->
-                            <!--inicio tercer informe-->
-                            <tr>
-                                <th scope="row">Informe Fusi Flota (en desarrollo)</th>
-                                <td>Informe de todos los codigos fusi de la flota en general</td>
-                                <td>
-                                    <a href="" class="btn btn-primary"> <i class="bx bx-download"></i></a>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-primary"><i class="bx bx-download"></i></a>
-                                </td>
-                            </tr>
-                            <!--fin tercer informe-->
-                            <!--inicio cuarto informe-->
-                            <tr>
-                                <th scope="row">Informe Fusi Buses (en desarrollo)</th>
-                                <td>Informe de todos los codigos fusi en detalle de todos los buses</td>
-                                <td>
-                                    <a href="" class="btn btn-primary"> <i class="bx bx-download"></i></a>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-primary"><i class="bx bx-download"></i></a>
-                                </td>
-                            </tr>
-                            <!--fin cuarto informe-->
-                        </tbody>
-                    </table>
+    <div class="container text-center">
+        <div class="col-12" style="margin-top: 50px">
+            <div class="card">
+                <h5 class="card-header title">Reportes Flota</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Informe</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">PDF</th>
+                                    <th scope="col">XLS</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <!--inicio primer informe-->
+                                <tr>
+                                    <th scope="row">Actualizaciones Flota</th>
+                                    <td>
+                                        Instantanea de la tabla presente en el dashboard principal, la cual muestra el
+                                        ultimo <br />
+                                        valor de la carga de baterias, el ultimo kilometraje registrado en la base de
+                                        datos, la fecha en la que se realizo<br />
+                                        la actualizacion de todos estos valores para cada uno de los buses
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'pdf-report' %}" class="btn btn-primary"
+                                            ><i class="bx bx-download"></i
+                                        ></a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'xls-report' %}" class="btn btn-primary"
+                                            ><i class="bx bx-download"></i
+                                        ></a>
+                                    </td>
+                                </tr>
+                                <!--fin primer informe-->
+                                <!--inicio segundo informe-->
+                                <tr>
+                                    <th scope="row">Kilometraje Anual Flota</th>
+                                    <td>
+                                        Informe donde despliega el valor inicial y final del kilometraje para cada uno
+                                        de los meses del año, de toda la flota
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'montly-km-report' %}" class="btn btn-primary">
+                                            <i class="bx bx-download"></i
+                                        ></a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'monthly-bus-report-xls' %}" class="btn btn-primary"
+                                            ><i class="bx bx-download"></i
+                                        ></a>
+                                    </td>
+                                </tr>
+                                <!--fin segundo informe-->
+                                <!--inicio tercer informe-->
+                                <tr>
+                                    <th scope="row">Informe Fusi Flota (en desarrollo)</th>
+                                    <td>Informe de todos los codigos fusi de la flota en general</td>
+                                    <td>
+                                        <a href="" class="btn btn-primary"> <i class="bx bx-download"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="" class="btn btn-primary"><i class="bx bx-download"></i></a>
+                                    </td>
+                                </tr>
+                                <!--fin tercer informe-->
+                                <!--inicio cuarto informe-->
+                                <tr>
+                                    <th scope="row">Informe Fusi Buses (en desarrollo)</th>
+                                    <td>Informe de todos los codigos fusi en detalle de todos los buses</td>
+                                    <td>
+                                        <a href="" class="btn btn-primary"> <i class="bx bx-download"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="" class="btn btn-primary"><i class="bx bx-download"></i></a>
+                                    </td>
+                                </tr>
+                                <!--fin cuarto informe-->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!---->
-    <div class="col-12" style="margin-top: 50px">
-        <div class="card">
-            <h5 class="card-header title">Reportes Buses</h5>
-            <div class="card-body">
-                <div class="col-12">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Bus</th>
-                                <th scope="col">Informe</th>
-                                <th scope="col">Descripcion</th>
-                                <th scope="col">PDF</th>
-                                <th scope="col">XLS</th>
-                            </tr>
-                        </thead>
+        <!---->
+        <div class="col-12" style="margin-top: 50px">
+            <div class="card">
+                <h5 class="card-header title">Reportes Buses</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Bus</th>
+                                    <th scope="col">Informe</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">PDF</th>
+                                    <th scope="col">XLS</th>
+                                </tr>
+                            </thead>
 
-                        <tbody class="table-group-divider">
-                            {% for i in bus %}
-                            <tr>
-                                <th scope="row">{{i.bus_name}}</th>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        {% endfor %}
-                    </table>
+                            <tbody class="table-group-divider">
+                                {% for i in bus %}
+                                <tr>
+                                    <th scope="row">{{i.bus_name}}</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    {% endblock content %}
 </div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-{% endblock content %}
