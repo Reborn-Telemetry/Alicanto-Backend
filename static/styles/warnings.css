@@ -13,3 +13,12 @@
 .table {
     --bs-table-bg: transparent;
 }
+
+.page-link {
+    background: transparent;
+    --bs-pagination-active-bg: #0f8bfd;
+    --bs-pagination-active-border-color: #0f8bfd;
+}
+.navpag {
+    margin-top: -80px;
+}
