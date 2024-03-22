@@ -12,6 +12,7 @@ from django.db.models import Q, Count, Sum
 # pdf imports 
 from django.http import FileResponse, HttpResponse
 import io
+from reportlab.platypus import Spacer
 from reportlab.pdfgen import canvas
 from django.http import FileResponse
 from reportlab.lib.pagesizes import letter, landscape
@@ -365,17 +366,22 @@ def xls_report(request):
 def bus_historic_fusi(request, pk):
     bus = Bus.bus.get(id=pk)
     fusi_bus = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code'))
+    fusi_bus_complete = FusiCode.fusi.filter(bus_id=pk)
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%d-%m-%Y")
     filename = f'reporte historico fusi_{bus.bus_name}_{formatted_datetime}.pdf'
     buf = io.BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=letter)
     elements = []
+    table_data_2 = [['Fecha', 'Codigo Fusi', 'Kilometraje Ocurrencia']]
     table_data = [
         ["Codigo Fusi", "Ocurrencias"]
     ]
     for item in fusi_bus:
         table_data.append([item['fusi_code'], item['total']])
+    
+    for item2 in fusi_bus_complete:
+        table_data_2.append([item2.TimeStamp.strftime("%d-%m-%Y %H:%M"), int(item2.fusi_code), item2.failure_odometer ])
 
     # Estilo de la tabla
     style = TableStyle([
@@ -390,8 +396,14 @@ def bus_historic_fusi(request, pk):
 
     # Crear la tabla y aplicar el estilo
     table = Table(table_data)
+    table2 = Table(table_data_2)
+    table2.setStyle(style)
     table.setStyle(style)
+    spacer = Spacer(0, 20)
     elements.append(table)
+    elements.append(spacer)
+    elements.append(table2)
+    
     image_path = 'static/img/REM.png'
     image = Image(image_path, width=80, height=80)
     elements.insert(0, image)
