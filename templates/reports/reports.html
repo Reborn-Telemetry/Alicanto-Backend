@@ -106,17 +106,28 @@
 
                             <tbody class="table-group-divider">
                                 {% for i in bus %}
+
                                 <tr>
                                     <th scope="row">{{i.bus_name}}</th>
+                                    <!--kilometraje mensual-->
                                     <td>kilometraje diario bus anual</td>
                                     <td>informe muestra el kilometraje maximo que registra por cada uno de los dias del mes </td>
                                     <td> <a href="{% url 'bus_dailykm_pdf_report' i.id %}" class="btn btn-primary"> <i class="bx bx-download"></i></a></td>
                                     <td></td>
+                                    <!--fusi historico-->
                                     <tr>
                                         <th scope="row"></th>
                                         <td>fusi historico bus</td>
                                         <td>informe muestra todos los codigos fusi y las repeticiones de cada uno, durante su vida util  </td>
                                         <td> <a href="{% url 'bus_historic_fusi_pdf_report' i.id %}" class="btn btn-primary"> <i class="bx bx-download"></i></a></td>
+                                    <td></td>
+                                    </tr>
+                                    <!--recorrido mensual-->
+                                    <tr>
+                                        <th scope="row"></th>
+                                        <td>Recorrido mensual bus</td>
+                                        <td>informe que indica el kilometraje incicial de cada mes, el kilometraje final de cada mes y el recorrido obtenido  </td>
+                                        <td> <a href="{% url 'recorrido_mensual_pdf' i.id %}" class="btn btn-primary"> <i class="bx bx-download"></i></a></td>
                                     <td></td>
                                     </tr>
                                 </tr>
