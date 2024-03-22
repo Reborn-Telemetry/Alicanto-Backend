@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count, Sum
 # pdf imports 
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 import io
 from reportlab.pdfgen import canvas
 from django.http import FileResponse
@@ -27,7 +27,6 @@ filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.
 20502.0, 21777.0, 21780.0, 20500.0, 20508.0, 20510.0, 20504.0, 20520.0, 20515.0, 20501.0]
 
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
-
 
 
 @login_required(login_url='login')
@@ -246,6 +245,7 @@ def dashboard(request):
     return render(request, 'pages/dashboard.html', context)
 
 
+
 def monthly_bus_report_xls(request):
     report_data = monthly_fleet_km()
     current_datetime = datetime.now()
@@ -361,6 +361,109 @@ def xls_report(request):
 
     return FileResponse(buf, as_attachment=True, filename=filename)
 
+@login_required(login_url='login')
+def bus_historic_fusi(request, pk):
+    bus = Bus.bus.get(id=pk)
+    fusi_bus = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code'))
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte historico fusi_{bus.bus_name}_{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+    table_data = [
+        ["Codigo Fusi", "Ocurrencias"]
+    ]
+    for item in fusi_bus:
+        table_data.append([item['fusi_code'], item['total']])
+
+    # Estilo de la tabla
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
+    ])
+
+    # Crear la tabla y aplicar el estilo
+    table = Table(table_data)
+    table.setStyle(style)
+    elements.append(table)
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+    
+
+
+
+
+
+
+@login_required(login_url='login')
+def daily_bus_km_report_pdf(request, pk):
+    bus = Bus.bus.get(id=pk)
+    result = daily_bus_km(pk)
+
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'km_diario_bus_{bus.bus_name}_{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+
+    table_data = [
+        ["Dia", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    ]
+
+    # Crear una lista de listas con los datos de result organizados por mes
+    data_by_month = [[] for _ in range(12)]  # 12 meses
+    for item in result:
+        for idx, value in enumerate(item[1:], start=1):
+            if value is not None:
+                data_by_month[idx - 1].append(value)
+            else:
+                data_by_month[idx - 1].append('')
+
+    # Llenar la tabla con los datos organizados
+    for i in range(31):  # 31 días
+        row = [f"Día {i+1}"]
+        for month_data in data_by_month:
+            if i < len(month_data):
+                row.append(month_data[i])
+            else:
+                row.append('')
+        table_data.append(row)
+
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
+    ])
+
+    table = Table(table_data)
+    table.setStyle(style)
+    elements.append(table)
+
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
 
 def pdf_report(request):
     current_datetime = datetime.now()
@@ -371,7 +474,7 @@ def pdf_report(request):
     elements = []
 
     table_data = [
-        ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
+        ["Bus", "Sniffer", "Ultimo SOC", "Ultimo Odometro", "Fecha de actualizacion"]
     ]
 
     bus_list = Bus.bus.all()
@@ -508,6 +611,7 @@ def delete_bus(request, pk):
         return redirect('bus_list')
     context = {'object': bus}
     return render(request, 'pages/delete_object.html', context)
+
 
 
 @login_required(login_url='login')
