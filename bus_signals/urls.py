@@ -24,5 +24,6 @@ urlpatterns = [
   path("monthly-bus-report-xls/", views.monthly_bus_report_xls, name="monthly-bus-report-xls"),
   path("warnings/", views.warnings, name="warnings"),
   path("fusi_dashboard/", views.fusi_dashboard, name="fusi_dashboard"),
+  path("recorrido_mensual_pdf/<str:pk>/", views.recorrido_mensual_bus_pdf, name="recorrido_mensual_pdf"),
 ]
 
