@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage, Odometer, FusiCode
 from .forms import BusForm, FusiMessageForm, FusiForm
-from users.models import WorkOrder
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
 import requests
 from django.contrib.auth import authenticate, login, logout
@@ -126,7 +125,21 @@ def warnings(request):
 @login_required(login_url='login')
 def reports_page(request):
     bus = Bus.bus.all()
-    context = {'bus': bus}
+
+    page = request.GET.get('page', 1)
+    results = 10
+    paginator = Paginator(bus, results)
+    try:
+        bus = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        bus = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        bus = paginator.page(page)
+    context = {
+        'bus': bus,
+        'paginator': paginator}
     return render(request, 'reports/reports.html', context)
 
 

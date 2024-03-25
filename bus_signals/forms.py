@@ -3,6 +3,7 @@ from .models import Bus, FusiMessage, FusiCode
 from users.models import WorkOrder
 
 
+
 class BusForm(ModelForm):
     class Meta:
         model = Bus
@@ -17,13 +18,13 @@ class FusiMessageForm(ModelForm):
         fields = '__all__'
 
 
+class FusiForm(ModelForm):
+    class Meta:
+        model = FusiCode
+        fields = '__all__'
+
 class WorkOrderForm(ModelForm):
     class Meta:
         model = WorkOrder
         fields = '__all__'
 
-
-class FusiForm(ModelForm):
-    class Meta:
-        model = FusiCode
-        fields = '__all__'
