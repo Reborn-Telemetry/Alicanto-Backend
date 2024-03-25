@@ -1,4 +1,6 @@
-import uuid
+from django.db import models
+
+# Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
 from bus_signals.models import Bus, Technician
@@ -7,7 +9,6 @@ from bus_signals.models import Bus, Technician
 # Create your models here.
 
 class Profile(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
