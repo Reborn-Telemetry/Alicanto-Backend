@@ -127,14 +127,6 @@
 
     <h2>Bitacora Bus</h2>
 
-    {% for order in ot %}
-    <p>
-        {{order.title}} {{order.description}}
-
-        <a href="{% url 'update_ot' order.id %}"><button>Editar Parte</button></a>
-    </p>
-
-    {% endfor %}
     <h2>Bitacora Codigos Fusi</h2>
     <table class="table">
         <tr>

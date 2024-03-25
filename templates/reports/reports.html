@@ -134,6 +134,29 @@
                             </tbody>
                             {% endfor %}
                         </table>
+                        {% if bus.has_other_pages %}
+                        <nav class="navpag" aria-label="Page navigation example">
+                            <ul class="pagination justify-content-center">
+                                {% if bus.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
+                                </li>
+                                {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                </li>
+                                {% endif %} {% endfor %} {% if bus.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
                     </div>
                 </div>
             </div>
