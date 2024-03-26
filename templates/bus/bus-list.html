@@ -1,75 +1,74 @@
 {% extends "main.html" %}{%block header%}Flota E-Buses{%endblock header%} {% block content %}
 
-<div>
-    <a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
-    <!--buscador de buses-->
-    <form action="{% url 'bus_list' %}" method="get">
-        <div>
-            <label>Buscar Bus </label>
-            <input
-                type="text"
-                name="search_query"
-                value="{{ search_query }}"
-                placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
-            />
-        </div>
+<a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
+<a href="{% url 'bus_list_view' %}"><button>Cambiar a lista</button> </a>
+<!--buscador de buses-->
+<form action="{% url 'bus_list' %}" method="get">
+    <div>
+        <label>Buscar Bus </label>
+        <input
+            type="text"
+            name="search_query"
+            value="{{ search_query }}"
+            placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
+        />
+    </div>
 
-        <input type="submit" value="Buscar" />
-    </form>
-    <!--lista buses-->
-    <div class="container text-center" style="height: 100vh">
-        <div class="row">
-            {% for bus in bus %}
-            <div class="col-sm-4">
-                <div class="card mb-4" style="max-width: 540px">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="{{ bus.bus_img.url }}" class="img-fluid rounded-start" alt="bus image" />
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <a href="{% url 'bus_detail' bus.id %}">
-                                    <h5 class="card-title">{{bus.bus_name}}</h5>
-                                    <p class="card-text">
-                                        {{bus.plate_number}} <br />
-                                        {{bus.lts_soc}}% <br />
-                                        {{bus.lts_odometer}} Kms.
-                                    </p>
-                                    <p class="card-text">
-                                        <small class="text-body-secondary">{{bus.lts_update}}</small>
-                                    </p>
-                                </a>
-                            </div>
+    <input type="submit" value="Buscar" />
+</form>
+<!--lista buses-->
+<div class="container text-center" style="height: 100vh">
+    <div class="row">
+        {% for bus in bus %}
+        <div class="col-sm-4">
+            <div class="card mb-4" style="max-width: 540px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ bus.bus_img.url }}" class="img-fluid rounded-start" alt="bus image" />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <a href="{% url 'bus_detail' bus.id %}">
+                                <h5 class="card-title">{{bus.bus_name}}</h5>
+                                <p class="card-text">
+                                    {{bus.plate_number}} <br />
+                                    {{bus.lts_soc}}% <br />
+                                    {{bus.lts_odometer}} Kms.
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-body-secondary">{{bus.lts_update}}</small>
+                                </p>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% if bus.has_other_pages %}
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                {% if bus.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
-                </li>
-                {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
-                <li class="page-item active">
-                    <a class="page-link" href="?page={{page}}">{{page}}</a>
-                </li>
-                {% else %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{page}}">{{page}}</a>
-                </li>
-                {% endif %} {% endfor %} {% if bus.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
+        {% endfor %}
     </div>
-
-    {% endblock content %}
+    {% if bus.has_other_pages %}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if bus.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
+            </li>
+            {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
+            <li class="page-item active">
+                <a class="page-link" href="?page={{page}}">{{page}}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{page}}">{{page}}</a>
+            </li>
+            {% endif %} {% endfor %} {% if bus.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
+
+{% endblock content %}

@@ -162,6 +162,33 @@ def fusi_dashboard(request):
     context = {'active_fusi': open_fusi, 'paginator': paginator}
     return render(request, 'fusi/fusi-dashboard.html', context)
 
+@login_required(login_url='login')
+def bus_list_view(request):
+    search_query = ''
+    page = request.GET.get('page')
+    results = 9
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    buses = Bus.bus.filter(
+        Q(bus_name__icontains=search_query) |
+        Q(bus_series__icontains=search_query) |
+        Q(bus_ecu__icontains=search_query) |
+        Q(client__icontains=search_query)
+    )
+
+    paginator = Paginator(buses, results)
+    try:
+        buses = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        buses = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        buses = paginator.page(page)
+
+    context = {'bus': buses, 'search_query': search_query, 'paginator': paginator}
+    return render(request, 'bus/bus_list_view.html', context)
 
 @login_required(login_url='login')
 def bus_list(request):
