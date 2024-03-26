@@ -58,7 +58,17 @@
                                 <!--Inicio perfil-->
                                 <td>{{i.vision}}</td>
                                 <!--Fin perfil-->
-                                <td>{{i.bus_ecu}}</td>
+
+                                <td>{{i.lts_update}}</td>
+                                <td>
+                                    <a href="{% url 'bus_detail' i.id %}">
+                                        <button type="button" class="btn btn-outline-info button-pro">
+                                            <div class="container-button">
+                                                Perfil <i class="bx bx-right-arrow-circle profile"></i>
+                                            </div>
+                                        </button>
+                                    </a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
