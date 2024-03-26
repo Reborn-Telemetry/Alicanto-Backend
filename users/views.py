@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, redirect
 from bus_signals.forms import WorkOrderForm
-from .models import WorkOrder
+from .models import WorkOrder, Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -11,7 +11,9 @@ from django.contrib import messages
 # Create your views here.
 @login_required(login_url='login')
 def profile(request):
-    return render(request, 'users/profile.html')
+    workers = Profile.objects.all()
+    context = {'workers': workers}
+    return render(request, 'users/profile.html', context)
 
 @login_required(login_url='login')
 def work_order(request):

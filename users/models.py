@@ -16,6 +16,7 @@ class Profile(models.Model):
     short_intro = models.CharField(max_length=200, blank=True, null=True)
     company = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=50, blank=True, null=True)
+    job_title = models.CharField(max_length=100, blank=True, null=True)
     profile_image = models.ImageField(null=True, blank=True, upload_to='profiles/', default='profiles/user-default.png')
 
     def __str__(self):
