@@ -1,4 +1,21 @@
 .col-lg-4 {
-    margin-top: 20px;
+    margin-top: 15px;
     margin-bottom: 20px;
+}
+.data {
+    display: flex;
+    flex-direction: column;
+    margin-top: -18px;
+}
+.card {
+    background-color: #ededed;
+}
+.serie {
+    object-fit: cover; /* Ajusta la imagen para que cubra todo el contenedor */
+    /* Garantiza que la imagen ocupe todo el alto del contenedor */
+}
+
+.name {
+    color: #0f8bfd;
+    margin-top: -8px;
 }
