@@ -3,7 +3,7 @@
 <a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
 <a href="{% url 'bus_list' %}"><button>Vista tarjetas</button> </a>
 <!--buscador de buses-->
-<form action="{% url 'bus_list' %}" method="get">
+<form action="{% url 'bus_list_view' %}" method="get">
     <div>
         <label>Buscar Bus </label>
         <input
@@ -34,7 +34,9 @@
                                 <th>v. Mark</th>
                                 <th>V. Jarvis</th>
                                 <th>V. Vision</th>
+                                <th>Ultima Actualizacion</th>
                                 <th>Ecu</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
@@ -58,8 +60,9 @@
                                 <!--Inicio perfil-->
                                 <td>{{i.vision}}</td>
                                 <!--Fin perfil-->
-
                                 <td>{{i.lts_update}}</td>
+                                <td>{{i.bus_ecu}}</td>
+
                                 <td>
                                     <a href="{% url 'bus_detail' i.id %}">
                                         <button type="button" class="btn btn-outline-info button-pro">
