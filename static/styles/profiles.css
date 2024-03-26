@@ -9,10 +9,7 @@
 }
 .card {
     background-color: #ededed;
-}
-.serie {
-    object-fit: cover; /* Ajusta la imagen para que cubra todo el contenedor */
-    /* Garantiza que la imagen ocupe todo el alto del contenedor */
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .name {
