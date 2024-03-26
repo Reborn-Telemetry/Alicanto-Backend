@@ -1,0 +1,109 @@
+{% extends "main.html" %}{% block header %}Flota E-Buses{% endblock header %} {% block content %}
+
+<a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
+<a href="{% url 'bus_list' %}"><button>Vista tarjetas</button> </a>
+<!--buscador de buses-->
+<form action="{% url 'bus_list' %}" method="get">
+    <div>
+        <label>Buscar Bus </label>
+        <input
+            type="text"
+            name="search_query"
+            value="{{ search_query }}"
+            placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
+        />
+    </div>
+
+    <input type="submit" value="Buscar" />
+</form>
+<!--lista buses-->
+<div class="container text-center" style="height: 100vh">
+    <div class="col-12">
+        <div class="card">
+            <h5 class="card-header">Actualizaciones Buses</h5>
+            <div class="card-body">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Bus</th>
+                                <th>Sniffer</th>
+                                <th>Patente</th>
+                                <th>Serie</th>
+                                <th>Cliente</th>
+                                <th>v. Mark</th>
+                                <th>V. Jarvis</th>
+                                <th>V. Vision</th>
+                                <th>Ecu</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for i in bus %}
+                            <tr>
+                                <td class="busname">{{i.bus_name}}</td>
+
+                                <td>{{ i.sniffer }}</td>
+                                <
+                                <td>{{i.plate_number}}</td>
+
+                                <td>{{i.bus_series}}</td>
+
+                                <td>{{i.client}}</td>
+                                <!--Inicio timestamp-->
+                                <td>
+                                    <div class="timestamp">{{i.lts_update}}</div>
+                                </td>
+                                <!--Fin timestamp-->
+                                <!--Inicio cargando-->
+                                <td>
+                                    <i class="bx bxs-battery-charging charging"></i>
+                                    <i class="bx bxs-bolt charging"></i>
+                                    in process
+                                </td>
+                                <!--Fin cargando-->
+                                <!--Inicio perfil-->
+                                <td>
+                                    <a href="{% url 'bus_detail' i.id %}">
+                                        <button type="button" class="btn btn-outline-info button-pro">
+                                            <div class="container-button">
+                                                Perfil <i class="bx bx-right-arrow-circle profile"></i>
+                                            </div>
+                                        </button>
+                                    </a>
+                                </td>
+                                <!--Fin perfil-->
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    {% if bus.has_other_pages %}
+                    <nav class="navpag" aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if bus.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
+                            </li>
+                            {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{page}}">{{page}}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page}}">{{page}}</a>
+                            </li>
+                            {% endif %} {% endfor %} {% if bus.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
