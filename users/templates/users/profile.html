@@ -1,13 +1,13 @@
 {% extends 'main.html' %} {% load static %} {% block header %}Staff {% endblock header %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/profiles.css' %}" />
 <div class="container text-center">
-    <div class="row">
+    <div class="row" style="height: 100vh">
         {% for i in workers %}
         <div class="col-lg-4">
-            <div class="card mb-3" style="max-width: 540px">
+            <div class="card mb-3" style="max-width: 600px">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="{{i.profile_image.url}}" class="img-fluid rounded-start serie" alt="profileimage" />
+                        <img style="object-fit:cover; "src="{{i.profile_image.url}}" class="img-fluid rounded-start serie" alt="profileimage" />
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
