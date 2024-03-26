@@ -43,35 +43,22 @@
                                 <td class="busname">{{i.bus_name}}</td>
 
                                 <td>{{ i.sniffer }}</td>
-                                <
+
                                 <td>{{i.plate_number}}</td>
 
                                 <td>{{i.bus_series}}</td>
 
                                 <td>{{i.client}}</td>
-                                <!--Inicio timestamp-->
-                                <td>
-                                    <div class="timestamp">{{i.lts_update}}</div>
-                                </td>
+
+                                <td>{{i.mark}}</td>
                                 <!--Fin timestamp-->
                                 <!--Inicio cargando-->
-                                <td>
-                                    <i class="bx bxs-battery-charging charging"></i>
-                                    <i class="bx bxs-bolt charging"></i>
-                                    in process
-                                </td>
+                                <td>{{i.jarvis}}</td>
                                 <!--Fin cargando-->
                                 <!--Inicio perfil-->
-                                <td>
-                                    <a href="{% url 'bus_detail' i.id %}">
-                                        <button type="button" class="btn btn-outline-info button-pro">
-                                            <div class="container-button">
-                                                Perfil <i class="bx bx-right-arrow-circle profile"></i>
-                                            </div>
-                                        </button>
-                                    </a>
-                                </td>
+                                <td>{{i.vision}}</td>
                                 <!--Fin perfil-->
+                                <td>{{i.bus_ecu}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
