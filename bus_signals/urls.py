@@ -7,6 +7,7 @@ urlpatterns = [
   path("", views.dashboard, name="dashboard"),
   path("logout_user/", views.logout_user, name="logout_user"),
   path("bus_list/", views.bus_list, name="bus_list"),
+  path("bus_list_view/", views.bus_list_view, name="bus_list_view"),
   path("dic_fusi/", views.dic_fusi, name="dic_fusi"),
   path("bus_detail/<str:pk>/", views.bus_detail, name="bus_detail"),
   path("create_bus/", views.create_bus, name="create_bus"),
