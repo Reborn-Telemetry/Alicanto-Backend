@@ -1,3 +1,23 @@
-{% extends 'main.html' %} {% load static %} {% block header %}Staff Telemetria{% endblock header %} {% block content %}
-<h1 style="margin-left: 300px">Staff Reborn</h1>
+{% extends 'main.html' %} {% load static %} {% block header %}Staff {% endblock header %} {% block content %}
+<link rel="stylesheet" href="{% static 'styles/profiles.css' %}" />
+<div class="container text-center">
+    <div class="row">
+        {% for i in workers %}
+        <div class="col-lg-4">
+            <div class="card" style="width: 18rem">
+                <img src="{{i.profile_image.url}}" class="card-img-top" alt="..." />
+                <div class="card-body">
+                    <h5 class="card-title">{{i.name}}</h5>
+                    <p class="card-text">{{i.short_intro}}</p>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><i class="bx bx-at"></i>{{i.email}}</li>
+                    <li class="list-group-item"><i class="bx bx-phone-call"></i>{{i.phone}}</li>
+                    <li class="list-group-item"><i class="bx bx-briefcase"></i>{{i.company}}</li>
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock content %}
