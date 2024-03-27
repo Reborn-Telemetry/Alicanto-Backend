@@ -147,36 +147,13 @@
                                     <!--Inicio soc-->
                                     <td>
                                         {% if i.lts_soc > 60 %}
+                                        <span class="badge text-bg-success">{{ i.lts_soc }} %</span>
 
-                                        <span
-                                            class="material-symbols-outlined icon"
-                                            style="color: green; display: inline-block; vertical-align: middle"
-                                            >battery_full</span
-                                        >
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_soc }} %</span
-                                        >
+                                        {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                        <span class="badge text-bg-warning">{{ i.lts_soc }} %</span>
 
-                                        {%elif i.lts_soc <= 60 and i.lts_soc > 40%}
-                                        <span
-                                            class="material-symbols-outlined icon"
-                                            style="color: orange; display: inline-block; vertical-align: middle"
-                                        >
-                                            battery_3_bar
-                                        </span>
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_soc }} %</span
-                                        >
                                         {% elif i.lts_soc <= 40 %}
-                                        <span
-                                            class="material-symbols-outlined icon"
-                                            style="color: red; display: inline-block; vertical-align: middle"
-                                        >
-                                            battery_1_bar
-                                        </span>
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_soc }} %</span
-                                        >
+                                        <span class="badge text-bg-danger">{{ i.lts_soc }} %</span>
                                         {% else %} {{ i.lts_soc }} {% endif %}
                                     </td>
                                     <!--Fin soc-->
