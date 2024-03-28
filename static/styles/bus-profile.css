@@ -16,11 +16,18 @@
     width: 100%;
     width: 100%;
 }
+
+h5 {
+    font-size: 15px;
+    font-weight: 400;
+}
+
 .custom-card {
     background-color: #ededed;
     border: none;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
 .twin {
     margin-top: 20px;
 }
