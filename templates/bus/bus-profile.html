@@ -1,30 +1,285 @@
-{% extends "main.html" %} {% load static %}{%block header%}BUS {{ bus.bus_name}}{%endblock header%} {% block content %}
+{% extends "main.html" %} {% load static %}{% block header%}BUS {{ bus.bus_name}}{%endblock header%} {% block content %}
+<link rel="stylesheet" href="{% static 'styles/bus-profile.css' %}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="option-button">
+                {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
+                <a href="{% url 'update_bus' bus.id %}"
+                    ><button type="button" class="btn btn-primary">Editar Bus</button></a
+                >
+                <a href="{% url 'work_order_form' %}">
+                    <button type="button" class="btn btn-info">Crear Parte</button></a
+                >
+
+                <a href="{% url 'delete_bus' bus.id %}">
+                    <button type="button" class="btn btn-danger">Eliminar Bus</button></a
+                >
+
+                {% else %}
+                <button type="button" class="btn btn-primary">Editar Bus</button>
+                <a href="{% url 'work_order_form' %}">
+                    <button type="button" class="btn btn-info">Crear Parte</button></a
+                >
+                <button type="button" class="btn btn-danger">Eliminar Bus</button>
+                {% endif %}
+            </div>
+        </div>
+        <!--inicio tarjeta bus principal-->
+        <div class="col-5">
+            <div class="card custom-card">
+                <img src="{{bus.bus_img.url}}" class="card-img-top" alt="..." />
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="col-12">
+                            <div class="card custom-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Datos del Bus</h5>
+                                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                                        <span style="color: #0f8bfd">Actualizacion : {{bus.lts_update}}</span>
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">ECU</h5>
+                                                    <p class="card-text custom-text">{{bus.bus_ecu}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Sniffer</h5>
+                                                    <p class="card-text custom-text">{{bus.sniffer}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Patente</h5>
+                                                    <p class="card-text custom-text">{{bus.plate_number}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 20px">
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Serie</h5>
+                                                    <p class="card-text custom-text">{{bus.bus_series}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Cliente</h5>
+                                                    <p class="card-text custom-text">{{bus.client}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">VIN</h5>
+                                                    <p class="card-text custom-text">Buscando info</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--fin tarjeta bus principal-->
+        <div class="col-4">
+            <div class="card custom-card">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Bateria Actual</h5>
+
+                                <div class="card-text">
+                                    <div class="box">
+                                        <div class="chart" data-percent="{{ bus.lts_soc }}" data-scale-color="#ffb400">
+                                            {{ bus.lts_soc }}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <h5 class="card-title">SOH</h5>
+
+                                <div class="card-text">
+                                    <div class="box">
+                                        <div class="chart" data-percent="1" data-scale-color="#ffb400">0%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--taejeta 2-->
+            <div class="card custom-card twin">
+                <div class="card-body">
+                    <h5 class="card-title">Versiones Software</h5>
+                    <div class="card-text">
+                        <div class="col-12">
+                            <div class="card custom-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Datos del Bus</h5>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Mark</h5>
+                                                    <p class="card-text custom-text">{{bus.mark}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Jarvis</h5>
+                                                    <p class="card-text custom-text">{{bus.jarvis}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="card custom-card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Vision</h5>
+                                                    <p class="card-text custom-text">{{bus.vision}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card mb-3 custom-card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img
+                            src="https://plus.unsplash.com/premium_photo-1681487077388-5a2c641a1e21?q=80&w=3684&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            class="img-fluid rounded-start"
+                            alt="..."
+                        />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">CO2 Evitado</h5>
+                            <p class="card-text">calculando... tons</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--aqui tabla con recorridos-->
+            <div class="card custom-card">
+                <h5 class="card-header">Recorrido buses</h5>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Mes</th>
+                                <th>Km Inicial</th>
+                                <th>Km Final</th>
+                                <th>Recorrido</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for i in monthly_result %}
+                            <tr>
+                                <td>Enero</td>
+                                <td>{{ i.1 }}</td>
+                                <td>{{i.2}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Febrero</td>
+                                <td>{{ i.3 }}</td>
+                                <td>{{i.4}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Marzo</td>
+                                <td>{{ i.5 }}</td>
+                                <td>{{i.6}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Abril</td>
+                                <td>{{ i.7 }}</td>
+                                <td>{{i.8}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Mayo</td>
+                                <td>{{ i.9 }}</td>
+                                <td>{{i.10}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Junio</td>
+                                <td>{{ i.11 }}</td>
+                                <td>{{i.12}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Julio</td>
+                                <td>{{ i.13 }}</td>
+                                <td>{{i.14}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Agosto</td>
+                                <td>{{ i.15 }}</td>
+                                <td>{{i.16}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Septiembre</td>
+                                <td>{{ i.17 }}</td>
+                                <td>{{i.18}}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--divisor-->
 
 <div class="container text-center">
-    <img src="{{ bus.bus_img.url }}" alt="image" style="width: 400px; height: 250px" />
-    <h5>Sniffer: {{ bus.sniffer}}</h5>
-    {% if user.username == 'hurbx' %}
-    <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
-    <a href="{% url 'delete_bus' bus.id %}"><button>Eliminar Bus</button></a>
-    <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
-    {% else %}
-    <a href="{% url 'update_bus' bus.id %}"><button>Editar Bus</button></a>
-    <a href="#"><button>Eliminar Bus</button></a>
-    <a href="{% url 'work_order_form' %}"><button>Crear Parte</button></a>
-
-    {% endif %}
-
-    <span class="badge rounded-pill text-bg-secondary">Patente: {{ bus.plate_number}}</span>
     <h5>Kilometraje: {{ bus.lts_odometer }}</h5>
-    <h5>Carga: {{ bus.lts_soc }}</h5>
-    <h5>Serie: {{ bus.bus_series }}</h5>
-    <h5>Cliente: {{ bus.client }}</h5>
-    <h5>Version Mark: {{ bus.mark }}</h5>
-    <h5>Version Jarvis: {{ bus.jarvis }}</h5>
-    <h5>Version Vision: {{ bus.vision }}</h5>
+
     <h5>Baterias 24 Volts: {{ bus.lts_24_volt }}</h5>
     <h5>Aislacion: {{ bus.lts_isolation }}</h5>
-    <h5>Actualizacion: {{ bus.lts_update }}</h5>
 
     <h2>Kilometrajes Diarios</h2>
 
@@ -153,5 +408,6 @@
         {% endfor %}
     </table>
 </div>
+<script src="{% static 'js/bus-profile-js.js' %}"></script>
 
 {% endblock content %}
