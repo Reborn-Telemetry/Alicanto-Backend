@@ -729,7 +729,7 @@ def bus_detail(request, pk):
     results = daily_bus_km(pk)
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
-    fusi = FusiCode.fusi.filter(bus_id=pk)
+    fusi = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
     context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi}
     return render(request, 'bus/bus-profile.html', context)
 
