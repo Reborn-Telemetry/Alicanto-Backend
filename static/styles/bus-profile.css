@@ -1,0 +1,42 @@
+.box .chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 40px;
+    line-height: 160px;
+    height: 160px;
+    color: #666363;
+}
+
+.box canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    width: 100%;
+}
+.custom-card {
+    background-color: #ededed;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.twin {
+    margin-top: 20px;
+}
+.custom-text {
+    color: #0f8bfd;
+}
+.option-button {
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+td {
+    font-size: 12px;
+}
+.table {
+    --bs-table-bg: transparent;
+}
