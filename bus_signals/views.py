@@ -515,11 +515,6 @@ def bus_historic_fusi(request, pk):
     return FileResponse(buf, as_attachment=True, filename=filename)
     
 
-
-
-
-
-
 @login_required(login_url='login')
 def daily_bus_km_report_pdf(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -630,24 +625,24 @@ def login_page(request):
         try:
             user = User.objects.get(username=username)
         except:
-            messages.error(request, 'User does not exist')
+            messages.error(request, 'El usuario no existe')
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
-            messages.success(request, 'user successfully logged in')
+            messages.success(request, 'Ingresaste coreectamente')
             return redirect('dashboard')
         else:
-            messages.error(request, 'username or password incorrect')
-            print('Username or password is incorrect')
+            messages.error(request, 'nombre de usuario o contraseña incorrectos')
+           
 
     return render(request, 'pages/login.html')
 
 
 def logout_user(request):
     logout(request)
-    messages.error(request, 'user successfully logged out')
+    messages.error(request, 'Sesion cerrada correctamente')
 
     return redirect('login')
 
