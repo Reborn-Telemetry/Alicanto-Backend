@@ -31,7 +31,8 @@ filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.
 
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
 
-
+def no_access(request):
+    return render(request, 'pages/no-access.html')
 @login_required(login_url='login')
 def warnings(request):
     headers = {

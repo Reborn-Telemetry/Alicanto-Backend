@@ -20,11 +20,13 @@
                 >
 
                 {% else %}
-                <button type="button" class="btn btn-primary">Editar Bus</button>
+                <a href="{% url 'no-access' %}"> <button type="button" class="btn btn-primary">Editar Bus</button></a>
+
                 <a href="{% url 'work_order_form' %}">
                     <button type="button" class="btn btn-info">Crear Parte</button></a
                 >
-                <button type="button" class="btn btn-danger">Eliminar Bus</button>
+                <a href="{% url 'no-access' %}"><button type="button" class="btn btn-danger">Eliminar Bus</button></a>
+
                 {% endif %}
             </div>
         </div>
@@ -35,7 +37,7 @@
                 <div class="card-body">
                     <div class="card-text">
                         <div class="col-12">
-                            <div class="card custom-card">
+                            <div style="box-shadow: none" class="card custom-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Datos del Bus</h5>
                                     <h6 class="card-subtitle mb-2 text-body-secondary">
@@ -105,10 +107,9 @@
             <div class="card custom-card">
                 <div class="row">
                     <div class="col-6">
-                        <div class="card custom-card">
+                        <div style="box-shadow: none" class="card custom-card">
                             <div class="card-body">
                                 <h5 class="card-title">Bateria Actual</h5>
-
                                 <div class="card-text">
                                     <div class="box">
                                         <div class="chart" data-percent="{{ bus.lts_soc }}" data-scale-color="#ffb400">
@@ -120,7 +121,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card custom-card">
+                        <div style="box-shadow: none" class="card custom-card">
                             <div class="card-body">
                                 <h5 class="card-title">SOH</h5>
 
@@ -141,9 +142,8 @@
                     <h5 class="card-title">Versiones Software</h5>
                     <div class="card-text">
                         <div class="col-12">
-                            <div class="card custom-card">
+                            <div style="box-shadow: none" class="card custom-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Datos del Bus</h5>
                                     <div class="row">
                                         <div class="col-4">
                                             <div class="card custom-card">
@@ -168,6 +168,37 @@
                                                     <p class="card-text custom-text">{{bus.vision}}</p>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="box-shadow: none" class="card custom-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Mediciones</h5>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="card custom-card">
+                                        <div class="card-body">
+                                            <h5 class="card-title custom-title">KM</h5>
+                                            <p class="card-text custom-text">{{bus.lts_odometer}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="card custom-card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">24 Volts</h5>
+                                            <p class="card-text custom-text">{{ bus.lts_24_volt }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="card custom-card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Aislacion</h5>
+                                            <p class="card-text custom-text">{{bus.lts_isolation}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -264,6 +295,24 @@
                                 <td>{{i.18}}</td>
                                 <td></td>
                             </tr>
+                            <tr>
+                                <td>Octubre</td>
+                                <td>{{ i.19 }}</td>
+                                <td>{{i.20}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Noviembre</td>
+                                <td>{{ i.21 }}</td>
+                                <td>{{i.22}}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Diciembre</td>
+                                <td>{{ i.23 }}</td>
+                                <td>{{i.24}}</td>
+                                <td></td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -276,11 +325,6 @@
 <!--divisor-->
 
 <div class="container text-center">
-    <h5>Kilometraje: {{ bus.lts_odometer }}</h5>
-
-    <h5>Baterias 24 Volts: {{ bus.lts_24_volt }}</h5>
-    <h5>Aislacion: {{ bus.lts_isolation }}</h5>
-
     <h2>Kilometrajes Diarios</h2>
 
     <table class="table">
