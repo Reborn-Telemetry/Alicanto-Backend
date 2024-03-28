@@ -1,5 +1,36 @@
 {% extends "main.html" %}{% block header %}Flota E-Buses{% endblock header %} {% block content %}
 
+<div class="container">
+    <div class="row">
+        {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
+        <div class="col-2">
+            <a href="{% url 'create_bus' %}">
+                <button type="button" class="btn btn-primary"><i class="bx bx-plus"></i>Nuevo</button>
+            </a>
+        </div>
+        <div class="col-2">
+            <a href="{% url 'bus_list_view' %}">
+                <button type="button" class="btn btn-primary"><i class="bx bx-list-ul"></i> Lista</button>
+            </a>
+        </div>
+        {% else %}
+        <div class="col-2">
+            <a href="{% url 'no-access' %}">
+                <button type="button" class="btn btn-primary"><i class="bx bx-plus"></i>Nuevo</button>
+            </a>
+        </div>
+        <div class="col-2">
+            <a href="{% url 'bus_list_view' %}">
+                <button type="button" class="btn btn-primary"><i class="bx bx-list-ul"></i> Lista</button>
+            </a>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+
+<!--divisor codigo-->
+
 <a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
 <a href="{% url 'bus_list' %}"><button>Vista tarjetas</button> </a>
 <!--buscador de buses-->
