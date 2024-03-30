@@ -727,10 +727,44 @@ def delete_bus(request, pk):
 def bus_detail(request, pk):
     montly_result = monthly_bus_km(pk)
     results = daily_bus_km(pk)
+    months_dict = {
+        1: 'Enero',
+        2: 'Febrero',
+        3: 'Marzo',
+        4: 'Abril',
+        5: 'Mayo',
+        6: 'Junio',
+        7: 'Julio',
+        8: 'Agosto',
+        9: 'Septiembre',
+        10: 'Octubre',
+        11: 'Noviembre',
+        12: 'Diciembre',
+    }
+
+    result_data = []
+
+    # Iterar sobre el rango correcto para cada mes
+    for i in range(1, len(montly_result[0]), 2):
+        if i + 1 < len(montly_result[0]) and montly_result[0][i] is not None and montly_result[0][i + 1] is not None:
+            difference = montly_result[0][i + 1] - montly_result[0][i]
+            month_name = months_dict[(i + 1) // 2]  # Obtener el nombre del mes del diccionario
+            result_data.append({
+                'month': month_name,
+                'value1': montly_result[0][i],
+                'value2': montly_result[0][i + 1],
+                'difference': difference if difference is not None else 'N/A'
+            })
+    
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
+    co2 = (bus.lts_odometer / 0.2857) * 2.68
+   
+    co2 = co2/1000
+    co2 = round(co2, 2)
+    print(co2)
     fusi = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
-    context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi}
+    context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi, 'result_data': result_data, 'co2': co2}
     return render(request, 'bus/bus-profile.html', context)
 
 
