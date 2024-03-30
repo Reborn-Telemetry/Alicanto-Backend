@@ -450,8 +450,10 @@ def recorrido_mensual_flota(request):
         # Crear la tabla y aplicar el estilo
         table = Table(table_data)
         table.setStyle(style)
+        spacer = Spacer(0, 20)
         elements.append(table)
         spacer = Spacer(0, 20)
+        
         
        
     # Construir el documento y guardar en el buffer
