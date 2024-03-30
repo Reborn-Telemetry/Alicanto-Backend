@@ -31,6 +31,7 @@ filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.
 
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
 
+@login_required(login_url='login')
 def no_access(request):
     return render(request, 'pages/no-access.html')
 @login_required(login_url='login')
@@ -246,6 +247,10 @@ def dashboard(request):
     km_total_format = '{:,.0f}'.format(km_total)
     km_total_format = km_total_format.replace(',', '.')
 
+    co2_total= (km_total/0.2857) * 2.68
+    co2_total = co2_total/1000
+    co2_total = round(co2_total, 2)
+
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
     # cantidad de buses sin actualizacion
@@ -286,9 +291,9 @@ def dashboard(request):
         'delayed': delayed,
         'paginator': paginator,
         'cant_fs': cant_fs,
+        'co2_total': co2_total
     }
     return render(request, 'pages/dashboard.html', context)
-
 
 
 def monthly_bus_report_xls(request):
@@ -824,7 +829,6 @@ def bus_detail(request, pk):
    
     co2 = co2/1000
     co2 = round(co2, 2)
-    print(co2)
     fusi = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
     context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi, 'result_data': result_data, 'co2': co2}
     return render(request, 'bus/bus-profile.html', context)
