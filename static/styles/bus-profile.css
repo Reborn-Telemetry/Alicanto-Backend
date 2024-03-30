@@ -47,3 +47,18 @@ td {
 .table {
     --bs-table-bg: transparent;
 }
+
+.image-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.image-icon i {
+    font-size: 50px;
+    color: #0f8bfd;
+}
+
+.custom-header {
+    color: #0f8bfd;
+    font-size: 18px;
+}
