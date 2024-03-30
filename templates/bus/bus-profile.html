@@ -309,117 +309,119 @@
     </div>
 </div>
 
-<div class="col-12" style="margin-top: 50px">
-    <div class="card custom-card">
-        <h5 class="card-header custom-header">Kilometraje maximo diario</h5>
-        <div class="card-body">
-            <div class="col-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Dia</th>
-                            <th>Enero</th>
-                            <th>Febrero</th>
-                            <th>Marzo</th>
-                            <th>Abril</th>
-                            <th>Mayo</th>
-                            <th>Junio</th>
-                            <th>Julio</th>
-                            <th>Agosto</th>
-                            <th>Septiembre</th>
-                            <th>Octubre</th>
-                            <th>Noviembre</th>
-                            <th>Diciembre</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        {% for i in results %}
-                        <tr>
-                            <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
-                            <td>{% if i.1 is None %} 0 {% else %}{{i.1}} {% endif %}</td>
-                            <td>{% if i.2 is None %} 0 {% else %}{{i.2}} {% endif %}</td>
-                            <td>{% if i.3 is None %} 0 {% else %}{{i.3}} {% endif %}</td>
-                            <td>{% if i.4 is None %} 0 {% else %}{{i.4}} {% endif %}</td>
-                            <td>{% if i.5 is None %} 0 {% else %}{{i.5}} {% endif %}</td>
-                            <td>{% if i.6 is None %} 0 {% else %}{{i.6}} {% endif %}</td>
-                            <td>{% if i.7 is None %} 0 {% else %}{{i.7}} {% endif %}</td>
-                            <td>{% if i.8 is None %} 0 {% else %}{{i.8}} {% endif %}</td>
-                            <td>{% if i.9 is None %} 0 {% else %}{{i.9}} {% endif %}</td>
-                            <td>{% if i.10 is None %} 0 {% else %}{{i.10}} {% endif %}</td>
-                            <td>{% if i.11 is None %} 0 {% else %}{{i.11}} {% endif %}</td>
-                            <td>{% if i.12 is None %} 0 {% else %}{{i.12}} {% endif %}</td>
-                        </tr>
+<div class="container">
+    <div class="col-12" style="margin-top: 50px">
+        <div class="card custom-card">
+            <h5 class="card-header custom-header">Kilometraje maximo diario</h5>
+            <div class="card-body">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Dia</th>
+                                <th>Enero</th>
+                                <th>Febrero</th>
+                                <th>Marzo</th>
+                                <th>Abril</th>
+                                <th>Mayo</th>
+                                <th>Junio</th>
+                                <th>Julio</th>
+                                <th>Agosto</th>
+                                <th>Septiembre</th>
+                                <th>Octubre</th>
+                                <th>Noviembre</th>
+                                <th>Diciembre</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            {% for i in results %}
+                            <tr>
+                                <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
+                                <td>{% if i.1 is None %} 0 {% else %}{{i.1}} {% endif %}</td>
+                                <td>{% if i.2 is None %} 0 {% else %}{{i.2}} {% endif %}</td>
+                                <td>{% if i.3 is None %} 0 {% else %}{{i.3}} {% endif %}</td>
+                                <td>{% if i.4 is None %} 0 {% else %}{{i.4}} {% endif %}</td>
+                                <td>{% if i.5 is None %} 0 {% else %}{{i.5}} {% endif %}</td>
+                                <td>{% if i.6 is None %} 0 {% else %}{{i.6}} {% endif %}</td>
+                                <td>{% if i.7 is None %} 0 {% else %}{{i.7}} {% endif %}</td>
+                                <td>{% if i.8 is None %} 0 {% else %}{{i.8}} {% endif %}</td>
+                                <td>{% if i.9 is None %} 0 {% else %}{{i.9}} {% endif %}</td>
+                                <td>{% if i.10 is None %} 0 {% else %}{{i.10}} {% endif %}</td>
+                                <td>{% if i.11 is None %} 0 {% else %}{{i.11}} {% endif %}</td>
+                                <td>{% if i.12 is None %} 0 {% else %}{{i.12}} {% endif %}</td>
+                            </tr>
 
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="col-12" style="margin-top: 50px">
-    <div class="card custom-card">
-        <h5 class="card-header custom-header">Bitacora Fusi Bus</h5>
-        <div class="card-body">
-            <div class="col-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Codigo Fusi</th>
-                            <th>Kilometraje</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for i in fusi %}
-                        <tr>
-                            <td>{{i.fusi_code}}</td>
-                            <td>{{i.failure_odometer}}</td>
-                            <td>{{i.TimeStamp}}</td>
-                            <td>{{i.fusi_state}}</td>
+    <div class="col-12" style="margin-top: 50px">
+        <div class="card custom-card">
+            <h5 class="card-header custom-header">Bitacora Fusi Bus</h5>
+            <div class="card-body">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Codigo Fusi</th>
+                                <th>Kilometraje</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in fusi %}
+                            <tr>
+                                <td>{{i.fusi_code}}</td>
+                                <td>{{i.failure_odometer}}</td>
+                                <td>{{i.TimeStamp}}</td>
+                                <td>{{i.fusi_state}}</td>
 
-                            <td>
-                                <a href="{% url 'update-fusi-code' i.id  %}">
-                                    <button type="button" class="btn btn-info">Editar Fusi</button>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% if fusi.has_other_pages %}
-                <nav class="navpag" aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        {% if fusi.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{fusi.previous_page_number}}">Anterior</a>
-                        </li>
-                        {% endif %} {% for page in paginator.page_range %} {% if page == fusi.number %}
-                        <li class="page-item active">
-                            <a class="page-link" href="?page={{page}}">{{page}}</a>
-                        </li>
-                        {% else %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{page}}">{{page}}</a>
-                        </li>
-                        {% endif %} {% endfor %} {% if fusi.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{fusi.next_page_number}}">Siguiente</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
+                                <td>
+                                    <a href="{% url 'update-fusi-code' i.id  %}">
+                                        <button type="button" class="btn btn-info">Editar Fusi</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if fusi.has_other_pages %}
+                    <nav class="navpag" aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if fusi.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{fusi.previous_page_number}}">Anterior</a>
+                            </li>
+                            {% endif %} {% for page in paginator.page_range %} {% if page == fusi.number %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{page}}">{{page}}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page}}">{{page}}</a>
+                            </li>
+                            {% endif %} {% endfor %} {% if fusi.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{fusi.next_page_number}}">Siguiente</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
+
+    <!--divisor-->
+
+    <script src="{% static 'js/bus-profile-js.js' %}"></script>
 </div>
 
-<!--divisor-->
-
-<script src="{% static 'js/bus-profile-js.js' %}"></script>
-
-{% endblock content %}
+< {% endblock content %}
