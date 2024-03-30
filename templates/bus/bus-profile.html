@@ -221,7 +221,7 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">CO2 Evitado</h5>
-                            <p class="card-text">calculando... tons</p>
+                            <p class="card-text">{{co2}} toneladas CO2</p>
                         </div>
                     </div>
                 </div>
@@ -240,78 +240,12 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            {% for i in monthly_result %}
+                            {% for data in result_data %}
                             <tr>
-                                <td>Enero</td>
-                                <td>{{ i.1 }}</td>
-                                <td>{{i.2}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Febrero</td>
-                                <td>{{ i.3 }}</td>
-                                <td>{{i.4}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Marzo</td>
-                                <td>{{ i.5 }}</td>
-                                <td>{{i.6}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Abril</td>
-                                <td>{{ i.7 }}</td>
-                                <td>{{i.8}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Mayo</td>
-                                <td>{{ i.9 }}</td>
-                                <td>{{i.10}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Junio</td>
-                                <td>{{ i.11 }}</td>
-                                <td>{{i.12}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Julio</td>
-                                <td>{{ i.13 }}</td>
-                                <td>{{i.14}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Agosto</td>
-                                <td>{{ i.15 }}</td>
-                                <td>{{i.16}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Septiembre</td>
-                                <td>{{ i.17 }}</td>
-                                <td>{{i.18}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Octubre</td>
-                                <td>{{ i.19 }}</td>
-                                <td>{{i.20}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Noviembre</td>
-                                <td>{{ i.21 }}</td>
-                                <td>{{i.22}}</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Diciembre</td>
-                                <td>{{ i.23 }}</td>
-                                <td>{{i.24}}</td>
-                                <td></td>
+                                <td>{{ data.month }}</td>
+                                <td>{{ data.value1 }}</td>
+                                <td>{{ data.value2 }}</td>
+                                <td>{{ data.difference }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -320,113 +254,113 @@
             </div>
         </div>
     </div>
-    <div class="row">aqui van los informes</div>
+    <div style="margin-top: 20px" class="row">
+        <div class="col-4">
+            <div class="card mb-3 custom-card">
+                <div class="row g-0">
+                    <div class="col-md-4 image-icon">
+                        <a href="{% url 'bus_dailykm_pdf_report' bus.id %}">
+                            <i class="bx bxs-down-arrow-square"></i>
+                        </a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Kilometraje Diario</h5>
+                            <p class="card-text">descargar informe km diario</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---->
+        <div class="col-4">
+            <div class="card mb-3 custom-card">
+                <div class="row g-0">
+                    <div class="col-md-4 image-icon">
+                        <a href="{% url 'bus_historic_fusi_pdf_report' bus.id %}"
+                            ><i class="bx bxs-down-arrow-square"></i
+                        ></a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Fusi historico</h5>
+                            <p class="card-text">descargar informe fusi hisotorico</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---->
+        <div class="col-4">
+            <div class="card mb-3 custom-card">
+                <div class="row g-0">
+                    <div class="col-md-4 image-icon">
+                        <a href="{% url 'recorrido_mensual_pdf' bus.id %}"> <i class="bx bxs-down-arrow-square"></i></a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Recorrido Mensual</h5>
+                            <p class="card-text">descargar informe recorrido</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12" style="margin-top: 50px">
+    <div class="card custom-card">
+        <h5 class="card-header custom-header">Kilometraje maximo diario</h5>
+        <div class="card-body">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Dia</th>
+                            <th>Enero</th>
+                            <th>Febrero</th>
+                            <th>Marzo</th>
+                            <th>Abril</th>
+                            <th>Mayo</th>
+                            <th>Junio</th>
+                            <th>Julio</th>
+                            <th>Agosto</th>
+                            <th>Septiembre</th>
+                            <th>Octubre</th>
+                            <th>Noviembre</th>
+                            <th>Diciembre</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for i in results %}
+                        <tr>
+                            <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
+                            <td>{% if i.1 is None %} 0 {% else %}{{i.1}} {% endif %}</td>
+                            <td>{% if i.2 is None %} 0 {% else %}{{i.2}} {% endif %}</td>
+                            <td>{% if i.3 is None %} 0 {% else %}{{i.3}} {% endif %}</td>
+                            <td>{% if i.4 is None %} 0 {% else %}{{i.4}} {% endif %}</td>
+                            <td>{% if i.5 is None %} 0 {% else %}{{i.5}} {% endif %}</td>
+                            <td>{% if i.6 is None %} 0 {% else %}{{i.6}} {% endif %}</td>
+                            <td>{% if i.7 is None %} 0 {% else %}{{i.7}} {% endif %}</td>
+                            <td>{% if i.8 is None %} 0 {% else %}{{i.8}} {% endif %}</td>
+                            <td>{% if i.9 is None %} 0 {% else %}{{i.9}} {% endif %}</td>
+                            <td>{% if i.10 is None %} 0 {% else %}{{i.10}} {% endif %}</td>
+                            <td>{% if i.11 is None %} 0 {% else %}{{i.11}} {% endif %}</td>
+                            <td>{% if i.12 is None %} 0 {% else %}{{i.12}} {% endif %}</td>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!--divisor-->
 
 <div class="container text-center">
-    <h2>Kilometrajes Diarios</h2>
-
-    <table class="table">
-        <tr>
-            <th>Dia</th>
-            <th>Enero</th>
-            <th>Febrero</th>
-            <th>Marzo</th>
-            <th>Abril</th>
-            <th>Mayo</th>
-            <th>Junio</th>
-            <th>Julio</th>
-            <th>Agosto</th>
-            <th>Septiembre</th>
-            <th>Octubre</th>
-            <th>Noviembre</th>
-            <th>Diciembre</th>
-        </tr>
-        {% for i in results %}
-        <tr>
-            <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
-            <td>{% if i.1 is None %} 0 {% else %}{{i.1}} {% endif %}</td>
-            <td>{% if i.2 is None %} 0 {% else %}{{i.2}} {% endif %}</td>
-            <td>{% if i.3 is None %} 0 {% else %}{{i.3}} {% endif %}</td>
-            <td>{% if i.4 is None %} 0 {% else %}{{i.4}} {% endif %}</td>
-            <td>{% if i.5 is None %} 0 {% else %}{{i.5}} {% endif %}</td>
-            <td>{% if i.6 is None %} 0 {% else %}{{i.6}} {% endif %}</td>
-            <td>{% if i.7 is None %} 0 {% else %}{{i.7}} {% endif %}</td>
-            <td>{% if i.8 is None %} 0 {% else %}{{i.8}} {% endif %}</td>
-            <td>{% if i.9 is None %} 0 {% else %}{{i.9}} {% endif %}</td>
-            <td>{% if i.10 is None %} 0 {% else %}{{i.10}} {% endif %}</td>
-            <td>{% if i.11 is None %} 0 {% else %}{{i.11}} {% endif %}</td>
-            <td>{% if i.12 is None %} 0 {% else %}{{i.12}} {% endif %}</td>
-        </tr>
-
-        {% endfor %}
-    </table>
-
-    <h2>Kilometrajes Diarios</h2>
-
-    <table class="table">
-        <tr>
-            <th>Bus</th>
-            <th>Ene Min</th>
-            <th>Ene Max</th>
-            <th>Feb Min</th>
-            <th>Feb Max</th>
-            <th>Mar Min</th>
-            <th>Mar Max</th>
-            <th>Abr Min</th>
-            <th>Abr Max</th>
-            <th>May Min</th>
-            <th>May Max</th>
-            <th>Jun Min</th>
-            <th>Jun Max</th>
-            <th>Jul Min</th>
-            <th>Jul Max</th>
-            <th>Ago Min</th>
-            <th>Ago Max</th>
-            <th>Sep Min</th>
-            <th>Sep Max</th>
-            <th>Oct Min</th>
-            <th>Oct Max</th>
-            <th>Nov Min</th>
-            <th>Nov Max</th>
-            <th>Dic Min</th>
-            <th>Dic Max</th>
-        </tr>
-        {% for i in monthly_result %}
-        <tr>
-            <td>{{ i.0 }}</td>
-            <td>{% if i.1 is None %} 0 {% else %}{{i.1}} Km{% endif %}</td>
-            <td>{% if i.2 is None %} 0 {% else %}{{i.2}} Km{% endif %}</td>
-            <td>{% if i.3 is None %} 0 {% else %}{{i.3}} Km{% endif %}</td>
-            <td>{% if i.4 is None %} 0 {% else %}{{i.4}} Km{% endif %}</td>
-            <td>{% if i.5 is None %} 0 {% else %}{{i.5}} Km{% endif %}</td>
-            <td>{% if i.6 is None %} 0 {% else %}{{i.6}} Km{% endif %}</td>
-            <td>{% if i.7 is None %} 0 {% else %}{{i.7}} Km{% endif %}</td>
-            <td>{% if i.8 is None %} 0 {% else %}{{i.8}} Km{% endif %}</td>
-            <td>{% if i.9 is None %} 0 {% else %}{{i.9}} Km{% endif %}</td>
-            <td>{% if i.10 is None %} 0 {% else %}{{i.10}} Km{% endif %}</td>
-            <td>{% if i.11 is None %} 0 {% else %}{{i.11}} Km{% endif %}</td>
-            <td>{% if i.12 is None %} 0 {% else %}{{i.12}} Km{% endif %}</td>
-            <td>{% if i.13 is None %} 0 {% else %}{{i.13}} Km{% endif %}</td>
-            <td>{% if i.14 is None %} 0 {% else %}{{i.14}} Km{% endif %}</td>
-            <td>{% if i.15 is None %} 0 {% else %}{{i.15}} Km{% endif %}</td>
-            <td>{% if i.16 is None %} 0 {% else %}{{i.16}} Km{% endif %}</td>
-            <td>{% if i.17 is None %} 0 {% else %}{{i.17}} Km{% endif %}</td>
-            <td>{% if i.18 is None %} 0 {% else %}{{i.18}} Km{% endif %}</td>
-            <td>{% if i.19 is None %} 0 {% else %}{{i.19}} Km{% endif %}</td>
-            <td>{% if i.20 is None %} 0 {% else %}{{i.20}} Km{% endif %}</td>
-            <td>{% if i.21 is None %} 0 {% else %}{{i.21}} Km{% endif %}</td>
-            <td>{% if i.22 is None %} 0 {% else %}{{i.22}} Km{% endif %}</td>
-            <td>{% if i.23 is None %} 0 {% else %}{{i.23}} Km{% endif %}</td>
-            <td>{% if i.24 is None %} 0 {% else %}{{i.24}} Km{% endif %}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <h2>Bitacora Bus</h2>
-
     <h2>Bitacora Codigos Fusi</h2>
     <table class="table">
         <tr>

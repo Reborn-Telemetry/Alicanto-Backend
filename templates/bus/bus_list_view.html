@@ -1,54 +1,35 @@
-{% extends "main.html" %}{% block header %}Flota E-Buses{% endblock header %} {% block content %}
+{% extends "main.html" %}{% load static %}{% block header %}Flota E-Buses{% endblock header %} {% block content %}
+<link rel="stylesheet" href="{% static 'styles/bus-list.css' %}" />
 
 <div class="container">
     <div class="row">
-        {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
-        <div class="col-2">
-            <a href="{% url 'create_bus' %}">
-                <button type="button" class="btn btn-primary"><i class="bx bx-plus"></i>Nuevo</button>
-            </a>
-        </div>
-        <div class="col-2">
-            <a href="{% url 'bus_list_view' %}">
-                <button type="button" class="btn btn-primary"><i class="bx bx-list-ul"></i> Lista</button>
-            </a>
-        </div>
-        {% else %}
-        <div class="col-2">
-            <a href="{% url 'no-access' %}">
-                <button type="button" class="btn btn-primary"><i class="bx bx-plus"></i>Nuevo</button>
-            </a>
-        </div>
-        <div class="col-2">
-            <a href="{% url 'bus_list_view' %}">
-                <button type="button" class="btn btn-primary"><i class="bx bx-list-ul"></i> Lista</button>
-            </a>
+        <!-- Botones Nuevo y Lista al principio -->
+        <div class="col-md-4 d-flex align-items-center justify-content-start">
+            {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
+            <a href="{% url 'create_bus' %}" class="btn btn-primary me-2"> <i class="bx bx-plus"></i> Nuevo </a>
+            {% else %}
+            <a href="{% url 'no-access' %}" class="btn btn-primary me-2"> <i class="bx bx-plus"></i> Nuevo </a>
+            {% endif %}
+
+            <a href="{% url 'bus_list' %}" class="btn btn-primary"> <i class="bx bx-id-card"></i> Tarjetas </a>
         </div>
 
-        {% endif %}
+        <!-- Formulario al final -->
+        <div class="col-md-8 d-flex align-items-center justify-content-end">
+            <form action="{% url 'bus_list' %}" method="get" id="formulario" class="d-flex align-items-center">
+                <div class="input-group me-2">
+                    <input type="text" class="form-control col-12" name="search_query" value="{{ search_query }}" />
+                </div>
+                <button type="submit" value="Buscar" class="btn btn-primary me-2">Buscar</button>
+            </form>
+        </div>
     </div>
 </div>
 
 <!--divisor codigo-->
 
-<a href="{% url 'create_bus' %}"><button>Crear Bus</button> </a>
-<a href="{% url 'bus_list' %}"><button>Vista tarjetas</button> </a>
-<!--buscador de buses-->
-<form action="{% url 'bus_list_view' %}" method="get">
-    <div>
-        <label>Buscar Bus </label>
-        <input
-            type="text"
-            name="search_query"
-            value="{{ search_query }}"
-            placeholder="Ingrese : Bus, Serie Bus, ECU Bus, Cliente"
-        />
-    </div>
-
-    <input type="submit" value="Buscar" />
-</form>
 <!--lista buses-->
-<div class="container text-center" style="height: 100vh">
+<div class="container text-center" style="height: 100vh; margin-top: 20px">
     <div class="col-12">
         <div class="card">
             <h5 class="card-header">Flota Buses</h5>
