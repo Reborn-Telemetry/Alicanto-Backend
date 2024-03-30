@@ -528,9 +528,6 @@ def recorrido_mensual_bus_pdf(request, pk):
     return FileResponse(buf, as_attachment=True, filename=filename)
 
 
-
-
-
 @login_required(login_url='login')
 def bus_historic_fusi(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -727,7 +724,6 @@ def create_bus(request):
     return render(request, 'bus/bus-form.html', context)
 
 
-
 @login_required(login_url='login')
 def create_fusi(request):
     form = FusiMessageForm()
@@ -830,7 +826,20 @@ def bus_detail(request, pk):
     co2 = co2/1000
     co2 = round(co2, 2)
     fusi = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
-    context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi, 'result_data': result_data, 'co2': co2}
+    # paginador fusi
+    page = request.GET.get('page')
+    result = 10
+    paginator = Paginator(fusi, result)
+    try:
+        fusi = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        fusi = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        fusi = paginator.page(page)
+
+    context = {'bus': bus, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi, 'result_data': result_data, 'co2': co2, 'paginator': paginator}
     return render(request, 'bus/bus-profile.html', context)
 
 

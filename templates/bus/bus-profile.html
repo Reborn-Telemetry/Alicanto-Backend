@@ -358,35 +358,68 @@
     </div>
 </div>
 
+<div class="col-12" style="margin-top: 50px">
+    <div class="card custom-card">
+        <h5 class="card-header custom-header">Bitacora Fusi Bus</h5>
+        <div class="card-body">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Codigo Fusi</th>
+                            <th>Kilometraje</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in fusi %}
+                        <tr>
+                            <td>{{i.fusi_code}}</td>
+                            <td>{{i.failure_odometer}}</td>
+                            <td>{{i.TimeStamp}}</td>
+                            <td>{{i.fusi_state}}</td>
+
+                            <td>
+                                <a href="{% url 'update-fusi-code' i.id  %}">
+                                    <button type="button" class="btn btn-info">Editar Fusi</button>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if fusi.has_other_pages %}
+                <nav class="navpag" aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% if fusi.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{fusi.previous_page_number}}">Anterior</a>
+                        </li>
+                        {% endif %} {% for page in paginator.page_range %} {% if page == fusi.number %}
+                        <li class="page-item active">
+                            <a class="page-link" href="?page={{page}}">{{page}}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{page}}">{{page}}</a>
+                        </li>
+                        {% endif %} {% endfor %} {% if fusi.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{fusi.next_page_number}}">Siguiente</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--divisor-->
 
-<div class="container text-center">
-    <h2>Bitacora Codigos Fusi</h2>
-    <table class="table">
-        <tr>
-            <th>Codigo Fusi</th>
-            <th>Km</th>
-            <th>Comentario</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th></th>
-        </tr>
-        {% for i in fusi %}
-        <tr>
-            <td>{{i.fusi_code}}</td>
-            <td>{{i.failure_odometer}}</td>
-            <td>{{i.fusi_comment}}</td>
-            <td>{{i.TimeStamp}}</td>
-            <td>{{i.fusi_state}}</td>
-            <td>
-                <a href="{% url 'update-fusi-code' i.id  %}">
-                    <button>Editar codigo fusi</button>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
 <script src="{% static 'js/bus-profile-js.js' %}"></script>
 
 {% endblock content %}

@@ -62,3 +62,9 @@ td {
     color: #0f8bfd;
     font-size: 18px;
 }
+
+.page-link {
+    background: transparent;
+    --bs-pagination-active-bg: #0f8bfd;
+    --bs-pagination-active-border-color: #0f8bfd;
+}
