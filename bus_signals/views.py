@@ -407,6 +407,65 @@ def xls_report(request):
     return FileResponse(buf, as_attachment=True, filename=filename)
 
 @login_required(login_url='login')
+def recorrido_mensual_flota(request):
+    buses = Bus.bus.all()
+    buses = buses.exclude(id__in=no_update_list)
+    elements = []
+    
+    for bus in buses:
+        result = monthly_bus_km(bus.id)
+        current_datetime = datetime.now()
+        formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+        filename = f'reporte_recorrido_mensual_flota_{formatted_datetime}.pdf'
+        buf = BytesIO()
+        doc = SimpleDocTemplate(buf, pagesize=letter)
+        table_data = [['Bus', 'Mes', 'Kilometraje Inicial', 'Kilometraje Final', 'Recorrido']]
+        meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+        
+        idx_mes = 0
+        for item in result:
+            # Ignorar el primer valor de la tupla
+            item = item[1:]
+            for i in range(len(item)):
+                if i % 2 == 0:  # Índices impares para kilómetros iniciales
+                    mes = meses[idx_mes]
+                    km_inicial = item[i]
+                    km_final = item[i + 1] if i + 1 < len(item) else None
+                    recorrido = km_final - km_inicial if km_final is not None else ''
+                    # Aquí se agrega el nombre del bus en lugar del ID
+                    table_data.append([bus.bus_name, mes, km_inicial, km_final, recorrido])
+                    idx_mes += 1  # Avanzar al siguiente mes
+        
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+            ('LINEBELOW', (0, 1), (-1, -1), 1, colors.black)
+        ])
+        
+        # Crear la tabla y aplicar el estilo
+        table = Table(table_data)
+        table.setStyle(style)
+        elements.append(table)
+        
+       
+    # Construir el documento y guardar en el buffer
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    doc.build(elements)
+    
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+
+@login_required(login_url='login')
 def recorrido_mensual_bus_pdf(request, pk):
     bus = Bus.bus.get(id=pk)
     result = monthly_bus_km(pk)

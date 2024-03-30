@@ -27,5 +27,6 @@ urlpatterns = [
   path("warnings/", views.warnings, name="warnings"),
   path("fusi_dashboard/", views.fusi_dashboard, name="fusi_dashboard"),
   path("recorrido_mensual_pdf/<str:pk>/", views.recorrido_mensual_bus_pdf, name="recorrido_mensual_pdf"),
+  path("recorrido_mensual_flota_pdf/", views.recorrido_mensual_flota, name="recorrido_mensual_flota_pdf"),
 ]
 
