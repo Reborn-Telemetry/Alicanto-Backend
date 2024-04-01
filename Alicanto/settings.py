@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bus_signals.apps.BusSignalsConfig',
     'users.apps.UsersConfig',
+    'reports.apps.ReportsConfig',
     "corsheaders",
 ]
 
