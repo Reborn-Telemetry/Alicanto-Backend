@@ -128,6 +128,7 @@ def warnings(request):
 @login_required(login_url='login')
 def reports_page(request):
     bus = Bus.bus.all()
+    bus = bus.exclude(id__in=no_update_list)
 
     page = request.GET.get('page', 1)
     results = 10
