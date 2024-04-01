@@ -19,6 +19,8 @@ def disponbilidad_flota(request):
 
    
 
+
+
    print(bus_fs) 
    print(bus_operativo)
    
