@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'reports.apps.ReportsConfig',
     "corsheaders",
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +136,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'es-CL'
+USE_L10N = True
+USE_THOUSAND_SEPARATOR = True
 
 TIME_ZONE = 'America/Santiago'
 

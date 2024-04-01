@@ -32,11 +32,11 @@ class Bus(models.Model):
     plate_number = models.CharField('Plate Number', max_length=10, unique=False, blank=True, null=True)
     bus_series = models.CharField('Serie', max_length=20, choices=series_choices, blank=False, null=False)
     client = models.CharField('Client', max_length=20, blank=False, null=False, default='Link')
-    lts_soc = models.FloatField('LTS SOC', default=None, blank=True, null=True)
-    lts_odometer = models.FloatField('LTS Odometer', default=0, blank=True, null=True)
+    lts_soc = models.IntegerField('LTS SOC', default=None, blank=True, null=True)
+    lts_odometer = models.IntegerField('LTS Odometer', default=0, blank=True, null=True)
     lts_isolation = models.FloatField('LTS Isolation', default=0, blank=True, null=True)
     lts_24_volt = models.FloatField('LTS 24 Volt', default=0, blank=True, null=True)
-    lts_fusi = models.FloatField('LTS FUSI', default=0, blank=True, null=True)
+    lts_fusi = models.IntegerField(blank=True, null=True)
     lts_update = models.DateTimeField('LTS Update', auto_now=False, blank=True, null=True)
     mark = models.CharField('Mark', max_length=20, blank=True, null=True, default='1.0.0')
     jarvis = models.CharField('Jarvis', max_length=20, blank=True, null=True, default='1.0.0')
@@ -81,7 +81,7 @@ class Battery24Volts(models.Model):
 
 class Soc(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    soc_value = models.FloatField('SOC Value', default=None, blank=True, null=True)
+    soc_value = models.IntegerField('SOC Value', default=None, blank=True, null=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, blank=True, null=True)
 
     soc = models.Manager()
@@ -353,7 +353,7 @@ class LenzeEngineSpeed(models.Model):
 
 class Odometer(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    odometer_value = models.FloatField('Odometer Value', null=True, blank=True)
+    odometer_value = models.IntegerField('Odometer Value', null=True, blank=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
 
     odometer = models.Manager()
@@ -416,7 +416,7 @@ class BtmsTemperature(models.Model):
 
 class FusiCode(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    fusi_code = models.FloatField('Fusi Code', blank=True)
+    fusi_code = models.IntegerField()
     fusi_state = models.CharField('Fusi State', max_length=10, blank=True, null=True, default='open', choices=fusi_code_options)
     fusi_comment = models.TextField('Fusi Comment', blank=True, null=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)

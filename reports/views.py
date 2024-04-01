@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from bus_signals.models import Bus
+from . models import Prueba
 
 import requests
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
@@ -17,7 +18,12 @@ def disponbilidad_flota(request):
    bus_operativo = Bus.bus.all().exclude(bus_name__in=bus_fs)
    bus_operativo = bus_operativo.exclude(id__in=no_update_list)
 
-   
+   prueba = Prueba.objects.all()
+
+   context= {'prueba': prueba}
+
+
+
 
 
 
@@ -28,4 +34,4 @@ def disponbilidad_flota(request):
    
    
 
-   return render(request, 'reports/disponibilidad_flota.html')
+   return render(request, 'reports/disponibilidad_flota.html', context)
