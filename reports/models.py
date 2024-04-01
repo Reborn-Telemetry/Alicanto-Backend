@@ -27,6 +27,15 @@ class DisponibilidadFlota(models.Model):
     verbose_name = 'Disponibilidad de Flota'
     verbose_name_plural = 'Disponibilidad de Flota'
    
+class Prueba(models.Model):
+  valor = models.IntegerField()
 
+  def __str__(self):
+    return f'{self.valor}'
+  
+  class Meta:
+    verbose_name = 'Prueba'
+    verbose_name_plural = 'Prueba'
+    
  
 
