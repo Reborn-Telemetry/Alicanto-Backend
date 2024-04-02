@@ -368,6 +368,7 @@
                         <thead>
                             <tr>
                                 <th>Codigo Fusi</th>
+                                <th>Descripcion</th>
                                 <th>Kilometraje</th>
                                 <th>Fecha</th>
                                 <th>Estado</th>
@@ -378,6 +379,10 @@
                             {% for i in fusi %}
                             <tr>
                                 <td>{{i.fusi_code}}</td>
+                                <td>
+                                    {% for x in message %} {% if i.fusi_code == x.fusi_code %} {{x.fusi_description }}
+                                    {% endif %} {% endfor %}
+                                </td>
                                 <td>{{i.failure_odometer}}</td>
                                 <td>{{i.TimeStamp}}</td>
                                 <td>{{i.fusi_state}}</td>

@@ -420,7 +420,7 @@ class FusiCode(models.Model):
     fusi_state = models.CharField('Fusi State', max_length=10, blank=True, null=True, default='open', choices=fusi_code_options)
     fusi_comment = models.TextField('Fusi Comment', blank=True, null=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-    failure_odometer = models.FloatField('Odometer', blank=True, null=True)
+    failure_odometer = models.IntegerField('Odometer', blank=True, null=True)
 
     fusi = models.Manager()
 
