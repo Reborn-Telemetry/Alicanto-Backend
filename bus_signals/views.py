@@ -829,23 +829,18 @@ def bus_detail(request, pk):
     for code in fusi_codes:
         for fusi_message in messages:
             if code.fusi_code == fusi_message.fusi_code:
-                fusi_message.fusi_description
+                code.fusi_description = fusi_message.fusi_description
                 break
+
    
     co2 = co2/1000
     co2 = round(co2, 2)
     
 
-    for code in fusi_codes:
-        for fusi_message in messages:
-            if code.fusi_code == fusi_message.fusi_code:
-                code.fusi_description = fusi_message.fusi_description
-                break
-
     # paginador fusi
     page = request.GET.get('page')
     result = 10
-    paginator = Paginator(fusi, result)
+    paginator = Paginator(fusi_codes, result)
     try:
         fusi = paginator.page(page)
     except PageNotAnInteger:
@@ -858,11 +853,11 @@ def bus_detail(request, pk):
     
 
     context = {'bus': bus,
-               'message': message,
+               'message': messages,
                  'ot': ot, 
                  'results': results,
                    'monthly_result': montly_result,
-                     'fusi': fusi,
+                     'fusi': fusi_codes,
                        'result_data': 
                        result_data, 
                        'co2': co2, 

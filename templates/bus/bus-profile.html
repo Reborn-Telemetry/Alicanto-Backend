@@ -380,8 +380,8 @@
                             <tr>
                                 <td>{{i.fusi_code}}</td>
                                 <td>
-                                    {% for x in message %} {% if x.fusi_code == i.fusi_code %} {{ x.fusi_code }} {% else
-                                    %} hola {% endif %} {% endfor %}
+                                    {% for mesa in message %} {% if mesa.fusi_code == i.fusi_code %}
+                                    {{mesa.fusi_description|truncatechars:40 }} {% endif %} {% endfor %}
                                 </td>
                                 <td>{{i.failure_odometer}}</td>
                                 <td>{{i.TimeStamp}}</td>
