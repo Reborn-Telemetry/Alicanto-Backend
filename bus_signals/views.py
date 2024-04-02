@@ -839,7 +839,7 @@ def bus_detail(request, pk):
 
     # paginador fusi
     page = request.GET.get('page')
-    result = 10
+    result = 30
     paginator = Paginator(fusi_codes, result)
     try:
         fusi_codes = paginator.page(page)
