@@ -823,6 +823,9 @@ def bus_detail(request, pk):
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
     co2 = (bus.lts_odometer / 0.2857) * 2.68
+
+    message = FusiMessage.fusi.all()
+   
     co2 = co2/1000
     co2 = round(co2, 2)
     fusi = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
