@@ -547,7 +547,7 @@ class BtmsStatus(models.Model):
 
 
 class FusiMessage(models.Model):
-    fusi_code = models.CharField('Fusi Code', max_length=10, unique=False, blank=False, null=False)
+    fusi_code = models.IntegerField()
     fusi_description = models.CharField('Fusi Description', max_length=500)
     message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True,
                                      null=True)
