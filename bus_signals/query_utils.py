@@ -306,7 +306,85 @@ bus_id, "TimeStamp" DESC
     return results
 
     
-  
+def matriz_km_diario_flota(bus_id, mes):
+    connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+    cursor = connection.cursor()
+    query = """
+    SELECT
+    CASE mes
+        WHEN 1 THEN 'Enero'
+        WHEN 2 THEN 'Febrero'
+        WHEN 3 THEN 'Marzo'
+        WHEN 4 THEN 'Abril'
+        WHEN 5 THEN 'Mayo'
+        WHEN 6 THEN 'Junio'
+        WHEN 7 THEN 'Julio'
+        WHEN 8 THEN 'Agosto'
+        WHEN 9 THEN 'Septiembre'
+        WHEN 10 THEN 'Octubre'
+        WHEN 11 THEN 'Noviembre'
+        WHEN 12 THEN 'Diciembre'
+    END AS mes,
+    bus_signals_bus.bus_name AS bus,
+    MAX(CASE WHEN dia = 1 THEN max_odometer END) AS "1",
+    MAX(CASE WHEN dia = 2 THEN max_odometer END) AS "2",
+    MAX(CASE WHEN dia = 3 THEN max_odometer END) AS "3",
+    MAX(CASE WHEN dia = 4 THEN max_odometer END) AS "4",
+    MAX(CASE WHEN dia = 5 THEN max_odometer END) AS "5",
+    MAX(CASE WHEN dia = 6 THEN max_odometer END) AS "6",
+    MAX(CASE WHEN dia = 7 THEN max_odometer END) AS "7",
+    MAX(CASE WHEN dia = 8 THEN max_odometer END) AS "8",
+    MAX(CASE WHEN dia = 9 THEN max_odometer END) AS "9",
+    MAX(CASE WHEN dia = 10 THEN max_odometer END) AS "10",
+    MAX(CASE WHEN dia = 11 THEN max_odometer END) AS "11",
+    MAX(CASE WHEN dia = 12 THEN max_odometer END) AS "12",
+    MAX(CASE WHEN dia = 13 THEN max_odometer END) AS "13",
+    MAX(CASE WHEN dia = 14 THEN max_odometer END) AS "14",
+    MAX(CASE WHEN dia = 15 THEN max_odometer END) AS "15",
+    MAX(CASE WHEN dia = 16 THEN max_odometer END) AS "16",
+    MAX(CASE WHEN dia = 17 THEN max_odometer END) AS "17",
+    MAX(CASE WHEN dia = 18 THEN max_odometer END) AS "18",
+    MAX(CASE WHEN dia = 19 THEN max_odometer END) AS "19",
+    MAX(CASE WHEN dia = 20 THEN max_odometer END) AS "20",
+    MAX(CASE WHEN dia = 21 THEN max_odometer END) AS "21",
+    MAX(CASE WHEN dia = 22 THEN max_odometer END) AS "22",
+    MAX(CASE WHEN dia = 23 THEN max_odometer END) AS "23",
+    MAX(CASE WHEN dia = 24 THEN max_odometer END) AS "24",
+    MAX(CASE WHEN dia = 25 THEN max_odometer END) AS "25",
+    MAX(CASE WHEN dia = 26 THEN max_odometer END) AS "26",
+    MAX(CASE WHEN dia = 27 THEN max_odometer END) AS "27",
+    MAX(CASE WHEN dia = 28 THEN max_odometer END) AS "28",
+    MAX(CASE WHEN dia = 29 THEN max_odometer END) AS "29",
+    MAX(CASE WHEN dia = 30 THEN max_odometer END) AS "30",
+    MAX(CASE WHEN dia = 31 THEN max_odometer END) AS "31"
+FROM (
+    SELECT
+        EXTRACT(MONTH FROM "TimeStamp") AS mes,
+        EXTRACT(DAY FROM "TimeStamp") AS dia,
+        MAX(odometer_value) AS max_odometer,
+        bus_id
+    FROM
+        bus_signals_odometer
+    WHERE
+        bus_id = %s
+    GROUP BY
+        EXTRACT(MONTH FROM "TimeStamp"),
+        EXTRACT(DAY FROM "TimeStamp"),
+        bus_id
+) AS max_odometers
+LEFT JOIN bus_signals_bus ON max_odometers.bus_id = bus_signals_bus.id
+WHERE
+    bus_id = %s
+    AND mes = %s
+GROUP BY
+    mes, bus;
+
+"""
+    cursor.execute(query, (bus_id, bus_id, mes))
+    results = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return results
 
 
 

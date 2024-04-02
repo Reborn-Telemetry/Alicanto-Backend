@@ -392,13 +392,13 @@ def xls_report(request):
     worksheet = workbook.add_sheet('Report')
 
     table_data = [
-        ["Bus Name", "Sniffer", "LTS SOC", "LTS Odometer", "LTS Update"]
+        ["Bus", "Sniffer", "Carga", "Kiometraje", "Fecha de actualizacion"]
     ]
 
     bus_list = Bus.bus.all()
     for bus in bus_list:
         formatted_datetime = bus.lts_update.strftime("%d/%m/%Y %H:%M") if bus.lts_update else "sin actualizacion"
-        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer) + 'km', formatted_datetime]
+        row = [bus.bus_name, bus.sniffer, str(bus.lts_soc), str(bus.lts_odometer), formatted_datetime]
         table_data.append(row)
 
     style = xlwt.easyxf('font: bold on; align: horiz center')
