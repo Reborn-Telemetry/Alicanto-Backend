@@ -6,4 +6,5 @@ from . import views
 
 urlpatterns = [
     path('disponibilidad-flota/', views.disponbilidad_flota, name='disponibilidad-flota'),
+    path('matriz-km-diario-flota/', views.matriz_km_diario_flota, name='matriz-km-diario-flota-xmls'),
 ]
