@@ -824,11 +824,23 @@ def bus_detail(request, pk):
     bus = Bus.bus.get(pk=pk)
     co2 = (bus.lts_odometer / 0.2857) * 2.68
 
-    message = FusiMessage.fusi.all()
+    messages = FusiMessage.fusi.all()
+    fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
+    for code in fusi_codes:
+        for fusi_message in messages:
+            if code.fusi_code == fusi_message.fusi_code:
+                fusi_message.fusi_description
+                break
    
     co2 = co2/1000
     co2 = round(co2, 2)
-    fusi = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
+    
+
+    for code in fusi_codes:
+        for fusi_message in messages:
+            if code.fusi_code == fusi_message.fusi_code:
+                code.fusi_description = fusi_message.fusi_description
+                break
 
     # paginador fusi
     page = request.GET.get('page')
@@ -845,7 +857,17 @@ def bus_detail(request, pk):
 
     
 
-    context = {'bus': bus, 'message': message, 'ot': ot, 'results': results, 'monthly_result': montly_result, 'fusi': fusi, 'result_data': result_data, 'co2': co2, 'paginator': paginator}
+    context = {'bus': bus,
+               'message': message,
+                 'ot': ot, 
+                 'results': results,
+                   'monthly_result': montly_result,
+                     'fusi': fusi,
+                       'result_data': 
+                       result_data, 
+                       'co2': co2, 
+                       'paginator': paginator
+                       }
     return render(request, 'bus/bus-profile.html', context)
 
 
