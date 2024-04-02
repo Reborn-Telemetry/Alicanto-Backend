@@ -381,7 +381,7 @@
                                 <td>{{i.fusi_code}}</td>
                                 <td>
                                     {% for mesa in message %} {% if mesa.fusi_code == i.fusi_code %}
-                                    {{mesa.fusi_description|truncatechars:40 }} {% endif %} {% endfor %}
+                                    {{mesa.fusi_description|truncatechars:30 }} {% endif %} {% endfor %}
                                 </td>
                                 <td>{{i.failure_odometer}}</td>
                                 <td>{{i.TimeStamp}}</td>
