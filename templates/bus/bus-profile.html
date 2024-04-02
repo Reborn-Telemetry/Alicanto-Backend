@@ -380,7 +380,7 @@
                             <tr>
                                 <td>{{i.fusi_code}}</td>
                                 <td>
-                                    {% for x in message %} {% if i.fusi_code == x.fusi_code %} {{x.fusi_description }}
+                                    {% for x in message %} {% if x.fusi_code == i.fusi_code %} {{x.fusi_description }}
                                     {% endif %} {% endfor %}
                                 </td>
                                 <td>{{i.failure_odometer}}</td>
