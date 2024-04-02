@@ -842,13 +842,13 @@ def bus_detail(request, pk):
     result = 10
     paginator = Paginator(fusi_codes, result)
     try:
-        fusi = paginator.page(page)
+        fusi_codes = paginator.page(page)
     except PageNotAnInteger:
         page = 1
-        fusi = paginator.page(page)
+        fusi_codes = paginator.page(page)
     except EmptyPage:
         page = paginator.num_pages
-        fusi = paginator.page(page)
+        fusi_codes = paginator.page(page)
 
     
 
