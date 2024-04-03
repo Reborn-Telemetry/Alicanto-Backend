@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('disponibilidad-flota/', views.disponbilidad_flota, name='disponibilidad-flota'),
+    path('dashboard_disponibilidad_flota/', views.dashboard_disponibilidad_flota, name='disponibilidad-flota'),
     path('matriz-km-diario-flota/', views.matriz_km_diario_flota, name='matriz-km-diario-flota-xmls'),
+    path('disponibilidad_flota/', views.disponbilidad_flota, name='action-disponibilidad'),
 ]

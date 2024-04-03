@@ -2,7 +2,13 @@
 
 <div style="height: 100vh" class="container">
     <h1>soy la disponibilidad</h1>
-    {{prueba}}
+    {% if user.username == 'hurbx' or user.username == 'Bquilincheo'%}
+    <a href="{% url 'action-disponibilidad' %}" class="btn btn-primary"
+        ><button class="btn btn-primary">registar</button></a
+    >
+    {% else %}
+    <a href="{% url 'no-access' %}" class="btn btn-primary"><button class="btn btn-primary">registar</button></a>
+    {% endif %}
 </div>
 
 {% endblock content %}
