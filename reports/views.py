@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from bus_signals.query_utils import matriz_km_diario_flota
 from bus_signals.models import Bus
-from . models import Prueba
+from . models import Prueba, DisponibilidadFlota
+from datetime import date
 import io
 from reportlab.platypus import Spacer
 from reportlab.lib import colors
@@ -13,9 +14,13 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 import xlwt
 from io import BytesIO
 import psycopg2
+from django.contrib import messages
 
 import requests
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
+
+def dashboard_disponibilidad_flota(request):
+   return render(request, 'reports/disponibilidad_flota.html')
 
 # Create your views here.
 def disponbilidad_flota(request):
@@ -28,11 +33,30 @@ def disponbilidad_flota(request):
       bus_fs.append(i['vehicle'].capitalize())
    bus_operativo = Bus.bus.all().exclude(bus_name__in=bus_fs)
    bus_operativo = bus_operativo.exclude(id__in=no_update_list)
-   prueba = Prueba.objects.all()
-   context= {'prueba': prueba}
-   print(bus_fs) 
-   print(bus_operativo)
-   return render(request, 'reports/disponibilidad_flota.html', context)
+   
+   for bus in bus_operativo:
+    disponibilidad_flota1 = DisponibilidadFlota(
+        bus=str(bus.bus_name),
+        serie=str(bus.bus_series),
+        disponibilidad=True,
+        dias_operativos=1,
+        dias_fs=0,
+    )
+    disponibilidad_flota1.save()
+  
+
+   for bus in bus_fs:
+      disponibilidad_flota = DisponibilidadFlota(
+         bus=str(bus),
+         disponibilidad=False,
+         dias_operativos=0,
+         dias_fs=1,
+      )
+      disponibilidad_flota.save()
+
+   
+   messages.success(request, 'Los registros se actualizaron correctamente.')
+   return redirect('disponibilidad-flota')
 
 
 def matriz_km_diario_flota(request):
