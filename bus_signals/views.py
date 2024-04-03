@@ -829,7 +829,7 @@ def bus_detail(request, pk):
     
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
-    co2 = (bus.lts_odometer / 0.2857) * 2.68
+   
 
     messages = FusiMessage.fusi.all()
     fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
@@ -839,9 +839,12 @@ def bus_detail(request, pk):
                 code.fusi_description = fusi_message.fusi_description
                 break
 
-   
-    co2 = co2/1000
-    co2 = round(co2, 2)
+    co2 = 0  # Valor predeterminado en caso de que bus.lts_odometer sea None
+    if bus.lts_odometer is not None:
+        co2 = (bus.lts_odometer / 0.2857) * 2.68
+        co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
+        co2 = round(co2, 2)
+
     
 
     # paginador fusi
