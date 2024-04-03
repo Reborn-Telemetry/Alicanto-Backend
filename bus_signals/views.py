@@ -809,7 +809,8 @@ def bus_detail(request, pk):
     result_data = []
 
     # Iterar sobre el rango correcto para cada mes
-    for i in range(1, len(montly_result[0]), 2):
+    if montly_result and len(montly_result[0]) > 0:
+      for i in range(1, len(montly_result[0]), 2):
         if i + 1 < len(montly_result[0]) and montly_result[0][i] is not None and montly_result[0][i + 1] is not None:
             difference = montly_result[0][i + 1] - montly_result[0][i]
             month_name = months_dict[(i + 1) // 2]  # Obtener el nombre del mes del diccionario
@@ -819,6 +820,12 @@ def bus_detail(request, pk):
                 'value2': montly_result[0][i + 1],
                 'difference': difference if difference is not None else 'N/A'
             })
+    else:
+       result_data = [{'month': 'Enero', 'value1': 0, 'value2': 0, 'difference': 0}]  # Valores predeterminados
+
+
+        
+
     
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
