@@ -20,7 +20,15 @@ import requests
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
 
 def dashboard_disponibilidad_flota(request):
-   return render(request, 'reports/disponibilidad_flota.html')
+   headers = { 'User-Agent': 'Alicanto/1.0', }
+   api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
+   response = requests.get(api_url, headers=headers)
+   data = response.json()
+   list_fs_bus = data['data']
+   context = {
+      'fs': list_fs_bus,
+   }
+   return render(request, 'reports/disponibilidad_flota.html', context)
 
 # Create your views here.
 def disponbilidad_flota(request):
@@ -53,6 +61,10 @@ def disponbilidad_flota(request):
          dias_fs=1,
       )
       disponibilidad_flota.save()
+
+   
+
+   
 
    
    messages.success(request, 'Los registros se actualizaron correctamente.')

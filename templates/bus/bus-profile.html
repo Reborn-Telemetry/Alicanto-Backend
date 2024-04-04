@@ -127,7 +127,13 @@
 
                                 <div class="card-text">
                                     <div class="box">
-                                        <div class="chart" data-percent="1" data-scale-color="#ffb400">0%</div>
+                                        <div
+                                            class="chart"
+                                            data-percent="{{ soh.battery_health_value }}"
+                                            data-scale-color="#ffb400"
+                                        >
+                                            {{soh.battery_health_value }} %
+                                        </div>
                                     </div>
                                 </div>
                             </div>
