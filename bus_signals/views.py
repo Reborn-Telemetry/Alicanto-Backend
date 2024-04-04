@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
@@ -24,6 +24,7 @@ from io import BytesIO
 # manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
 
 
 filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
@@ -34,6 +35,8 @@ no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '8
 @login_required(login_url='login')
 def no_access(request):
     return render(request, 'pages/no-access.html')
+
+
 @login_required(login_url='login')
 def warnings(request):
     headers = {
@@ -165,6 +168,7 @@ def fusi_dashboard(request):
     context = {'active_fusi': open_fusi, 'paginator': paginator}
     return render(request, 'fusi/fusi-dashboard.html', context)
 
+
 @login_required(login_url='login')
 def bus_list_view(request):
     search_query = ''
@@ -192,6 +196,7 @@ def bus_list_view(request):
 
     context = {'bus': buses, 'search_query': search_query, 'paginator': paginator}
     return render(request, 'bus/bus_list_view.html', context)
+
 
 @login_required(login_url='login')
 def bus_list(request):
@@ -473,7 +478,6 @@ def recorrido_mensual_flota(request):
     return FileResponse(buf, as_attachment=True, filename=filename)
 
 
-
 @login_required(login_url='login')
 def recorrido_mensual_bus_pdf(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -638,6 +642,7 @@ def daily_bus_km_report_pdf(request, pk):
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
+
 
 def pdf_report(request):
     current_datetime = datetime.now()
@@ -829,6 +834,16 @@ def bus_detail(request, pk):
     
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
+
+    soh = 0
+    try:
+     latest_battery_health = BatteryHealth.battery_health.filter(bus_id=pk).latest('battery_health_value')
+     soh = latest_battery_health
+    except ObjectDoesNotExist:
+     print('No se encontraron registros en BatteryHealth para el bus_id especificado.')
+
+   
+    
    
 
     messages = FusiMessage.fusi.all()
@@ -871,7 +886,8 @@ def bus_detail(request, pk):
                        'result_data': 
                        result_data, 
                        'co2': co2, 
-                       'paginator': paginator
+                       'paginator': paginator,
+                       'soh': soh
                        }
     return render(request, 'bus/bus-profile.html', context)
 

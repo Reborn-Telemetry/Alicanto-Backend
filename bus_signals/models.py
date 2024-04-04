@@ -27,10 +27,10 @@ fusi_code_options = (
 
 
 class Bus(models.Model):
-    bus_name = models.CharField('Name', max_length=10, unique=True, blank=False, null=False)
+    bus_name = models.CharField('Name', max_length=40, unique=True, blank=False, null=False)
     sniffer = models.CharField('Sniffer', max_length=10, unique=True, blank=False, null=False)
     plate_number = models.CharField('Plate Number', max_length=10, unique=False, blank=True, null=True)
-    bus_series = models.CharField('Serie', max_length=20, choices=series_choices, blank=False, null=False)
+    bus_series = models.CharField('Serie', max_length=30, choices=series_choices, blank=False, null=False)
     client = models.CharField('Client', max_length=20, blank=False, null=False, default='Link')
     lts_soc = models.IntegerField('LTS SOC', default=None, blank=True, null=True)
     lts_odometer = models.IntegerField('LTS Odometer', default=0, blank=True, null=True)
@@ -62,6 +62,38 @@ class Bus(models.Model):
         verbose_name_plural = 'Buses'
         ordering = ['bus_name']
 
+class Odometer(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    odometer_value = models.IntegerField('Odometer Value', null=True, blank=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+
+    odometer = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.odometer_value} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'Odometer'
+        verbose_name_plural = 'Odometers'
+        ordering = ['TimeStamp']
+
+
+class Soc(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    soc_value = models.IntegerField('SOC Value', default=None, blank=True, null=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, blank=True, null=True)
+
+    soc = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.soc_value} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'SOC'
+        verbose_name_plural = 'SOCs'
+        ordering = ['TimeStamp']
+
+
 
 class Battery24Volts(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
@@ -79,19 +111,72 @@ class Battery24Volts(models.Model):
         ordering = ['TimeStamp']
 
 
-class Soc(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    soc_value = models.IntegerField('SOC Value', default=None, blank=True, null=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, blank=True, null=True)
+class BatteryHealth(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
+    battery_health_value = models.IntegerField('Battery Health', null=True, blank=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
 
-    soc = models.Manager()
+    battery_health = models.Manager()
 
     def __str__(self):
-        return f'{self.TimeStamp} - {self.soc_value} - {self.bus}'
+        return f'{self.TimeStamp} - {self.battery_health_value} - {self.bus}'
 
     class Meta:
-        verbose_name = 'SOC'
-        verbose_name_plural = 'SOCs'
+        verbose_name = 'Battery Health'
+        verbose_name_plural = 'Batteries Health'
+        ordering = ['TimeStamp']
+
+
+class FusiCode(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    fusi_code = models.IntegerField()
+    fusi_state = models.CharField('Fusi State', max_length=10, blank=True, null=True, default='open', choices=fusi_code_options)
+    fusi_comment = models.TextField('Fusi Comment', blank=True, null=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+    failure_odometer = models.IntegerField('Odometer', blank=True, null=True)
+
+    fusi = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.fusi_code} - {self.fusi_state} - {self.fusi_comment} - ' \
+               f'{self.failure_odometer} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'Fusi Code'
+        verbose_name_plural = 'Fusi Codes'
+        ordering = ['TimeStamp']
+
+
+class FusiMessage(models.Model):
+    fusi_code = models.IntegerField()
+    fusi_description = models.CharField('Fusi Description', max_length=500)
+    message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True,
+                                     null=True)
+
+    fusi = models.Manager()
+
+    def __str__(self):
+        return f'{self.message_class}- {self.fusi_code} - {self.fusi_description}'
+
+    class Meta:
+        verbose_name = 'Fusi Message'
+        verbose_name_plural = 'Fusi Messages'
+        ordering = ['fusi_code']
+
+
+class Isolation(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    isolation_value = models.FloatField('Isolation', blank=True, null=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+
+    isolation = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.isolation_value} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'Isolation'
+        verbose_name_plural = 'Isolations'
         ordering = ['TimeStamp']
 
 
@@ -124,22 +209,6 @@ class MaxTemperaturePack(models.Model):
     class Meta:
         verbose_name = 'Max Temperature Pack'
         verbose_name_plural = 'Max Temperatures Pack'
-        ordering = ['TimeStamp']
-
-
-class BatteryHealth(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
-    battery_health_value = models.FloatField('Battery Health', null=True, blank=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-
-    battery_health = models.Manager()
-
-    def __str__(self):
-        return f'{self.TimeStamp} - {self.battery_health_value} - {self.bus}'
-
-    class Meta:
-        verbose_name = 'Battery Health'
-        verbose_name_plural = 'Batteries Health'
         ordering = ['TimeStamp']
 
 
@@ -220,22 +289,6 @@ class BatteryPackAvgCellVoltage(models.Model):
     class Meta:
         verbose_name = 'Battery Pack Avg Cell Voltage'
         verbose_name_plural = 'Batteries Pack Avg Cell Voltage'
-        ordering = ['TimeStamp']
-
-
-class Isolation(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    isolation_value = models.FloatField('Isolation', blank=True, null=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-
-    isolation = models.Manager()
-
-    def __str__(self):
-        return f'{self.TimeStamp} - {self.isolation_value} - {self.bus}'
-
-    class Meta:
-        verbose_name = 'Isolation'
-        verbose_name_plural = 'Isolations'
         ordering = ['TimeStamp']
 
 
@@ -351,22 +404,6 @@ class LenzeEngineSpeed(models.Model):
         ordering = ['TimeStamp']
 
 
-class Odometer(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    odometer_value = models.IntegerField('Odometer Value', null=True, blank=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-
-    odometer = models.Manager()
-
-    def __str__(self):
-        return f'{self.TimeStamp} - {self.odometer_value} - {self.bus}'
-
-    class Meta:
-        verbose_name = 'Odometer'
-        verbose_name_plural = 'Odometers'
-        ordering = ['TimeStamp']
-
-
 class Speed(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
     speed_value = models.FloatField('Speed Value', blank=True)
@@ -414,26 +451,6 @@ class BtmsTemperature(models.Model):
         verbose_name_plural = 'BTMS Temperatures'
 
 
-class FusiCode(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    fusi_code = models.IntegerField()
-    fusi_state = models.CharField('Fusi State', max_length=10, blank=True, null=True, default='open', choices=fusi_code_options)
-    fusi_comment = models.TextField('Fusi Comment', blank=True, null=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-    failure_odometer = models.IntegerField('Odometer', blank=True, null=True)
-
-    fusi = models.Manager()
-
-    def __str__(self):
-        return f'{self.TimeStamp} - {self.fusi_code} - {self.fusi_state} - {self.fusi_comment} - ' \
-               f'{self.failure_odometer} - {self.bus}'
-
-    class Meta:
-        verbose_name = 'Fusi Code'
-        verbose_name_plural = 'Fusi Codes'
-        ordering = ['TimeStamp']
-
-
 class ChargeStatus(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
     charge_status_value = models.FloatField('Charge Status Value', blank=True)
@@ -463,22 +480,6 @@ class GearStatus(models.Model):
     class Meta:
         verbose_name = 'Gear Status'
         verbose_name_plural = 'Gear Status'
-        ordering = ['TimeStamp']
-
-
-class BusState(models.Model):
-    TimeStamp = models.DateTimeField('Timestamp', blank=True, null=True)
-    bus_state_value = models.CharField('Bus State Value', max_length=10, blank=True, null=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-
-    bus_state = models.Manager()
-
-    def __str__(self):
-        return f'{self.TimeStamp} - {self.bus_state_value} - {self.bus}'
-
-    class Meta:
-        verbose_name = 'Bus State'
-        verbose_name_plural = 'Bus State'
         ordering = ['TimeStamp']
 
 
@@ -546,23 +547,6 @@ class BtmsStatus(models.Model):
         ordering = ['TimeStamp']
 
 
-class FusiMessage(models.Model):
-    fusi_code = models.IntegerField()
-    fusi_description = models.CharField('Fusi Description', max_length=500)
-    message_class = models.CharField('Message Class', choices=message_class_choices, max_length=20, blank=True,
-                                     null=True)
-
-    fusi = models.Manager()
-
-    def __str__(self):
-        return f'{self.message_class}- {self.fusi_code} - {self.fusi_description}'
-
-    class Meta:
-        verbose_name = 'Fusi Message'
-        verbose_name_plural = 'Fusi Messages'
-        ordering = ['fusi_code']
-
-
 class ModemInfo(models.Model):
     imei = models.CharField('IMEI', max_length=20)
     rem_number = models.CharField('REM Number', max_length=20)
@@ -580,23 +564,6 @@ class ModemInfo(models.Model):
         verbose_name = 'Modem Info'
         verbose_name_plural = 'Modem Info'
         ordering = ['rem_number']
-
-
-class Technician(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    name = models.CharField('Name', max_length=100)
-    phone = models.CharField('Phone', max_length=20)
-    job = models.CharField('Job', max_length=100, choices=job_choices)
-
-    technician = models.Manager()
-
-    def __str__(self):
-        return f'{self.name} - {self.phone} - {self.job}'
-
-    class Meta:
-        verbose_name = 'Technician'
-        verbose_name_plural = 'Technicians'
-        ordering = ['name']
 
 
 class AwsPathBucket(models.Model):

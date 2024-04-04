@@ -1,7 +1,6 @@
-{% extends "main.html" %} {% load static %} {% block title %}Disponibilidad{% endblock %} {% block content %}
+{% extends "main.html" %} {% load static %} {% block header %}Disponibilidad Flota{% endblock %} {% block content %}
 
 <div style="height: 100vh" class="container">
-    <h1>soy la disponibilidad</h1>
     {% if user.username == 'hurbx' or user.username == 'Bquilincheo'%}
     <a href="{% url 'action-disponibilidad' %}" class="btn btn-primary"
         ><button class="btn btn-primary">registar</button></a
@@ -9,6 +8,140 @@
     {% else %}
     <a href="{% url 'no-access' %}" class="btn btn-primary"><button class="btn btn-primary">registar</button></a>
     {% endif %}
+    <br />
+    <br />
+    <!--divisor tarjetas-->
+    <div class="row">
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses FS</h5>
+                            <p class="card-text">This is a wider card with supporting</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor tarjetas-->
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses Operativos</h5>
+                            <p class="card-text">This is a wider card with supporting</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor tarjetas-->
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Flota</h5>
+                            <p class="card-text">This is a wider card with supporting</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor tarjetas-->
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Disponibilidad</h5>
+                            <p class="card-text">This is a wider card with supporting</p>
+                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor tarjetas-->
+    </div>
+    <!--inicio tablas-->
+    <div style="margin-top: 50px" class="row">
+        <div class="col-3">
+            <div class="card">
+                <h5 class="card-header">Buses Fuera de Servicio</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>Causa</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for i in fs %}
+                                <tr>
+                                    <td style="text-transform: capitalize">{{i.vehicle}}</td>
+                                    <td>
+                                        {% if i.state == 2 %}
+                                        <span class="badge rounded-pill text-bg-danger"> En Reparacion</span>
+
+                                        {% elif i.state == 3 %}
+                                        <span class="badge rounded-pill text-bg-warning">En Mantencion</span>
+                                        {%endif%}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor tablas -->
+        <div class="col-9">
+            <div class="card">
+                <h5 class="card-header">Registro Buses</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>Disponibilidad</th>
+                                    <th>Fecha</th>
+                                    <th>Observacion</th>
+                                    <th>Dias Fs</th>
+                                    <th>Dias OP</th>
+                                    <th>Total OP</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-{% endblock content %}
+{% endblock %}

@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}" />
 
-<div class="container">
+<div style="height: 100vh" class="container">
     <div class="row">
         <div class="col-3">
             <div class="card1">
@@ -55,7 +55,7 @@
         <!--fin perimera linea tarjetas-->
 
         <div class="col-3" style="margin-top: 20px">
-            <a class="nav-link" href="{% url 'warnings' %}">
+            <a class="nav-link" href="{% url 'disponibilidad-flota' %}">
                 <div class="card1">
                     <p class="card-description">Buses FS</p>
                     <div class="dashboard-card" id="total-card">

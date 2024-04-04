@@ -18,6 +18,13 @@ class DisponibilidadFlota(models.Model):
   dias_operativos = models.IntegerField(blank=True, null=True)
   dias_fs = models.IntegerField(blank=True, null=True)
 
+  @property
+  def total_op(self):
+      if self.dias_operativos is not None and self.dias_fs is not None:
+          return self.dias_operativos - self.dias_fs
+      else:
+          return None
+
   
 
   def __str__(self):

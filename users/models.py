@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
-from bus_signals.models import Bus, Technician
+from bus_signals.models import Bus
 
 
 # Create your models here.
@@ -32,11 +32,10 @@ class WorkOrder(models.Model):
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    technician = models.ForeignKey(Technician, on_delete=models.CASCADE, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.title} - {self.bus} - {self.technician} - {self.created}'
+        return f'{self.title} - {self.bus} - {self.created}'
 
     class Meta:
         verbose_name = 'Work Order'
