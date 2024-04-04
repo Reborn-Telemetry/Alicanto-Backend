@@ -27,13 +27,13 @@ admin.site.register(models.BtmsTemperature)
 admin.site.register(models.FusiCode)
 admin.site.register(models.ChargeStatus)
 admin.site.register(models.GearStatus)
-admin.site.register(models.BusState)
+
 admin.site.register(models.BrakePedalStatus)
 admin.site.register(models.AirConditionerStatus)
 admin.site.register(models.ServiceCompressorStatus)
 admin.site.register(models.BtmsStatus)
 admin.site.register(models.FusiMessage)
 admin.site.register(models.ModemInfo)
-admin.site.register(models.Technician)
+
 
 

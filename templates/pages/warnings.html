@@ -181,31 +181,6 @@
 
 <div class="row">
     <div class="col-4" style="margin-top: 20px">
-        <h2>Buses FS</h2>
-        <table class="table">
-            <tr>
-                <th>Bus</th>
-                <th>Estado</th>
-            </tr>
-            {% for i in list_fs_bus %}
-            <tr>
-                <td style="text-transform: capitalize">{{i.vehicle}}</td>
-                <td>
-                    {% if i.state == 2 %}
-                    <span class="badge rounded-pill text-bg-danger"> En Reparacion</span>
-
-                    {% elif i.state == 3 %}
-                    <span class="badge rounded-pill text-bg-warning">En Mantencion</span>
-                    {%endif%}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-4" style="margin-top: 20px">
         <h2>top 10 buses/codigo fusi *en desarrollo</h2>
         <table class="table">
             <tr>
