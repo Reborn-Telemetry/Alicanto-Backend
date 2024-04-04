@@ -25,8 +25,15 @@ def dashboard_disponibilidad_flota(request):
    response = requests.get(api_url, headers=headers)
    data = response.json()
    list_fs_bus = data['data']
+   cant_fs = len(data['data'])
+   total_flota = Bus.bus.exclude(id__in=no_update_list)
+   total_flota = total_flota.count()
+   operacion = total_flota - cant_fs
    context = {
       'fs': list_fs_bus,
+      'cant_fs': cant_fs,
+      'total_flota': total_flota,
+      'operacion': operacion,
    }
    return render(request, 'reports/disponibilidad_flota.html', context)
 
