@@ -8,4 +8,5 @@ urlpatterns = [
     path('dashboard_disponibilidad_flota/', views.dashboard_disponibilidad_flota, name='disponibilidad-flota'),
     path('matriz-km-diario-flota/', views.matriz_km_diario_flota, name='matriz-km-diario-flota-xmls'),
     path('disponibilidad_flota/', views.disponbilidad_flota, name='action-disponibilidad'),
+    path('soh-flota/', views.reporte_soh_flota, name='reporte-soh-flota'),
 ]
