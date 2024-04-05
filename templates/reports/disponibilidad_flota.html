@@ -1,4 +1,5 @@
 {% extends "main.html" %} {% load static %} {% block header %}Disponibilidad Flota{% endblock %} {% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div style="height: 100vh" class="container">
     {% if user.username == 'hurbx' or user.username == 'Bquilincheo'%}
@@ -108,6 +109,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <button id="cargarMas" class="btn btn-primary col-12">Cargar más</button>
                 </div>
             </div>
         </div>
@@ -139,5 +141,42 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        var registrosPorPagina = 10;
+        var numRegistros = $(".table-group-divider tr").length;
+        var numRegistrosMostrados = 0;
+
+        // Ocultar todos los registros después del décimo
+        $(".table-group-divider tr:gt(" + (registrosPorPagina - 1) + ")").hide();
+
+        // Función para mostrar más registros
+        function mostrarMasRegistros() {
+            numRegistrosMostrados += registrosPorPagina;
+            $(".table-group-divider tr:lt(" + numRegistrosMostrados + ")").show();
+
+            // Ocultar el botón "Mostrar más" si ya se han mostrado todos los registros
+            if (numRegistrosMostrados >= numRegistros) {
+                $("#cargarMas").text("Mostrar menos");
+            }
+        }
+
+        // Función para mostrar menos registros
+        function mostrarMenosRegistros() {
+            $(".table-group-divider tr:gt(" + (registrosPorPagina - 1) + ")").hide();
+            numRegistrosMostrados = 0;
+            $("#cargarMas").text("Mostrar más");
+        }
+
+        // Al hacer clic en el botón "Cargar más"
+        $("#cargarMas").click(function () {
+            if ($("#cargarMas").text() === "Mostrar más") {
+                mostrarMasRegistros();
+            } else {
+                mostrarMenosRegistros();
+            }
+        });
+    });
+</script>
 
 {% endblock %}
