@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q, Count, Sum
+from django.db.models import Q, Count, Sum, Max
 # pdf imports 
 from django.http import FileResponse, HttpResponse
 import io
@@ -842,10 +842,6 @@ def bus_detail(request, pk):
     except ObjectDoesNotExist:
      print('No se encontraron registros en BatteryHealth para el bus_id especificado.')
 
-   
-    
-   
-
     messages = FusiMessage.fusi.all()
     fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
     for code in fusi_codes:
@@ -874,7 +870,6 @@ def bus_detail(request, pk):
     except EmptyPage:
         page = paginator.num_pages
         fusi_codes = paginator.page(page)
-
     
 
     context = {'bus': bus,
