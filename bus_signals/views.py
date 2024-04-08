@@ -585,64 +585,6 @@ def bus_historic_fusi(request, pk):
     return FileResponse(buf, as_attachment=True, filename=filename)
     
 
-@login_required(login_url='login')
-def daily_bus_km_report_pdf(request, pk):
-    bus = Bus.bus.get(id=pk)
-    result = daily_bus_km(pk)
-
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-    filename = f'km_diario_bus_{bus.bus_name}_{formatted_datetime}.pdf'
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=letter)
-    elements = []
-
-    table_data = [
-        ["Dia", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
-    ]
-
-    # Crear una lista de listas con los datos de result organizados por mes
-    data_by_month = [[] for _ in range(12)]  # 12 meses
-    for item in result:
-        for idx, value in enumerate(item[1:], start=1):
-            if value is not None:
-                data_by_month[idx - 1].append(value)
-            else:
-                data_by_month[idx - 1].append('')
-
-    # Llenar la tabla con los datos organizados
-    for i in range(31):  # 31 días
-        row = [f"Día {i+1}"]
-        for month_data in data_by_month:
-            if i < len(month_data):
-                row.append(month_data[i])
-            else:
-                row.append('')
-        table_data.append(row)
-
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
-        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
-    ])
-
-    table = Table(table_data)
-    table.setStyle(style)
-    elements.append(table)
-
-    image_path = 'static/img/REM.png'
-    image = Image(image_path, width=80, height=80)
-    elements.insert(0, image)
-
-    doc.build(elements)
-
-    buf.seek(0)
-    return FileResponse(buf, as_attachment=True, filename=filename)
-
 
 def pdf_report(request):
     current_datetime = datetime.now()

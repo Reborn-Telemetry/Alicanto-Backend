@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from bus_signals.query_utils import matriz_km_diario_flota
+from bus_signals.query_utils import matriz_km_diario_flota, daily_bus_km
 from bus_signals.models import Bus, BatteryHealth
 from . models import Prueba, DisponibilidadFlota
 from datetime import date
@@ -17,6 +17,7 @@ import psycopg2
 from django.contrib import messages
 from django.db.models import Max
 import requests
+from django.contrib.auth.decorators import login_required
 no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
 
 def dashboard_disponibilidad_flota(request):
@@ -37,7 +38,9 @@ def dashboard_disponibilidad_flota(request):
    }
    return render(request, 'reports/disponibilidad_flota.html', context)
 
-# Create your views here.
+"""Desde aqui en adelante todas las funciones son para la generacion de reportes"""
+
+
 def disponbilidad_flota(request):
    headers = { 'User-Agent': 'Alicanto/1.0', }
    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
@@ -108,11 +111,7 @@ def reporte_soh_flota(request):
   return FileResponse(buf, as_attachment=True, filename=filename)    
 
 
-
-  
-
 def matriz_km_diario_flota(request):
-   
    dbname = 'alicanto-db-dev'
    user = 'postgres'
    password = 'postgres'
@@ -235,3 +234,62 @@ def matriz_km_diario_flota(request):
    
    
    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+@login_required(login_url='login')
+def daily_bus_km_report_pdf(request, pk):
+    bus = Bus.bus.get(id=pk)
+    result = daily_bus_km(pk)
+
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'km_diario_bus_{bus.bus_name}_{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+
+    table_data = [
+        ["Dia", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    ]
+
+    # Crear una lista de listas con los datos de result organizados por mes
+    data_by_month = [[] for _ in range(12)]  # 12 meses
+    for item in result:
+        for idx, value in enumerate(item[1:], start=1):
+            if value is not None:
+                data_by_month[idx - 1].append(value)
+            else:
+                data_by_month[idx - 1].append('')
+
+    # Llenar la tabla con los datos organizados
+    for i in range(31):  # 31 días
+        row = [f"Día {i+1}"]
+        for month_data in data_by_month:
+            if i < len(month_data):
+                row.append(month_data[i])
+            else:
+                row.append('')
+        table_data.append(row)
+
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
+    ])
+
+    table = Table(table_data)
+    table.setStyle(style)
+    elements.append(table)
+
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
