@@ -9,4 +9,5 @@ urlpatterns = [
     path('matriz-km-diario-flota/', views.matriz_km_diario_flota, name='matriz-km-diario-flota-xmls'),
     path('disponibilidad_flota/', views.disponbilidad_flota, name='action-disponibilidad'),
     path('soh-flota/', views.reporte_soh_flota, name='reporte-soh-flota'),
+    path("bus_dailykm_report_pdf/<str:pk>/", views.daily_bus_km_report_pdf, name="bus_dailykm_pdf_report"),
 ]
