@@ -1,10 +1,4 @@
-<!DOCTYPE html>{% load static %}{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li class="{{ message.tags }}" style="color: black">{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+<!DOCTYPE html>{% load static %}
 <!-- <h1>Bienvenido a Alicanto</h1>
 
 <form action="{% url 'login' %}" method="POST">{% csrf_token %}
@@ -20,9 +14,40 @@
         <meta charset="UTF-8" />
         <title>Alicanto Login</title>
         <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css" />
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                z-index: 9999;
+            }
+        </style>
         <link rel="stylesheet" href="{% static 'styles/login.css' %}" />
     </head>
     <body>
+        {% if messages %}
+        <div class="toast-container" aria-live="polite" aria-atomic="true">
+            {% for message in messages %}
+            <div
+                class="toast align-items-center text-white bg-dark"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                id="toast{{ forloop.counter }}"
+            >
+                <div class="d-flex">
+                    <div class="toast-body">{{ message }}</div>
+                    <button
+                        type="button"
+                        class="btn-close me-2 m-auto"
+                        data-bs-dismiss="toast"
+                        aria-label="Close"
+                    ></button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
         <section>
             <div class="container">
                 <div class="login-form">
@@ -36,31 +61,25 @@
                 </div>
             </div>
         </section>
-        <!--
-            <div class="login">
-            <h2 class="active">Iniciar sesion</h2>
-            <form action="{% url 'login' %}" method="POST">
-                {% csrf_token %}
-                <input type="text" class="text" name="username" />
-                <span>Usuario</span>
-
-                <br />
-
-                <br />
-
-                <input type="password" class="text" name="password" />
-                <span>contraseña</span>
-                <br />
-
-                <button class="signin">Ingresar</button>
-
-                <hr />
-
-                <p class="trademark">Reborn Electric Motors</p>
-                <br />
-                <p class="trademark2">Alicanto Telemetría Reborn</p>
-            </form>
-        </div>
-        -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const toasts = document.querySelectorAll(".toast");
+                toasts.forEach((toast) => {
+                    const toastInstance = new bootstrap.Toast(toast);
+                    toastInstance.show();
+                });
+            });
+        </script>
     </body>
 </html>

@@ -37,6 +37,7 @@ class Bus(models.Model):
     lts_isolation = models.FloatField('LTS Isolation', default=0, blank=True, null=True)
     lts_24_volt = models.FloatField('LTS 24 Volt', default=0, blank=True, null=True)
     lts_fusi = models.IntegerField(blank=True, null=True)
+    charging = models.IntegerField('Charging', default=0, blank=True, null=True)
     lts_update = models.DateTimeField('LTS Update', auto_now=False, blank=True, null=True)
     mark = models.CharField('Mark', max_length=20, blank=True, null=True, default='1.0.0')
     jarvis = models.CharField('Jarvis', max_length=20, blank=True, null=True, default='1.0.0')
@@ -455,6 +456,7 @@ class ChargeStatus(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
     charge_status_value = models.FloatField('Charge Status Value', blank=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+    soc_level = models.IntegerField('SOC Level', blank=True, null=True)
 
     charge_status = models.Manager()
 
