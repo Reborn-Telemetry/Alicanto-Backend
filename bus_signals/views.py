@@ -65,8 +65,10 @@ def warnings(request):
     current_month = timezone.now().month
     distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
+    fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%B')
+
 
     # paginador buses sin conexion
     page = request.GET.get('page')
@@ -97,6 +99,7 @@ def warnings(request):
         delayed = paginator_delayed.page(page2)
 
     # fin paginador delayed
+ 
         
          # paginador fusi
     page_fusi = request.GET.get('page_fusi')
@@ -113,6 +116,7 @@ def warnings(request):
 
 
     context = {
+        'fusi_grafico': fusi_grafico,
          'mes_actual': mes_actual,
         'list_fs_bus': list_fs_bus,
         'low_battery': low_battery,
@@ -797,8 +801,6 @@ def bus_detail(request, pk):
         co2 = (bus.lts_odometer / 0.2857) * 2.68
         co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
         co2 = round(co2, 2)
-
-    
 
     # paginador fusi
     page = request.GET.get('page')
