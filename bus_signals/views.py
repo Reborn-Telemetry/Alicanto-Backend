@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
@@ -773,10 +773,6 @@ def bus_detail(request, pk):
             })
     else:
        result_data = [{'month': 'Enero', 'value1': 0, 'value2': 0, 'difference': 0}]  # Valores predeterminados
-
-
-        
-
     
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
@@ -802,9 +798,14 @@ def bus_detail(request, pk):
         co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
         co2 = round(co2, 2)
 
+    fusi_grafico = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
+    fusi_grafico2 = list(fusi_grafico.values('fusi_code', 'total'))
+
+    isolation  = Isolation.isolation.filter(bus_id=pk).values('isolation_value')[:40]
+    isolation2 = list(isolation.values('isolation_value'))
     # paginador fusi
     page = request.GET.get('page')
-    result = 30
+    result = 15
     paginator = Paginator(fusi_codes, result)
     try:
         fusi_codes = paginator.page(page)
@@ -818,16 +819,17 @@ def bus_detail(request, pk):
 
     context = {'bus': bus,
                'message': messages,
-                 'ot': ot, 
-                 'results': results,
-                   'monthly_result': montly_result,
-                     'fusi': fusi_codes,
-                       'result_data': 
-                       result_data, 
-                       'co2': co2, 
-                       'paginator': paginator,
-                       'soh': soh
-                       }
+               'ot': ot, 
+               'results': results,
+               'monthly_result': montly_result,
+               'fusi': fusi_codes,
+               'result_data': result_data, 
+               'co2': co2, 
+               'paginator': paginator,
+               'soh': soh,
+               'fusi_pie': fusi_grafico2,
+               'isolation': isolation2
+                }
     return render(request, 'bus/bus-profile.html', context)
 
 
