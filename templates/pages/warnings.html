@@ -10,7 +10,7 @@
                 <h5 class="card-header">Buses bajo 50% Bateria</h5>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -32,10 +32,38 @@
                                             <span class="badge rounded-pill text-bg-danger">{{ i.lts_soc }} %</span>
                                             {% else %} {{ i.lts_soc }} {% endif %}
                                         </td>
-                                        <td>{{ i.lts_update }}</td>
+                                        <td>{{ i.lts_update|date:"d-m-Y H:m" }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px" class="card">
+                <h5 class="card-header">Buses bajo 24 volts</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table">
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>Voltaje</th>
+                                    <th>actualizacion</th>
+                                </tr>
+                                {% for i in low_battery %}
+                                <tr>
+                                    <td>{{i.bus_name}}</td>
+                                    <td>
+                                        {% if i.lts_24_volt < 20 %}
+                                        <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
+                                </tr>
+                                {% endfor %}
                             </table>
                         </div>
                     </div>
@@ -47,23 +75,25 @@
             <div class="card">
                 <h5 class="card-header">Buses con pendientes de subida</h5>
                 <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Bus</th>
-                                <th>actualizacion</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for i in delayed %}
-                            <tr>
-                                <td>{{i.bus_name}}</td>
-                                <td>{{i.lts_update}}</td>
-                            </tr>
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>actualizacion</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for i in delayed %}
+                                <tr>
+                                    <td>{{i.bus_name}}</td>
+                                    <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
+                                </tr>
 
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     <!--paginador va aqui-->
                     <nav class="navpag" aria-label="Page navigation example">
                         <ul class="pagination">
@@ -161,35 +191,6 @@
             </div>
             <!--inicio segunda tarjeta-->
             <div style="margin-top: 30px" class="row">
-                <div class="col-6">
-                    <div class="card">
-                        <h5 class="card-header">Buses bajo 24 volts</h5>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table">
-                                        <tr>
-                                            <th>Bus</th>
-                                            <th>Voltaje</th>
-                                            <th>actualizacion</th>
-                                        </tr>
-                                        {% for i in low_battery %}
-                                        <tr>
-                                            <td>{{i.bus_name}}</td>
-                                            <td>
-                                                {% if i.lts_24_volt < 20 %}
-                                                <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>{{i.lts_update}}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!--aqui segunda tabla-->
                 <div class="col-6">
                     <div class="card">

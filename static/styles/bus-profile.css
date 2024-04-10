@@ -68,3 +68,9 @@ td {
     --bs-pagination-active-bg: #0f8bfd;
     --bs-pagination-active-border-color: #0f8bfd;
 }
+.leaf {
+    color: #7ada00;
+    font-size: 50px;
+    text-align: center;
+    align-content: center;
+}

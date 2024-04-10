@@ -93,8 +93,11 @@
                                                     <h5 class="card-title">Carga</h5>
                                                     <p class="card-text custom-text">
                                                         {% if bus.charging == 1 %}
-                                                        <i style="font-size: 21px" class="bx bxs-battery-charging"></i>
-                                                        Cargando.. {% else %} Desconectado {% endif %}
+                                                        <i
+                                                            style="font-size: 21px; color: #7ada00"
+                                                            class="bx bxs-battery-charging"
+                                                        ></i>
+                                                        Cargando {% else %} Desconectado {% endif %}
                                                     </p>
                                                 </div>
                                             </div>
@@ -222,16 +225,12 @@
         <div class="col-3">
             <div class="card mb-3 custom-card">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img
-                            src="https://plus.unsplash.com/premium_photo-1681487077388-5a2c641a1e21?q=80&w=3684&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            class="img-fluid rounded-start"
-                            alt="..."
-                        />
+                    <div class="col-md-4 leaf">
+                        <i class="bx bxs-leaf"></i>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">CO2 Evitado</h5>
+                            <h5 class="card-title"><strong>CO2 Evitado</strong></h5>
                             <p class="card-text">{{co2}} toneladas CO2</p>
                         </div>
                     </div>
