@@ -5,12 +5,16 @@
 <div style="height: 100vh" class="container">
     <div class="row">
         <div class="col-3">
-            <div class="card1">
-                <p class="card-description">Km Flota</p>
-                <div class="dashboard-card" id="total-card">
-                    <i class="bx bx-tachometer fondo"></i>
-                    <div class="card-content">
-                        <h4 class="card-header">{{km_total}} Km</h4>
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-tachometer icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Km Flota</h5>
+                            <p class="card-text">{{km_total}} Km</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -18,36 +22,48 @@
         <!--segunda tarjeta -->
 
         <div class="col-3">
-            <div class="card1">
-                <p class="card-description">Total flota</p>
-                <div class="dashboard-card" id="total-card">
-                    <i class="bx bx-bus fondo"></i>
-                    <div class="card-content">
-                        <h4 class="card-header">{{total_flota}} Buses</h4>
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Flota</h5>
+                            <p class="card-text">{{total_flota}} Buses</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--tercera tarjeta -->
         <div class="col-3">
-            <div class="card1">
-                <p class="card-description">CO2 Evitado</p>
-                <div class="dashboard-card" id="total-card">
-                    <i class="bx bx-error fondo"></i>
-                    <div class="card-content">
-                        <h4 class="card-header">{{co2_total}}</h4>
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-leaf icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">CO2 Evitado</h5>
+                            <p class="card-text">{{co2_total}} Tons</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--cuarta tarjeta -->
         <div class="col-3">
-            <div class="card1">
-                <p style="margin-left: 50px" class="card-description">Buses en operacion</p>
-                <div class="dashboard-card" id="total-card">
-                    <i class="bx bx-check-circle fondo"></i>
-                    <div class="card-content">
-                        <h4 style="margin-left: 20px" class="card-header">{{operacion}} Buses</h4>
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-check-circle icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses Operativos</h5>
+                            <p class="card-text">{{operacion}} Buses</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,16 +72,23 @@
 
         <div class="col-3" style="margin-top: 20px">
             <a class="nav-link" href="{% url 'disponibilidad-flota' %}">
-                <div class="card1">
-                    <p class="card-description">Buses FS</p>
-                    <div class="dashboard-card" id="total-card">
-                        <i class="bx bx-x-circle fondo"></i>
-                        <div class="card-content">
-                            <h4 class="card-header">{{ cant_fs }} Buses</h4>
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bx-x-circle icon-alert"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="indicator">
-                        <i class="bx bx-chevron-right"></i>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Buses FS</h5>
+                                <p class="card-text">
+                                    {{cant_fs}} Buses
+
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -73,16 +96,22 @@
 
         <div class="col-3" style="margin-top: 20px">
             <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card1">
-                    <p style="margin-left: 40px" class="card-description">Sin conexion</p>
-                    <div class="dashboard-card" id="total-card">
-                        <i class="bx bx-wifi-off fondo"></i>
-                        <div class="card-content">
-                            <h4 class="card-header">{{no_update}} Buses</h4>
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bx-wifi-off icon-alert"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="indicator">
-                        <i class="bx bx-chevron-right"></i>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Sin Conexion</h5>
+                                <p class="card-text">
+                                    {{no_update}} Buses
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -90,32 +119,44 @@
 
         <div class="col-3" style="margin-top: 20px">
             <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card1">
-                    <p style="margin-left: 40px" class="card-description">Carga baja</p>
-                    <div class="dashboard-card" id="total-card">
-                        <i class="bx bxs-battery-low fondo"></i>
-                        <div class="card-content">
-                            <h4 class="card-header">{{cant_low_50_soc}} Buses</h4>
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bxs-battery-low icon-alert"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="indicator">
-                        <i class="bx bx-chevron-right"></i>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">SOC Bajo</h5>
+                                <p class="card-text">
+                                    {{cant_low_50_soc}} Buses
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
         </div>
         <div class="col-3" style="margin-top: 20px">
             <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card1">
-                    <p style="margin-left: 40px" class="card-description">Subida Pendiente</p>
-                    <div class="dashboard-card" id="total-card">
-                        <i class="bx bx-history fondo"></i>
-                        <div class="card-content">
-                            <h4 class="card-header">{{delayed}} Buses</h4>
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bx-history icon-alert"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="indicator">
-                        <i class="bx bx-chevron-right"></i>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Subida Pendiente</h5>
+                                <p class="card-text">
+                                    {{delayed}} Buses
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
