@@ -51,6 +51,12 @@ def warnings(request):
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
 
+    low_50 = list(low_50_soc_count.values('bus_name', 'lts_soc'))
+
+
+
+
+
     top_buses = FusiCode.fusi.values('bus__bus_name').annotate(num_registros=Count('bus')).order_by('-num_registros')[:10]
     
     no_update = Bus.bus.filter(lts_update=None)
@@ -66,6 +72,7 @@ def warnings(request):
     distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
     fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
+
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%B')
 
@@ -128,6 +135,7 @@ def warnings(request):
         'top_buses': top_buses,
         'distinct_fusi_code': distinct_fusi_code,
           'paginator_fusi': paginator_fusi,
+          'low_50':low_50,
     }
     return render(request, 'pages/warnings.html', context)
 

@@ -1,5 +1,5 @@
 {% extends "main.html" %} {% load static %} {% block header %}Disponibilidad Flota{% endblock %} {% block content %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="{% static 'styles/disponibilidad.css' %}" />
 
 <div style="height: 100vh" class="container">
     {% if user.username == 'hurbx' or user.username == 'Bquilincheo'%}
@@ -17,12 +17,14 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                        <div class="icon-card">
+                            <i class="bx bx-x-circle icon-alert"></i>
+                        </div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Buses FS</h5>
-                            <p class="card-text">{{cant_fs}}</p>
+                            <p class="card-text">{{cant_fs}} Buses</p>
                         </div>
                     </div>
                 </div>
@@ -33,12 +35,12 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                        <div class="icon-card"><i class="bx bx-check-circle icon-alert"></i></div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Buses Operativos</h5>
-                            <p class="card-text">{{operacion}}</p>
+                            <p class="card-text">{{operacion}} Buses</p>
                         </div>
                     </div>
                 </div>
@@ -49,12 +51,12 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                        <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Total Flota</h5>
-                            <p class="card-text">{{total_flota}}</p>
+                            <p class="card-text">{{total_flota}} Buses</p>
                         </div>
                     </div>
                 </div>
@@ -65,12 +67,12 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="..." class="img-fluid rounded-start" alt="..." />
+                        <div class="icon-card"><i class="bx bx-bar-chart-square icon-alert"></i></div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Disponibilidad</h5>
-                            <p class="card-text">en desarrollo....</p>
+                            <p class="card-text">%</p>
                         </div>
                     </div>
                 </div>
@@ -141,6 +143,7 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         var registrosPorPagina = 10;
