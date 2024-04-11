@@ -2,7 +2,7 @@
 
 <link rel="stylesheet" href="{% static 'styles/bus-list.css' %}" />
 
-<div class="container">
+<div style="height: 100vh" class="container">
     <div class="row">
         <!-- Botones Nuevo y Lista al principio -->
         <div class="col-md-4 d-flex align-items-center justify-content-start">
@@ -55,7 +55,7 @@
     </div>
 </div>
 {% if bus.has_other_pages %}
-<nav aria-label="Page navigation example">
+<nav style="margin-top: -400px" aria-label="Page navigation example">
     <ul class="pagination">
         {% if bus.has_previous %}
         <li class="page-item">
@@ -77,12 +77,12 @@
     </ul>
 </nav>
 {% endif %}
+<div style="height: 100vh"></div>
 
 <!---divisor de codigo   -->
 
 <!--buscador de buses-->
 
 <!--lista buses-->
-<div class="container text-center" style="height: 100vh"></div>
 
 {% endblock content %}
