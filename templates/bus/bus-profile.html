@@ -351,45 +351,47 @@
             <h5 class="card-header custom-header">Kilometraje maximo diario</h5>
             <div class="card-body">
                 <div class="col-12">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Dia</th>
-                                <th>Enero</th>
-                                <th>Febrero</th>
-                                <th>Marzo</th>
-                                <th>Abril</th>
-                                <th>Mayo</th>
-                                <th>Junio</th>
-                                <th>Julio</th>
-                                <th>Agosto</th>
-                                <th>Septiembre</th>
-                                <th>Octubre</th>
-                                <th>Noviembre</th>
-                                <th>Diciembre</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for i in results %}
-                            <tr>
-                                <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
-                                <td>{% if i.1 is None %} 0 {% else %}{{i.1}} {% endif %}</td>
-                                <td>{% if i.2 is None %} 0 {% else %}{{i.2}} {% endif %}</td>
-                                <td>{% if i.3 is None %} 0 {% else %}{{i.3}} {% endif %}</td>
-                                <td>{% if i.4 is None %} 0 {% else %}{{i.4}} {% endif %}</td>
-                                <td>{% if i.5 is None %} 0 {% else %}{{i.5}} {% endif %}</td>
-                                <td>{% if i.6 is None %} 0 {% else %}{{i.6}} {% endif %}</td>
-                                <td>{% if i.7 is None %} 0 {% else %}{{i.7}} {% endif %}</td>
-                                <td>{% if i.8 is None %} 0 {% else %}{{i.8}} {% endif %}</td>
-                                <td>{% if i.9 is None %} 0 {% else %}{{i.9}} {% endif %}</td>
-                                <td>{% if i.10 is None %} 0 {% else %}{{i.10}} {% endif %}</td>
-                                <td>{% if i.11 is None %} 0 {% else %}{{i.11}} {% endif %}</td>
-                                <td>{% if i.12 is None %} 0 {% else %}{{i.12}} {% endif %}</td>
-                            </tr>
+                    <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Dia</th>
+                                    <th>Enero</th>
+                                    <th>Febrero</th>
+                                    <th>Marzo</th>
+                                    <th>Abril</th>
+                                    <th>Mayo</th>
+                                    <th>Junio</th>
+                                    <th>Julio</th>
+                                    <th>Agosto</th>
+                                    <th>Septiembre</th>
+                                    <th>Octubre</th>
+                                    <th>Noviembre</th>
+                                    <th>Diciembre</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for i in results %}
+                                <tr>
+                                    <td>{% if i.0 is None %} 0 {% else %}{{i.0}}{% endif %}</td>
+                                    <td>{% if i.1 is None %} 0 {% else %}{{i.1}} {% endif %}</td>
+                                    <td>{% if i.2 is None %} 0 {% else %}{{i.2}} {% endif %}</td>
+                                    <td>{% if i.3 is None %} 0 {% else %}{{i.3}} {% endif %}</td>
+                                    <td>{% if i.4 is None %} 0 {% else %}{{i.4}} {% endif %}</td>
+                                    <td>{% if i.5 is None %} 0 {% else %}{{i.5}} {% endif %}</td>
+                                    <td>{% if i.6 is None %} 0 {% else %}{{i.6}} {% endif %}</td>
+                                    <td>{% if i.7 is None %} 0 {% else %}{{i.7}} {% endif %}</td>
+                                    <td>{% if i.8 is None %} 0 {% else %}{{i.8}} {% endif %}</td>
+                                    <td>{% if i.9 is None %} 0 {% else %}{{i.9}} {% endif %}</td>
+                                    <td>{% if i.10 is None %} 0 {% else %}{{i.10}} {% endif %}</td>
+                                    <td>{% if i.11 is None %} 0 {% else %}{{i.11}} {% endif %}</td>
+                                    <td>{% if i.12 is None %} 0 {% else %}{{i.12}} {% endif %}</td>
+                                </tr>
 
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
