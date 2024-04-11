@@ -5,12 +5,12 @@
 <div class="container">
     <!--inicio primera tarjeta-->
     <div class="row">
-        <div class="col-4">
+        <div class="col-12">
             <div class="card">
-                <h5 class="card-header">Buses bajo 50% Bateria</h5>
+                <h5 class="card-header">Buses bajo 50% Carga</h5>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-3">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -38,10 +38,25 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="col-9">
+                            <canvas id="grafico2"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-
+        </div>
+    </div>
+    <!--aqui buses bajo 24 volts-->
+    <div style="margin-top: 30px" class="row">
+        <div class="col-12">
+            <div class="card">
+                <h5 class="card-header">Buses bajo 24 volts</h5>
+                <div class="card-body"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
             <div style="margin-top: 30px" class="card">
                 <h5 class="card-header">Buses bajo 24 volts</h5>
                 <div class="card-body">
@@ -255,6 +270,37 @@
                     labels: labels,
                     datasets: [{
                         label: 'Cantidad de Códigos FUSI',
+                        data: valores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
+                        borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+        <script>
+            // Obtener los datos pasados desde Django
+            var datos = {{ low_50 | safe }};
+
+            // Preparar los datos para Chart.js
+            var labels = datos.map(item => item.bus_name);
+            var valores = datos.map(item => item.lts_soc);
+
+            // Crear el gráfico con Chart.js
+            var ctx = document.getElementById('grafico2').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Nivel baterias',
                         data: valores,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
                         borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
