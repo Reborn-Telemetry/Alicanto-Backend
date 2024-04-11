@@ -1,97 +1,53 @@
 /* Estilos para la tarjeta */
-.card1 {
+.icon-card {
+    max-width: 60px;
+    max-height: 60px;
+    background-color: #0f8bfd;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
-    background-color: #ededed;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    border-radius: 10px;
-    position: relative; /* Agregado */
+    margin: auto;
+    position: relative; /* Agrega posición relativa para que funcione el centrado vertical */
+    top: 50%; /* Mueve el círculo hacia abajo un 50% de la altura de su contenedor */
+    transform: translateY(-50%); /* Vuelve a subir el círculo un 50% de su propia altura */
 }
+.card {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: none;
+    background-color: #ededed;
+}
+.icon-alert {
+    color: #fff;
+    font-size: 30px;
+}
+.card-title {
+    border-bottom: 1px solid #c3c3cc;
+    padding-bottom: 5px;
+}
+.card-text {
+    font-size: 22px;
+    font-weight: 500;
+    color: #0f8bfd;
+}
+
 .indicator {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
     color: #686868;
-    width: auto;
-    position: absolute; /* Agregado */
-    bottom: 2; /* Ajusta la posición desde abajo */
-    right: 15px; /* Ajusta la posición desde la derecha */
+    margin-left: 30px;
+    font-weight: 700;
     font-size: 1.8rem;
 }
 
-.dashboard-card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-    margin-bottom: 0.5rem;
-    border-radius: 10px;
-}
-
-.dashboard-card:last-child {
-    margin-bottom: 0;
-}
-
-.fondo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60px; /* Ancho del contenedor del ícono */
-    height: 50px; /* Altura del contenedor del ícono */
-    background-color: #0f8bfd;
-    border-radius: 50%;
-    color: white;
-}
-
-.dashboard-card i {
-    font-size: 1.6rem; /* Tamaño del ícono */
-    line-height: 1; /* Asegura que la altura del ícono sea igual a su tamaño */
-    padding: 0.5rem; /* Espaciado interno del ícono */
-}
-
-.card-description {
-    font-weight: 500;
-    text-align: center;
-    justify-content: center;
-    margin-bottom: -25px;
-}
-
-.dashboard-card,
-.card-description {
-    color: black;
-}
-
-.dashboard-card .card-content {
-    width: 95%;
-    margin-top: 1rem;
-    text-align: center; /* Alinea el texto al centro */
-}
-
-.card-content .card-header {
-    font-size: 1.6rem;
-    margin: 0;
-    background: transparent;
-    margin-bottom: -10px;
-}
-
-.card-content .card-description {
-    font-size: 0.9rem;
-    margin: 0;
-}
 /* Dashboard */
+
 .texticon {
     color: black;
     display: inline-block;
     vertical-align: middle;
     margin-left: -20px;
     font-weight: 400;
-}
-
-.icon {
-    font-size: 30px;
 }
 
 .timestamp {
@@ -102,10 +58,6 @@
     text-align: center;
 }
 
-.card {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    background-color: #ededed;
-}
 .card-header {
     --bs-card-cap-color: #0f8bfd;
     font-weight: 700;
