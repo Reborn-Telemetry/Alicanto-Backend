@@ -403,37 +403,32 @@
                 <h5 class="card-header custom-header">Bitacora Fusi Bus</h5>
                 <div class="card-body">
                     <div class="col-12">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Codigo Fusi</th>
-                                    <th>Descripcion</th>
-                                    <th>Kilometraje</th>
-                                    <th>Fecha</th>
+                        <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo Fusi</th>
+                                        <th>Descripcion</th>
+                                        <th>Kilometraje</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in fusi %}
+                                    <tr>
+                                        <td>{{i.fusi_code}}</td>
+                                        <td>
+                                            {% for mesa in message %} {% if mesa.fusi_code == i.fusi_code %}
+                                            {{mesa.fusi_description|truncatechars:30 }} {% endif %} {% endfor %}
+                                        </td>
+                                        <td>{{i.failure_odometer}}</td>
+                                        <td>{{i.TimeStamp|date:"d-m-Y H:m"}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in fusi %}
-                                <tr>
-                                    <td>{{i.fusi_code}}</td>
-                                    <td>
-                                        {% for mesa in message %} {% if mesa.fusi_code == i.fusi_code %}
-                                        {{mesa.fusi_description|truncatechars:30 }} {% endif %} {% endfor %}
-                                    </td>
-                                    <td>{{i.failure_odometer}}</td>
-                                    <td>{{i.TimeStamp|date:"d-m-Y H:m"}}</td>
-
-                                    <td>
-                                        <a href="{% url 'update-fusi-code' i.id  %}">
-                                            <button type="button" class="btn btn-info">Editar Fusi</button>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
                         {% if fusi.has_other_pages %}
                         <nav class="navpag" aria-label="Page navigation example">
                             <ul class="pagination justify-content-center">
