@@ -51,21 +51,14 @@ def warnings(request):
     delayed = bus_instance.delay_data()
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
-
     low_50 = list(low_50_soc_count.values('bus_name', 'lts_soc'))
-
-
-
-
-
     top_buses = FusiCode.fusi.values('bus__bus_name').annotate(num_registros=Count('bus')).order_by('-num_registros')[:10]
-    
     no_update = Bus.bus.filter(lts_update=None)
-    
     no_update = no_update.exclude(id__in=no_update_list)
-
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
+
+    low_24_grafico = list(low_battery.values('bus_name', 'lts_24_volt'))
 
 
      # fusicodes monthly
@@ -73,6 +66,7 @@ def warnings(request):
     distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
     fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
+    top_grafico = list(top_buses.values('bus__bus_name', 'num_registros'))
 
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%B')
@@ -111,7 +105,7 @@ def warnings(request):
         
          # paginador fusi
     page_fusi = request.GET.get('page_fusi')
-    results_fusi = 12
+    results_fusi = 10
     paginator_fusi = Paginator(distinct_fusi_code, results_fusi)
     try:
         distinct_fusi_code = paginator_fusi.page(page_fusi)
@@ -122,8 +116,12 @@ def warnings(request):
         page_fusi = paginator_fusi.num_pages
         distinct_fusi_code = paginator_fusi.page(page_fusi)
 
+    
+
 
     context = {
+        'top_grafico': top_grafico,
+        'low_24_grafico': low_24_grafico,
         'fusi_grafico': fusi_grafico,
          'mes_actual': mes_actual,
         'list_fs_bus': list_fs_bus,
@@ -135,8 +133,8 @@ def warnings(request):
         'paginator_delayed': paginator_delayed,
         'top_buses': top_buses,
         'distinct_fusi_code': distinct_fusi_code,
-          'paginator_fusi': paginator_fusi,
-          'low_50':low_50,
+        'paginator_fusi': paginator_fusi,
+        'low_50':low_50,
     }
     return render(request, 'pages/warnings.html', context)
 
