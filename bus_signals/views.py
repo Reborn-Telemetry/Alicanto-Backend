@@ -25,6 +25,7 @@ from io import BytesIO
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+import pytz
 
 
 filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
@@ -848,6 +849,8 @@ def bus_detail(request, pk):
     if rango_actual:
      rangos.append(rango_actual)
 
+    santiago_tz = pytz.timezone('Chile/Continental')
+
 # Preparar los datos para la tabla
     datos_tabla = []
     for i, rango in enumerate(rangos, 1):
@@ -856,18 +859,22 @@ def bus_detail(request, pk):
         soc_inicial = rango[0].soc_level
         soc_final = rango[-1].soc_level
         carga = soc_final - soc_inicial  # Resta de soc_level
+        print(fecha_inicio, fecha_termino)
 
         fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
         fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
+
+        fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+        fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
     
     # Calcular la diferencia de tiempo en horas
-        diferencia = fecha_termino_dt - fecha_inicio_dt
+        diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
         diferencia_en_horas = diferencia.total_seconds() / 3600
 
         datos_tabla.append({
         'rango': i,
-        'fecha_inicio': fecha_inicio,
-        'fecha_termino': fecha_termino,
+        'fecha_inicio':fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+        'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
         'tiempo':round(diferencia_en_horas,2), 
         'soc_inicial': soc_inicial,
         'soc_final': soc_final,
