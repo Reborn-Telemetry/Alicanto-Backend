@@ -413,6 +413,7 @@
                                         <th>Soc Inicial</th>
                                         <th>Soc Final</th>
                                         <th>Carga</th>
+                                        <th>Energia</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -421,9 +422,10 @@
                                     <td>{{i.rango}}</td>
                                     <td>{{i.fecha_inicio}}</td>
                                     <td>{{i.fecha_termino}}</td>
-                                    <td>{{i.soc_inicial}}</td>
-                                    <td>{{i.soc_final}}</td>
-                                    <td>{{i.carga}}</td>
+                                    <td>{{i.soc_inicial}}%</td>
+                                    <td>{{i.soc_final}}%</td>
+                                    <td>{{i.carga}}%</td>
+                                    <td>{{i.energia}} KWh</td>
                                 </tr>
                                 {% endfor %}
                             </table>
