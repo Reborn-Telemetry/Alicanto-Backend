@@ -802,9 +802,13 @@ def bus_detail(request, pk):
                 break
 
     co2 = 0  # Valor predeterminado en caso de que bus.lts_odometer sea None
-    if bus.lts_odometer is not None:
-        co2 = (bus.lts_odometer / 0.2857) * 2.68
+    if bus.lts_odometer is not None and bus.bus_series == 'Tricahue':
+        co2 = (bus.lts_odometer * 857) / 1000
         co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
+        co2 = round(co2, 2)
+    else: 
+        co2 = (bus.lts_odometer * 443) / 1000
+        co2 /= 1000
         co2 = round(co2, 2)
 
     fusi_grafico = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
@@ -859,7 +863,6 @@ def bus_detail(request, pk):
         soc_inicial = rango[0].soc_level
         soc_final = rango[-1].soc_level
         carga = soc_final - soc_inicial  # Resta de soc_level
-        print(fecha_inicio, fecha_termino)
 
         fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
         fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
