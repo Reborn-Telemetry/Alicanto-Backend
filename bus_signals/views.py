@@ -844,11 +844,6 @@ def bus_detail(request, pk):
         rangos.append(rango_actual)
 
 # Mostrar los rangos obtenidos
-    for i, rango in enumerate(rangos, 1):
-        print(f"Rango {i}:")
-        for item in rango:
-         print(item.TimeStamp, "-", item.charge_status_value, "-", item.soc_level)  # Ajusta según tus atributos
-         print()
 
     if rango_actual:
      rangos.append(rango_actual)
@@ -862,17 +857,24 @@ def bus_detail(request, pk):
         soc_final = rango[-1].soc_level
         carga = soc_final - soc_inicial  # Resta de soc_level
 
+        fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
+        fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
+    
+    # Calcular la diferencia de tiempo en horas
+        diferencia = fecha_termino_dt - fecha_inicio_dt
+        diferencia_en_horas = diferencia.total_seconds() / 3600
+
         datos_tabla.append({
         'rango': i,
         'fecha_inicio': fecha_inicio,
         'fecha_termino': fecha_termino,
+        'tiempo':round(diferencia_en_horas,2), 
         'soc_inicial': soc_inicial,
         'soc_final': soc_final,
         'carga': carga,
-        'energia': carga * 140, 
+        'energia': (carga * 140)/100, 
     })
     
-    print(datos_tabla)
 
 
   
