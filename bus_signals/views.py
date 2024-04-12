@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
@@ -824,6 +824,59 @@ def bus_detail(request, pk):
         page = paginator.num_pages
         fusi_codes = paginator.page(page)
     
+    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
+    
+    rangos = []
+    rango_actual = []
+
+    for item in charge_data:
+     if item.charge_status_value == 1:
+        rango_actual.append(item)
+     elif item.charge_status_value == 0:
+        if rango_actual:
+            rangos.append(rango_actual.copy())
+            rango_actual.clear()
+        else:
+            continue
+
+# Agregar el último rango si no termina con Estado 0.0
+    if rango_actual:
+        rangos.append(rango_actual)
+
+# Mostrar los rangos obtenidos
+    for i, rango in enumerate(rangos, 1):
+        print(f"Rango {i}:")
+        for item in rango:
+         print(item.TimeStamp, "-", item.charge_status_value, "-", item.soc_level)  # Ajusta según tus atributos
+         print()
+
+    if rango_actual:
+     rangos.append(rango_actual)
+
+# Preparar los datos para la tabla
+    datos_tabla = []
+    for i, rango in enumerate(rangos, 1):
+        fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+        fecha_termino = rango[-1].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+        soc_inicial = rango[0].soc_level
+        soc_final = rango[-1].soc_level
+        carga = soc_final - soc_inicial  # Resta de soc_level
+
+        datos_tabla.append({
+        'rango': i,
+        'fecha_inicio': fecha_inicio,
+        'fecha_termino': fecha_termino,
+        'soc_inicial': soc_inicial,
+        'soc_final': soc_final,
+        'carga': carga,
+    })
+    
+    print(datos_tabla)
+
+
+  
+
+    
 
     context = {'bus': bus,
                'message': messages,
@@ -836,7 +889,8 @@ def bus_detail(request, pk):
                'paginator': paginator,
                'soh': soh,
                'fusi_pie': fusi_grafico2,
-               'isolation': isolation2
+               'isolation': isolation2,
+               'datos_tabla': datos_tabla
                 }
     return render(request, 'bus/bus-profile.html', context)
 
