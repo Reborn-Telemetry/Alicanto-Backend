@@ -180,6 +180,23 @@ class Isolation(models.Model):
         verbose_name_plural = 'Isolations'
         ordering = ['TimeStamp']
 
+class ChargeStatus(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    charge_status_value = models.FloatField('Charge Status Value', blank=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+    soc_level = models.IntegerField('SOC Level', blank=True, null=True)
+
+    charge_status = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.charge_status_value} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'Charge Status'
+        verbose_name_plural = 'Charge Status'
+        ordering = ['TimeStamp']
+
+
 
 class PackTemperature(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
@@ -452,21 +469,6 @@ class BtmsTemperature(models.Model):
         verbose_name_plural = 'BTMS Temperatures'
 
 
-class ChargeStatus(models.Model):
-    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
-    charge_status_value = models.FloatField('Charge Status Value', blank=True)
-    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
-    soc_level = models.IntegerField('SOC Level', blank=True, null=True)
-
-    charge_status = models.Manager()
-
-    def __str__(self):
-        return f'{self.TimeStamp} - {self.charge_status_value} - {self.bus}'
-
-    class Meta:
-        verbose_name = 'Charge Status'
-        verbose_name_plural = 'Charge Status'
-        ordering = ['TimeStamp']
 
 
 class GearStatus(models.Model):
