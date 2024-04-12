@@ -869,6 +869,7 @@ def bus_detail(request, pk):
         'soc_inicial': soc_inicial,
         'soc_final': soc_final,
         'carga': carga,
+        'energia': carga * 140, 
     })
     
     print(datos_tabla)
