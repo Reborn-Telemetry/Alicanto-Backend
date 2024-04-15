@@ -812,7 +812,7 @@ def bus_detail(request, pk):
     fusi_grafico = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     fusi_grafico2 = list(fusi_grafico.values('fusi_code', 'total'))
 
-    isolation  = Isolation.isolation.filter(bus_id=pk).values('isolation_value')[:40]
+    isolation = Isolation.isolation.filter(bus_id=pk).values('isolation_value')[:40]
     isolation2 = list(isolation.values('isolation_value'))
     # paginador fusi
     page = request.GET.get('page')
