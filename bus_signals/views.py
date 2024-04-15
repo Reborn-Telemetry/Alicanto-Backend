@@ -827,7 +827,12 @@ def bus_detail(request, pk):
         page = paginator.num_pages
         fusi_codes = paginator.page(page)
     
+    current_datetime = timezone.now()
+    mes_actual = current_datetime.strftime('%m')
+    
+    
     charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
+    
     
     rangos = []
     rango_actual = []
@@ -882,13 +887,14 @@ def bus_detail(request, pk):
         'carga': carga,
         'energia': (carga * 140)/100, 
     })
+        
     
-
-
-  
-
+        
+    acu = 0
+    for i in datos_tabla:
+        acu = acu + i['energia']
+    acu = round(acu, 2)
     
-
     context = {'bus': bus,
                'message': messages,
                'ot': ot, 
@@ -901,7 +907,8 @@ def bus_detail(request, pk):
                'soh': soh,
                'fusi_pie': fusi_grafico2,
                'isolation': isolation2,
-               'datos_tabla': datos_tabla
+               'datos_tabla': datos_tabla,
+               'acu': acu
                 }
     return render(request, 'bus/bus-profile.html', context)
 
