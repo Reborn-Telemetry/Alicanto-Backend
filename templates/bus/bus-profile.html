@@ -398,12 +398,12 @@
     </div>
 
     <div class="row">
-        <div class="col-12" style="margin-top: 50px">
+        <div class="col-9" style="margin-top: 50px">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Bitacora de Carga</h5>
                 <div class="card-body">
                     <div class="col-12">
-                        <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                        <div class="table-responsive overflow-y-scroll" style="max-height: 420px">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -417,29 +417,58 @@
                                         <th>Energia</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
-                                {% for i in datos_tabla %}
-                                <tr>
-                                    <td>{{i.rango}}</td>
-                                    <td>{{i.fecha_inicio}}</td>
-                                    <td>{{i.fecha_termino}}</td>
-                                    <td>{{i.tiempo}} hrs</td>
-                                    <td>{{i.soc_inicial}}%</td>
-                                    <td>{{i.soc_final}}%</td>
-                                    <td>{{i.carga}}%</td>
-                                    <td>{{i.energia}} kwh</td>
-                                </tr>
-                                {% endfor %}
+                                <tbody>
+                                    {% for i in datos_tabla %}
+                                    <tr>
+                                        <td>{{i.rango}}</td>
+                                        <td>{{i.fecha_inicio}}</td>
+                                        <td>{{i.fecha_termino}}</td>
+                                        <td>{{i.tiempo}} hrs</td>
+                                        <td>{{i.soc_inicial}}%</td>
+                                        <td>{{i.soc_final}}%</td>
+                                        <td>{{i.carga}}%</td>
+                                        <td>{{i.energia}} kwh</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div style="margin-top: 50px" class="col-3">
+            <div class="card custom-card">
+                <h5 class="card-header custom-header">Energia Cargada</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Mes</th>
+                                        <th>Energia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in monthly_totals %}
+                                    <tr>
+                                        <td>{{i.month}}</td>
+                                        <td>{{i.energy}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    Total Energia: {{acu}} kwh
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
-        <div class="col-9" style="margin-top: 50px">
+        <div class="col-12" style="margin-top: 50px">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Bitacora Fusi Bus</h5>
                 <div class="card-body">
@@ -495,12 +524,6 @@
                         {% endif %}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div style="margin-top: 50px" class="col-3">
-            <div class="card custom-card">
-                <h5 class="card-header custom-header">Energia Cargada</h5>
-                <div class="card-body">{{acu}} kwh</div>
             </div>
         </div>
     </div>
