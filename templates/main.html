@@ -52,7 +52,122 @@
             {% endfor %}
         </div>
         {% endif %}
-        <div style="height: 100vh" class="container-fluid">
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+                <div class="d-flex flex-column flex-shrink-0 back" style="width: 5.5rem">
+                    <a
+                        href="/"
+                        class="d-block p-3 link-dark text-decoration-none"
+                        title="Icon-only"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                    >
+                        <img class="rounded-circle" alt="logoReborn" src="{% static "img/REM.png" %}"
+                        style="width:30px">
+                    </a>
+                    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+                        <li>
+                            <a
+                                href="{% url 'dashboard' %}"
+                                class="nav-link py-4"
+                                title="Dashboard"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-home-alt-2 bi"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'reports_page' %}"
+                                class="nav-link py-4"
+                                title="Reportes"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-pie-chart-alt-2 bi"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'warnings' %}"
+                                class="nav-link py-4"
+                                title="Alertas"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-error-circle bi"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'bus_list' %}"
+                                class="nav-link py-4"
+                                title="Flota"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-bus bi"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'dic_fusi' %}"
+                                class="nav-link py-4"
+                                title="Diccionario Fusi"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-book bi"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href=""
+                                class="nav-link py-4"
+                                title="Programacion Buses"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-time bi"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'work_order_form' %}"
+                                class="nav-link py-4"
+                                title="Crear Parte"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="right"
+                            >
+                                <i class="bx bx-edit-alt bi"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="dropdown">
+                        <a
+                            href="#"
+                            class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle"
+                            id="dropdownUser3"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <img
+                                src="https://github.com/mdo.png"
+                                alt="mdo"
+                                width="24"
+                                height="24"
+                                class="rounded-circle"
+                            />
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--<div style="height: 100vh" class="container-fluid">
             <div class="row flex-nowrap">
                 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
                     <div
@@ -161,7 +276,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="col py-3">
                     <h1 class="header">{% block header %}{% endblock header %}</h1>
                     {% block content %}{% endblock content %}
