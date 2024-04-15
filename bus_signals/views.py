@@ -827,23 +827,27 @@ def bus_detail(request, pk):
         page = paginator.num_pages
         fusi_codes = paginator.page(page)
     
+    
+    
+    
+    
+    
+
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%m')
-    
-    
+
     charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
-    
-    
+
     rangos = []
     rango_actual = []
 
     for item in charge_data:
-     if item.charge_status_value == 1:
-        rango_actual.append(item)
-     elif item.charge_status_value == 0:
-        if rango_actual:
-            rangos.append(rango_actual.copy())
-            rango_actual.clear()
+        if item.charge_status_value == 1:
+            rango_actual.append(item)
+        elif item.charge_status_value == 0:
+            if rango_actual:
+                rangos.append(rango_actual.copy())
+                rango_actual.clear()
         else:
             continue
 
@@ -851,14 +855,9 @@ def bus_detail(request, pk):
     if rango_actual:
         rangos.append(rango_actual)
 
-# Mostrar los rangos obtenidos
-
-    if rango_actual:
-     rangos.append(rango_actual)
-
     santiago_tz = pytz.timezone('Chile/Continental')
 
-# Preparar los datos para la tabla
+# Preparar los datos para la tabla y calcular acumulados
     datos_tabla = []
     for i, rango in enumerate(rangos, 1):
         fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
@@ -872,28 +871,43 @@ def bus_detail(request, pk):
 
         fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
         fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
-    
+
     # Calcular la diferencia de tiempo en horas
         diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
         diferencia_en_horas = diferencia.total_seconds() / 3600
 
         datos_tabla.append({
-        'rango': i,
-        'fecha_inicio':fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
-        'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
-        'tiempo':round(diferencia_en_horas,2), 
-        'soc_inicial': soc_inicial,
-        'soc_final': soc_final,
-        'carga': carga,
-        'energia': (carga * 140)/100, 
-    })
-        
+            'rango': i,
+            'fecha_inicio': fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+            'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+            'tiempo': round(diferencia_en_horas, 2),
+            'soc_inicial': soc_inicial,
+            'soc_final': soc_final,
+            'carga': carga,
+            'energia': (carga * 140) / 100,
+        })
+
+    acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)}  
+
     
-        
-    acu = 0
     for i in datos_tabla:
-        acu = acu + i['energia']
-    acu = round(acu, 2)
+        fecha_inicio = i['fecha_inicio']
+
+    # Assuming fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
+        try:
+            month = fecha_inicio[5:7]  # Extract month as a string
+            acumulado_mensual[month] += i['energia']
+        except ValueError:
+        # Handle invalid month format (e.g., log or skip entry)
+            print(f"Invalid month format found in fecha_inicio: {fecha_inicio}")
+            pass
+
+    monthly_totals = []
+    for month, energy in acumulado_mensual.items():
+        monthly_totals.append({'month': month, 'energy': round(energy, 2)})
+
+    print(monthly_totals)
+    acu = round(sum(i['energia'] for i in datos_tabla), 2)
     
     context = {'bus': bus,
                'message': messages,
@@ -908,7 +922,8 @@ def bus_detail(request, pk):
                'fusi_pie': fusi_grafico2,
                'isolation': isolation2,
                'datos_tabla': datos_tabla,
-               'acu': acu
+               'acu': acu,
+               'monthly_totals': monthly_totals,
                 }
     return render(request, 'bus/bus-profile.html', context)
 
