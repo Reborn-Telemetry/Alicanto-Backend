@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12">
+        <div class="col-sm-12 col-lg-12">
             <div class="option-button">
                 {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
                 <a href="{% url 'update_bus' bus.id %}"
@@ -32,7 +32,7 @@
             </div>
         </div>
         <!--inicio tarjeta bus principal-->
-        <div class="col-5">
+        <div class="col-sm-12 col-lg-5">
             <div class="card custom-card">
                 <img src="{{bus.bus_img.url}}" class="card-img-top" alt="..." />
                 <div class="card-body">
@@ -111,10 +111,10 @@
             </div>
         </div>
         <!--fin tarjeta bus principal-->
-        <div class="col-4">
+        <div class="col-sm-12 col-lg-4">
             <div class="card custom-card">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-sm-6 col-lg-6">
                         <div style="box-shadow: none" class="card custom-card">
                             <div class="card-body">
                                 <h5 class="card-title">Bateria Actual</h5>
@@ -128,7 +128,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6 col-lg-6">
                         <div style="box-shadow: none" class="card custom-card">
                             <div class="card-body">
                                 <h5 class="card-title">SOH</h5>
@@ -222,7 +222,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-sm-12 col-lg-3">
             <div class="card mb-3 custom-card">
                 <div class="row g-0">
                     <div class="col-md-4 leaf">
@@ -265,7 +265,7 @@
         </div>
     </div>
     <div style="margin-top: 20px" class="row">
-        <div class="col-4">
+        <div class="col-sm-12 col-lg-4">
             <div class="card mb-3 custom-card">
                 <div class="row g-0">
                     <div class="col-md-4 image-icon">
@@ -283,7 +283,7 @@
             </div>
         </div>
         <!---->
-        <div class="col-4">
+        <div class="col-sm-12 col-lg-4">
             <div class="card mb-3 custom-card">
                 <div class="row g-0">
                     <div class="col-md-4 image-icon">
@@ -294,14 +294,14 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Fusi historico</h5>
-                            <p class="card-text">descargar informe fusi hisotorico</p>
+                            <p class="card-text">descargar informe fusi historico</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!---->
-        <div class="col-4">
+        <div class="col-sm-12 col-4">
             <div class="card mb-3 custom-card">
                 <div class="row g-0">
                     <div class="col-md-4 image-icon">
@@ -320,7 +320,7 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="col-6" style="margin-top: 50px">
+        <div class="col-sm-12 col-6" style="margin-top: 50px">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Grafico Fusi Mes Actual</h5>
                 <div class="card-body">
@@ -330,7 +330,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6" style="margin-top: 50px">
+        <div class="col-sm-12 col-6" style="margin-top: 50px">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Aislacion Bus</h5>
                 <div class="card-body">
