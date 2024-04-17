@@ -1,6 +1,9 @@
 {% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}{% endblock header %}{% block content %}
 
 <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 
 <div class="container">
     <div class="row">
@@ -41,7 +44,7 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-leaf icon-alert"></i></div>
+                        <div class="icon-card"><i style="color: green" class="bx bx-leaf icon-alert"></i></div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -57,7 +60,9 @@
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-check-circle icon-alert"></i></div>
+                        <div class="icon-card">
+                            <i style="color: #2c9b42" class="bx bx-check-circle icon-alert"></i>
+                        </div>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -70,234 +75,312 @@
         </div>
         <!--fin perimera linea tarjetas-->
 
-        <div class="col-3" style="margin-top: 20px">
-            <a class="nav-link" href="{% url 'disponibilidad-flota' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="icon-card">
-                                <i class="bx bx-x-circle icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Buses FS</h5>
-                                <p class="card-text">
-                                    {{cant_fs}} Buses
-
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-3" style="margin-top: 20px">
-            <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="icon-card">
-                                <i class="bx bx-wifi-off icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Sin Conexion</h5>
-                                <p class="card-text">
-                                    {{no_update}} Buses
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-3" style="margin-top: 20px">
-            <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="icon-card">
-                                <i class="bx bxs-battery-low icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">SOC Bajo</h5>
-                                <p class="card-text">
-                                    {{cant_low_50_soc}} Buses
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-3" style="margin-top: 20px">
-            <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="icon-card">
-                                <i class="bx bx-history icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Subida Pendiente</h5>
-                                <p class="card-text">
-                                    {{delayed}} Buses
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <!--iniciotabla actualizaciones de buses -->
-
-        <div class="col-8" style="margin-top: 50px">
+        <div class="col-6" style="margin-top: 30px">
             <div class="card">
-                <h5 class="card-header">Actualizaciones Buses</h5>
+                <h5 class="card-header">Informe Fusi Flota</h5>
                 <div class="card-body">
-                    <div class="col-12 text-center">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Bus</th>
-                                        <th>Carga</th>
-                                        <th>Kilometraje</th>
-                                        <th>24 Volts</th>
-                                        <th>Fusi</th>
-                                        <th>Actualizacion</th>
-                                        <th>Cargando</th>
-                                        <th>Perfil</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider">
-                                    {% for i in bus %}
-                                    <tr>
-                                        <td class="busname">{{i.bus_name}}</td>
-                                        <!--Inicio soc-->
-                                        <td>
-                                            {% if i.lts_soc > 60 %}
-                                            <span class="badge text-bg-success">{{ i.lts_soc }} %</span>
-
-                                            {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                                            <span class="badge text-bg-warning">{{ i.lts_soc }} %</span>
-
-                                            {% elif i.lts_soc <= 40 %}
-                                            <span class="badge text-bg-danger">{{ i.lts_soc }} %</span>
-                                            {% else %} {{ i.lts_soc }} {% endif %}
-                                        </td>
-                                        <!--Fin soc-->
-                                        <!--Inicio odometro-->
-                                        <td>
-                                            <span class="texticon">{{ i.lts_odometer|intcomma }} Km.</span>
-                                        </td>
-                                        <!--Fin odometro-->
-                                        <!--Inicio voltaje-->
-                                        <td>
-                                            {% if i.lts_24_volt >= 22 %}
-                                            <div class="battok">
-                                                <span>{{ i.lts_24_volt }}</span>
-                                            </div>
-                                            {% elif i.lts_24_volt >= 19 %}
-                                            <div class="battmed">
-                                                <span>{{ i.lts_24_volt }}</span>
-                                            </div>
-                                            {% else %}
-                                            <div class="batlow">
-                                                <span>{{ i.lts_24_volt }}</span>
-                                            </div>
-                                            {% endif %}
-                                        </td>
-                                        <!--Fin voltaje-->
-                                        <td>
-                                            <div class="fusi">
-                                                {% if i.lts_fusi == 0.0 %}
-                                                <i class="bx bx-check-circle ok"></i>
-                                                {% else %}
-                                                <i class="bx bx-info-circle notok"></i>
-                                                {{i.lts_fusi}} {% endif %}
-                                            </div>
-                                        </td>
-                                        <!--Inicio timestamp-->
-                                        <td>
-                                            <div class="timestamp">{{i.lts_update|date:"d-m-Y H:m"}}</div>
-                                        </td>
-                                        <!--Fin timestamp-->
-                                        <!--Inicio cargando-->
-                                        <td>
-                                            {% if i.charging == 1 %}
-                                            <div class="charge-container">
-                                                <div
-                                                    style="width: 2.3rem; height: 2.3rem; color: yellowgreen"
-                                                    class="spinner-border"
-                                                    role="status"
-                                                >
-                                                    <span class="visually-hidden">Loading...</span>
-                                                </div>
-                                                <i class="bx bxs-battery-charging charging"></i>
-                                            </div>
-
-                                            {% endif %}
-                                        </td>
-                                        <!--Fin cargando-->
-                                        <!--Inicio perfil-->
-                                        <td>
-                                            <a href="{% url 'bus_detail' i.id %}">
-                                                <button type="button" class="btn btn-outline-primary button-pro">
-                                                    <div class="container-button">
-                                                        Perfil <i class="bx bx-right-arrow-circle profile"></i>
-                                                    </div>
-                                                </button>
-                                            </a>
-                                        </td>
-                                        <!--Fin perfil-->
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {% if bus.has_other_pages %}
-                        <nav class="navpag" aria-label="Page navigation example">
-                            <ul class="pagination justify-content-center">
-                                {% if bus.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
-                                </li>
-                                {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
-                                <li class="page-item active">
-                                    <a class="page-link" href="?page={{page}}">{{page}}</a>
-                                </li>
-                                {% else %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{page}}">{{page}}</a>
-                                </li>
-                                {% endif %} {% endfor %} {% if bus.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                        {% endif %}
+                    <div class="col-12">
+                        <canvas id="myPieChart2"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="col-6" style="margin-top: 30px">
+            <div class="card">
+                <h5 class="card-header">Co2 evitado Mensual</h5>
+                <div class="card-body">
+                    <div class="col-12"></div>
+                </div>
+            </div>
+        </div>
 
-    {% endblock content %}
+        <!--iniciotabla actualizaciones de buses -->
+        <div style="margin-top: 30px" class="row">
+            <div class="col-9">
+                <div class="card">
+                    <h5 class="card-header">Actualizaciones Buses</h5>
+                    <div class="card-body">
+                        <div class="col-12 text-center">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bus</th>
+                                            <th>Carga</th>
+                                            <th>Kilometraje</th>
+                                            <th>24 Volts</th>
+                                            <th>Fusi</th>
+                                            <th>Actualizacion</th>
+                                            <th>Cargando</th>
+                                            <th>Perfil</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        {% for i in bus %}
+                                        <tr>
+                                            <td class="busname">{{i.bus_name}}</td>
+                                            <!--Inicio soc-->
+                                            <td>
+                                                {% if i.lts_soc > 60 %}
+                                                <div class="soc-ok">{{ i.lts_soc }}%</div>
+
+                                                {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                                <div class="soc-med">{{ i.lts_soc }}%</div>
+
+                                                {% elif i.lts_soc <= 40 %}
+                                                <div class="soc-no">{{ i.lts_soc }}%</div>
+                                                {% else %} {{ i.lts_soc }} {% endif %}
+                                            </td>
+                                            <!--Fin soc-->
+                                            <!--Inicio odometro-->
+                                            <td>
+                                                <span class="texticon">{{ i.lts_odometer|intcomma }} Km.</span>
+                                            </td>
+                                            <!--Fin odometro-->
+                                            <!--Inicio voltaje-->
+                                            <td>
+                                                {% if i.lts_24_volt >= 22 %}
+                                                <div class="battok">
+                                                    <span>{{ i.lts_24_volt }}</span>
+                                                </div>
+                                                {% elif i.lts_24_volt >= 19 %}
+                                                <div class="battmed">
+                                                    <span>{{ i.lts_24_volt }}</span>
+                                                </div>
+                                                {% else %}
+                                                <div class="batlow">
+                                                    <span>{{ i.lts_24_volt }}</span>
+                                                </div>
+                                                {% endif %}
+                                            </td>
+                                            <!--Fin voltaje-->
+                                            <td>
+                                                <div class="fusi">
+                                                    {% if i.lts_fusi == 0.0 %}
+                                                    <i class="bx bx-check-circle ok"></i>
+                                                    {% else %}
+                                                    <i class="bx bx-info-circle notok"></i>
+                                                    {{i.lts_fusi}} {% endif %}
+                                                </div>
+                                            </td>
+                                            <!--Inicio timestamp-->
+                                            <td>
+                                                <div class="timestamp">{{i.lts_update|date:"d-m-Y H:m"}}</div>
+                                            </td>
+                                            <!--Fin timestamp-->
+                                            <!--Inicio cargando-->
+                                            <td>
+                                                {% if i.charging == 1 %}
+                                                <div class="charge-container">
+                                                    <div
+                                                        style="
+                                                            width: 38px;
+                                                            height: 38px;
+                                                            color: #2c9b42;
+                                                            --bs-spinner-border-width: 3px;
+                                                        "
+                                                        class="spinner-border"
+                                                        role="status"
+                                                    >
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    <i class="bx bxs-battery-charging charging"></i>
+                                                </div>
+
+                                                {% endif %}
+                                            </td>
+                                            <!--Fin cargando-->
+                                            <!--Inicio perfil-->
+                                            <td>
+                                                <a href="{% url 'bus_detail' i.id %}">
+                                                    <button type="button" class="btn btn-outline-info button-pro">
+                                                        <div class="container-button">
+                                                            <i class="bx bx-chevron-right"></i>
+                                                        </div>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <!--Fin perfil-->
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {% if bus.has_other_pages %}
+                            <nav class="navpag" aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    {% if bus.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{bus.previous_page_number}}">Anterior</a>
+                                    </li>
+                                    {% endif %} {% for page in paginator.page_range %} {% if page == bus.number %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                    </li>
+                                    {% endif %} {% endfor %} {% if bus.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{bus.next_page_number}}">Siguiente</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--fin tabla actualizaciones de buses -->
+            <div class="col-3">
+                <a class="nav-link" href="{% url 'disponibilidad-flota' %}">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="icon-card">
+                                    <i style="color: #d80000" class="bx bx-x-circle icon-alert"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Buses FS</h5>
+                                    <p class="card-text">
+                                        {{cant_fs}} Buses
+
+                                        <i class="bx bx-chevron-right indicator"></i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!--fin tarjeta -->
+                <a style="margin-top: 30px" class="nav-link" href="#">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="icon-card">
+                                    <i class="bx bx-wifi-off icon-alert"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Buses Cargando</h5>
+                                    <p class="card-text">
+                                        <i class="bx bx-chevron-right indicator"></i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!--fin tarjeta -->
+                <a style="margin-top: 30px" class="nav-link" href="{% url 'warnings' %}">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="icon-card">
+                                    <i style="color: #eabb00" class="bx bxs-battery-low icon-alert"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">SOC Bajo</h5>
+                                    <p class="card-text">
+                                        {{cant_low_50_soc}} Buses
+                                        <i class="bx bx-chevron-right indicator"></i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!--fin tarjeta -->
+                <a style="margin-top: 30px" class="nav-link" href="{% url 'warnings' %}">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="icon-card">
+                                    <i class="bx bx-history icon-alert"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Subida Pendiente</h5>
+                                    <p class="card-text">
+                                        {{delayed}} Buses
+                                        <i class="bx bx-chevron-right indicator"></i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!--fin-->
+                <a style="margin-top: 30px" class="nav-link" href="#">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="icon-card">
+                                    <i class="bx bx-history icon-alert"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Energia Cargada</h5>
+                                    <p class="card-text">
+                                        <i class="bx bx-chevron-right indicator"></i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtén los datos de tu vista Django
+        const data = {{ fusi_grafico | safe }};
+        const dataToShow = data.slice(0, 10);
+
+        // Crea los arrays de labels y values solo con los primeros 20 elementos
+        const labels = dataToShow.map((item) => item.fusi_code);
+        const values = dataToShow.map((item) => item.total);
+
+        // Configura el pie chart
+        const ctx = document.getElementById("myPieChart2").getContext("2d");
+        const myPieChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        data: values,
+                        backgroundColor: [
+
+                            "rgba(54, 162, 235, 0.7)",
+
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true, // Oculta la leyenda
+                },
+            },
+        });
+    });
+</script>
+{% endblock content %}
