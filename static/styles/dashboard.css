@@ -12,8 +12,9 @@
     margin: auto;
     position: relative; /* Agrega posición relativa para que funcione el centrado vertical */
     top: 50%; /* Mueve el círculo hacia abajo un 50% de la altura de su contenedor */
-    transform: translateY(-50%); /* Vuelve a subir el círculo un 50% de su propia altura */
+    transform: translateY(-20%); /* Vuelve a subir el círculo un 50% de su propia altura */
 }
+
 .card {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border: none;
@@ -50,14 +51,6 @@
     font-weight: 400;
 }
 
-.timestamp {
-    font-size: 15px;
-    font-weight: 400;
-    max-width: 180px;
-    display: flex;
-    text-align: center;
-}
-
 .card-header {
     --bs-card-cap-color: #0f8bfd;
     font-weight: 700;
@@ -82,6 +75,11 @@ td .fusi {
     gap: 5px;
 }
 
+.timestamp {
+    font-size: 15px;
+    font-weight: 400;
+}
+
 td .volt {
     display: flex;
     flex-direction: column;
@@ -99,8 +97,8 @@ td .volt {
 }
 
 .charging {
-    color: #2c9b42;
-    font-size: 2rem;
+    color: yellowgreen;
+    font-size: 1.6rem;
 }
 
 .battok span {
@@ -116,6 +114,17 @@ td .volt {
 .batlow span {
     color: #d52525;
     font-size: 1rem;
+}
+
+.charge-container {
+    position: relative;
+}
+
+.charging {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .navpag {
