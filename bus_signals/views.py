@@ -282,7 +282,7 @@ def dashboard(request):
     operacion = total_flota - cant_fs
 
     page = request.GET.get('page', 1)
-    results = 10
+    results = 7
     paginator = Paginator(complete_table, results)
     try:
         complete_table = paginator.page(page)
@@ -292,6 +292,11 @@ def dashboard(request):
     except EmptyPage:
         page = paginator.num_pages
         complete_table = paginator.page(page)
+
+    current_month = timezone.now().month
+    distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
+    distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
+    fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
 
 
 
@@ -308,7 +313,8 @@ def dashboard(request):
         'delayed': delayed,
         'paginator': paginator,
         'cant_fs': cant_fs,
-        'co2_total': co2_total
+        'co2_total': co2_total,
+        'fusi_grafico': fusi_grafico,
     }
     return render(request, 'pages/dashboard.html', context)
 
