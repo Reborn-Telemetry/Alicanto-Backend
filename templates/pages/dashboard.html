@@ -164,101 +164,111 @@
 
         <!--iniciotabla actualizaciones de buses -->
 
-        <div class="col-12" style="margin-top: 50px">
+        <div class="col-8" style="margin-top: 50px">
             <div class="card">
                 <h5 class="card-header">Actualizaciones Buses</h5>
                 <div class="card-body">
-                    <div class="col-12">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Bus</th>
-                                    <th>Carga</th>
-                                    <th>Kilometraje</th>
-                                    <th>24 Volts</th>
-                                    <th>Fusi</th>
-                                    <th>Actualizacion</th>
-                                    <th>Cargando</th>
-                                    <th>Perfil</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                {% for i in bus %}
-                                <tr>
-                                    <td class="busname">{{i.bus_name}}</td>
-                                    <!--Inicio soc-->
-                                    <td>
-                                        {% if i.lts_soc > 60 %}
-                                        <span class="badge text-bg-success">{{ i.lts_soc }} %</span>
+                    <div class="col-12 text-center">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Bus</th>
+                                        <th>Carga</th>
+                                        <th>Kilometraje</th>
+                                        <th>24 Volts</th>
+                                        <th>Fusi</th>
+                                        <th>Actualizacion</th>
+                                        <th>Cargando</th>
+                                        <th>Perfil</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for i in bus %}
+                                    <tr>
+                                        <td class="busname">{{i.bus_name}}</td>
+                                        <!--Inicio soc-->
+                                        <td>
+                                            {% if i.lts_soc > 60 %}
+                                            <span class="badge text-bg-success">{{ i.lts_soc }} %</span>
 
-                                        {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                                        <span class="badge text-bg-warning">{{ i.lts_soc }} %</span>
+                                            {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                            <span class="badge text-bg-warning">{{ i.lts_soc }} %</span>
 
-                                        {% elif i.lts_soc <= 40 %}
-                                        <span class="badge text-bg-danger">{{ i.lts_soc }} %</span>
-                                        {% else %} {{ i.lts_soc }} {% endif %}
-                                    </td>
-                                    <!--Fin soc-->
-                                    <!--Inicio odometro-->
-                                    <td>
-                                        <span class="texticon" style="display: inline-block; vertical-align: middle"
-                                            >{{ i.lts_odometer|intcomma }} Km.</span
-                                        >
-                                    </td>
-                                    <!--Fin odometro-->
-                                    <!--Inicio voltaje-->
-                                    <td>
-                                        {% if i.lts_24_volt >= 22 %}
-                                        <div class="battok">
-                                            <span>{{ i.lts_24_volt }}</span>
-                                        </div>
-                                        {% elif i.lts_24_volt >= 19 %}
-                                        <div class="battmed">
-                                            <span>{{ i.lts_24_volt }}</span>
-                                        </div>
-                                        {% else %}
-                                        <div class="batlow">
-                                            <span>{{ i.lts_24_volt }}</span>
-                                        </div>
-                                        {% endif %}
-                                    </td>
-                                    <!--Fin voltaje-->
-                                    <td>
-                                        <div class="fusi">
-                                            {% if i.lts_fusi == 0.0 %}
-                                            <i class="bx bx-check-circle ok"></i>
+                                            {% elif i.lts_soc <= 40 %}
+                                            <span class="badge text-bg-danger">{{ i.lts_soc }} %</span>
+                                            {% else %} {{ i.lts_soc }} {% endif %}
+                                        </td>
+                                        <!--Fin soc-->
+                                        <!--Inicio odometro-->
+                                        <td>
+                                            <span class="texticon">{{ i.lts_odometer|intcomma }} Km.</span>
+                                        </td>
+                                        <!--Fin odometro-->
+                                        <!--Inicio voltaje-->
+                                        <td>
+                                            {% if i.lts_24_volt >= 22 %}
+                                            <div class="battok">
+                                                <span>{{ i.lts_24_volt }}</span>
+                                            </div>
+                                            {% elif i.lts_24_volt >= 19 %}
+                                            <div class="battmed">
+                                                <span>{{ i.lts_24_volt }}</span>
+                                            </div>
                                             {% else %}
-                                            <i class="bx bx-info-circle notok"></i>
-                                            {{i.lts_fusi}} {% endif %}
-                                        </div>
-                                    </td>
-                                    <!--Inicio timestamp-->
-                                    <td>
-                                        <div class="timestamp">{{i.lts_update|date:"d-m-Y H:m"}}</div>
-                                    </td>
-                                    <!--Fin timestamp-->
-                                    <!--Inicio cargando-->
-                                    <td>
-                                        {% if i.charging == 1 %}
-                                        <i class="bx bxs-battery-charging charging"></i>
-                                        {% endif %}
-                                    </td>
-                                    <!--Fin cargando-->
-                                    <!--Inicio perfil-->
-                                    <td>
-                                        <a href="{% url 'bus_detail' i.id %}">
-                                            <button type="button" class="btn btn-outline-info button-pro">
-                                                <div class="container-button">
-                                                    Perfil <i class="bx bx-right-arrow-circle profile"></i>
+                                            <div class="batlow">
+                                                <span>{{ i.lts_24_volt }}</span>
+                                            </div>
+                                            {% endif %}
+                                        </td>
+                                        <!--Fin voltaje-->
+                                        <td>
+                                            <div class="fusi">
+                                                {% if i.lts_fusi == 0.0 %}
+                                                <i class="bx bx-check-circle ok"></i>
+                                                {% else %}
+                                                <i class="bx bx-info-circle notok"></i>
+                                                {{i.lts_fusi}} {% endif %}
+                                            </div>
+                                        </td>
+                                        <!--Inicio timestamp-->
+                                        <td>
+                                            <div class="timestamp">{{i.lts_update|date:"d-m-Y H:m"}}</div>
+                                        </td>
+                                        <!--Fin timestamp-->
+                                        <!--Inicio cargando-->
+                                        <td>
+                                            {% if i.charging == 1 %}
+                                            <div class="charge-container">
+                                                <div
+                                                    style="width: 2.5rem; height: 2.5rem; color: yellowgreen"
+                                                    class="spinner-border"
+                                                    role="status"
+                                                >
+                                                    <span class="visually-hidden">Loading...</span>
                                                 </div>
-                                            </button>
-                                        </a>
-                                    </td>
-                                    <!--Fin perfil-->
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                                <i class="bx bxs-battery-charging charging"></i>
+                                            </div>
+
+                                            {% endif %}
+                                        </td>
+                                        <!--Fin cargando-->
+                                        <!--Inicio perfil-->
+                                        <td>
+                                            <a href="{% url 'bus_detail' i.id %}">
+                                                <button type="button" class="btn btn-outline-primary button-pro">
+                                                    <div class="container-button">
+                                                        Perfil <i class="bx bx-right-arrow-circle profile"></i>
+                                                    </div>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <!--Fin perfil-->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
                         {% if bus.has_other_pages %}
                         <nav class="navpag" aria-label="Page navigation example">
