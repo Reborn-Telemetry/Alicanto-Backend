@@ -12,7 +12,7 @@
     margin: auto;
     position: relative; /* Agrega posición relativa para que funcione el centrado vertical */
     top: 50%; /* Mueve el círculo hacia abajo un 50% de la altura de su contenedor */
-    transform: translateY(-20%); /* Vuelve a subir el círculo un 50% de su propia altura */
+    transform: translateY(-50%); /* Vuelve a subir el círculo un 50% de su propia altura */
 }
 
 .card {
