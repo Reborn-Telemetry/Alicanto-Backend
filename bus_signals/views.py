@@ -401,7 +401,7 @@ def bus_detail(request, pk):
     for month, energy in acumulado_mensual.items():
         monthly_totals.append({'month': month, 'energy': round(energy, 2)})
 
-    print(monthly_totals)
+    
     acu = round(sum(i['energia'] for i in datos_tabla), 2)
     
     context_perfil = {'bus': bus,
@@ -579,7 +579,7 @@ def dashboard(request):
         
         acu = round(sum(i['energia'] for i in datos_tabla), 2)
         energia_anual += acu
-        energia_anual = round(energia_anual, 2)
+        energia_anual = round(energia_anual)
     
 
     
