@@ -301,32 +301,23 @@ def dashboard(request):
     fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
 
     total_per_month = defaultdict(int)
+    charging = 0
 
 # Iterar sobre todos los buses y sus datos de odómetro
     for bus in Bus.bus.all():
     # Obtener el dict de máximo odómetro por mes para el bus actual
         max_values_per_month = get_max_odometer_per_month(bus.id)
-
+        if bus.charging == 1:
+            charging += 1
     # Iterar sobre cada mes en el dict y sumar el valor al total correspondiente
         for month, max_value in max_values_per_month.items():
          total_per_month[month] += max_value
+    print(charging)
     
     linechart_data = []
     for month, total in total_per_month.items():
         linechart_data.append({'month': month, 'total': round(total * 670 / 10000)})
     
-  
-    
-
-
-
-
-
-
-
-
-
-
 
     context = {
        
@@ -344,6 +335,7 @@ def dashboard(request):
         'co2_total': co2_total,
         'fusi_grafico': fusi_grafico,
         'linechart_data': linechart_data,
+        'charging': charging,
     }
     return render(request, 'pages/dashboard.html', context)
 
