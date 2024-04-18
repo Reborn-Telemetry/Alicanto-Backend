@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
-from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km
+from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q, Count, Sum, Max
+from django.db.models import Q, Count, Sum, Max, F, Avg
 # pdf imports 
 from django.http import FileResponse, HttpResponse
 import io
@@ -23,9 +23,11 @@ import xlwt
 from io import BytesIO
 # manejo errores paginador
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models.functions import ExtractMonth
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 import pytz
+from collections import defaultdict
 
 
 filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
@@ -298,6 +300,32 @@ def dashboard(request):
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
     fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
 
+    total_per_month = defaultdict(int)
+
+# Iterar sobre todos los buses y sus datos de odómetro
+    for bus in Bus.bus.all():
+    # Obtener el dict de máximo odómetro por mes para el bus actual
+        max_values_per_month = get_max_odometer_per_month(bus.id)
+
+    # Iterar sobre cada mes en el dict y sumar el valor al total correspondiente
+        for month, max_value in max_values_per_month.items():
+         total_per_month[month] += max_value
+    
+    linechart_data = []
+    for month, total in total_per_month.items():
+        linechart_data.append({'month': month, 'total': round(total * 670 / 10000)})
+    
+  
+    
+
+
+
+
+
+
+
+
+
 
 
     context = {
@@ -315,6 +343,7 @@ def dashboard(request):
         'cant_fs': cant_fs,
         'co2_total': co2_total,
         'fusi_grafico': fusi_grafico,
+        'linechart_data': linechart_data,
     }
     return render(request, 'pages/dashboard.html', context)
 

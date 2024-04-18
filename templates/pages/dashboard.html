@@ -78,7 +78,7 @@
         <div class="col-6" style="margin-top: 30px">
             <div class="card">
                 <h5 class="card-header">Informe Fusi Flota</h5>
-                <div class="card-body">
+                <div class="card-body" style="height: 200px">
                     <div class="col-12">
                         <canvas id="myPieChart2"></canvas>
                     </div>
@@ -86,14 +86,13 @@
             </div>
         </div>
         <div class="col-6" style="margin-top: 30px">
-            <div class="card">
+            <div class="card d-flex">
                 <h5 class="card-header">Co2 evitado Mensual</h5>
-                <div class="card-body">
-                    <div class="col-12"></div>
+                <div class="card-body" style="height: 200px">
+                    <canvas id="co2"></canvas>
                 </div>
             </div>
         </div>
-
         <!--iniciotabla actualizaciones de buses -->
         <div style="margin-top: 30px" class="row">
             <div class="col-9">
@@ -363,10 +362,13 @@
                 labels: labels,
                 datasets: [
                     {
+                        label:'codigos fusi',
                         data: values,
                         backgroundColor: [
-
+                            "#A155B9",
                             "rgba(54, 162, 235, 0.7)",
+
+
 
                         ],
                         borderWidth: 1,
@@ -380,6 +382,40 @@
                     display: true, // Oculta la leyenda
                 },
             },
+        });
+    });
+</script>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtén los datos de tu vista Django
+            const data = {{ linechart_data | safe }};
+
+
+            // Crea los arrays de labels y values solo con los primeros 20 elementos
+            const labels = data.map((item) => item.month);
+            const values = data.map((item) => item.total);
+
+            // Configura el pie chart
+            const ctx = document.getElementById("co2").getContext("2d");
+        const myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Valores mes en toneladas',
+                    data: values,
+                    fill: false,
+                    borderColor: '#A155B9',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
         });
     });
 </script>

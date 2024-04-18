@@ -1,4 +1,7 @@
 import psycopg2
+from django.db.models import Max
+from django.db.models.functions import ExtractMonth
+from bus_signals.models import Odometer
 
 dbname = 'alicanto-db-dev'
 user = 'postgres'
@@ -385,6 +388,20 @@ GROUP BY
     cursor.close()
     connection.close()
     return results
+
+
+def get_max_odometer_per_month(bus_id):
+    max_values_per_month = (
+        Odometer.odometer
+        .filter(bus_id=bus_id)
+        .annotate(month=ExtractMonth('TimeStamp'))
+        .values('month')
+        .annotate(max_odometer_value=Max('odometer_value'))
+        .order_by('month')  # Ordenar por mes
+    )
+
+    max_values_dict = {entry['month']: entry['max_odometer_value'] for entry in max_values_per_month}
+    return max_values_dict
 
 
 
