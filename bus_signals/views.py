@@ -241,6 +241,191 @@ def bus_list(request):
 
 
 @login_required(login_url='login')
+def bus_detail(request, pk):
+    montly_result = monthly_bus_km(pk)
+    results = daily_bus_km(pk)
+    months_dict = {
+        1: 'Enero',
+        2: 'Febrero',
+        3: 'Marzo',
+        4: 'Abril',
+        5: 'Mayo',
+        6: 'Junio',
+        7: 'Julio',
+        8: 'Agosto',
+        9: 'Septiembre',
+        10: 'Octubre',
+        11: 'Noviembre',
+        12: 'Diciembre',
+    }
+
+    result_data = []
+
+    # Iterar sobre el rango correcto para cada mes
+    if montly_result and len(montly_result[0]) > 0:
+      for i in range(1, len(montly_result[0]), 2):
+        if i + 1 < len(montly_result[0]) and montly_result[0][i] is not None and montly_result[0][i + 1] is not None:
+            difference = montly_result[0][i + 1] - montly_result[0][i]
+            month_name = months_dict[(i + 1) // 2]  # Obtener el nombre del mes del diccionario
+            result_data.append({
+                'month': month_name,
+                'value1': montly_result[0][i],
+                'value2': montly_result[0][i + 1],
+                'difference': difference if difference is not None else 'N/A'
+            })
+    else:
+       result_data = [{'month': 'Enero', 'value1': 0, 'value2': 0, 'difference': 0}]  # Valores predeterminados
+    
+    ot = WorkOrder.objects.filter(bus=pk)
+    bus = Bus.bus.get(pk=pk)
+
+    soh = 0
+    try:
+     latest_battery_health = BatteryHealth.battery_health.filter(bus_id=pk).latest('battery_health_value')
+     soh = latest_battery_health
+    except ObjectDoesNotExist:
+     print('No se encontraron registros en BatteryHealth para el bus_id especificado.')
+
+    messages = FusiMessage.fusi.all()
+    fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
+    for code in fusi_codes:
+        for fusi_message in messages:
+            if code.fusi_code == fusi_message.fusi_code:
+                code.fusi_description = fusi_message.fusi_description
+                break
+
+    co2 = 0  # Valor predeterminado en caso de que bus.lts_odometer sea None
+    if bus.lts_odometer is not None and bus.bus_series == 'Tricahue':
+        co2 = (bus.lts_odometer * 857) / 1000
+        co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
+        co2 = round(co2, 2)
+    else: 
+        co2 = (bus.lts_odometer * 443) / 1000
+        co2 /= 1000
+        co2 = round(co2, 2)
+
+    fusi_grafico = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
+    fusi_grafico2 = list(fusi_grafico.values('fusi_code', 'total'))
+
+    isolation = Isolation.isolation.filter(bus_id=pk).values('isolation_value')[:40]
+    isolation2 = list(isolation.values('isolation_value'))
+    # paginador fusi
+    page = request.GET.get('page')
+    result = 15
+    paginator = Paginator(fusi_codes, result)
+    try:
+        fusi_codes = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        fusi_codes = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        fusi_codes = paginator.page(page)
+    
+    
+    
+    
+    
+    
+
+    current_datetime = timezone.now()
+    mes_actual = current_datetime.strftime('%m')
+
+    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
+
+    rangos = []
+    rango_actual = []
+
+    for item in charge_data:
+        if item.charge_status_value == 1:
+            rango_actual.append(item)
+        elif item.charge_status_value == 0:
+            if rango_actual:
+                rangos.append(rango_actual.copy())
+                rango_actual.clear()
+        else:
+            continue
+
+# Agregar el último rango si no termina con Estado 0.0
+    if rango_actual:
+        rangos.append(rango_actual)
+
+    santiago_tz = pytz.timezone('Chile/Continental')
+
+# Preparar los datos para la tabla y calcular acumulados
+    datos_tabla = []
+    for i, rango in enumerate(rangos, 1):
+        fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+        fecha_termino = rango[-1].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+        soc_inicial = rango[0].soc_level
+        soc_final = rango[-1].soc_level
+        carga = soc_final - soc_inicial  # Resta de soc_level
+
+        fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
+        fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
+
+        fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+        fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+
+    # Calcular la diferencia de tiempo en horas
+        diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
+        diferencia_en_horas = diferencia.total_seconds() / 3600
+
+        datos_tabla.append({
+            'rango': i,
+            'fecha_inicio': fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+            'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+            'tiempo': round(diferencia_en_horas, 2),
+            'soc_inicial': soc_inicial,
+            'soc_final': soc_final,
+            'carga': carga,
+            'energia': (carga * 140) / 100,
+        })
+
+    acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)}  
+
+    
+    for i in datos_tabla:
+        fecha_inicio = i['fecha_inicio']
+
+    # Assuming fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
+        try:
+            month = fecha_inicio[5:7]  # Extract month as a string
+            acumulado_mensual[month] += i['energia']
+        except ValueError:
+        # Handle invalid month format (e.g., log or skip entry)
+            print(f"Invalid month format found in fecha_inicio: {fecha_inicio}")
+            pass
+
+    monthly_totals = []
+    for month, energy in acumulado_mensual.items():
+        monthly_totals.append({'month': month, 'energy': round(energy, 2)})
+
+    print(monthly_totals)
+    acu = round(sum(i['energia'] for i in datos_tabla), 2)
+    
+    context_perfil = {'bus': bus,
+               'message': messages,
+               'ot': ot, 
+               'results': results,
+               'monthly_result': montly_result,
+               'fusi': fusi_codes,
+               'result_data': result_data, 
+               'co2': co2, 
+               'paginator': paginator,
+               'soh': soh,
+               'fusi_pie': fusi_grafico2,
+               'isolation': isolation2,
+               'datos_tabla': datos_tabla,
+               'acu': acu,
+               'monthly_totals': monthly_totals,
+                }
+    return render(request, 'bus/bus-profile.html', context_perfil)
+
+
+
+
+@login_required(login_url='login')
 def dashboard(request):
     headers = {
     'User-Agent': 'Alicanto/1.0',
@@ -312,11 +497,91 @@ def dashboard(request):
     # Iterar sobre cada mes en el dict y sumar el valor al total correspondiente
         for month, max_value in max_values_per_month.items():
          total_per_month[month] += max_value
-    print(charging)
+    
     
     linechart_data = []
     for month, total in total_per_month.items():
         linechart_data.append({'month': month, 'total': round(total * 670 / 10000)})
+
+    # energia total cargada año
+    energia_anual = 0
+    for i in Bus.bus.all():
+        charge_data = ChargeStatus.charge_status.filter(bus_id=i.id).order_by('TimeStamp')
+
+        rangos = []
+        rango_actual = []
+
+        for item in charge_data:
+            if item.charge_status_value == 1:
+                rango_actual.append(item)
+            elif item.charge_status_value == 0:
+                if rango_actual:
+                    rangos.append(rango_actual.copy())
+                    rango_actual.clear()
+                else:
+                    continue
+
+# Agregar el último rango si no termina con Estado 0.0
+        if rango_actual:
+            rangos.append(rango_actual)
+
+        santiago_tz = pytz.timezone('Chile/Continental')
+
+# Preparar los datos para la tabla y calcular acumulados
+        datos_tabla = []
+        for i, rango in enumerate(rangos, 1):
+            fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+            fecha_termino = rango[-1].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+            soc_inicial = rango[0].soc_level
+            soc_final = rango[-1].soc_level
+            carga = soc_final - soc_inicial  # Resta de soc_level
+
+            fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
+            fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
+
+            fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+            fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+
+    # Calcular la diferencia de tiempo en horas
+            diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
+            diferencia_en_horas = diferencia.total_seconds() / 3600
+
+            datos_tabla.append({
+                'rango': i,
+                'fecha_inicio': fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+                'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+                'tiempo': round(diferencia_en_horas, 2),
+                'soc_inicial': soc_inicial,
+                'soc_final': soc_final,
+                'carga': carga,
+                'energia': (carga * 140) / 100,
+            })
+
+        acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)}  
+
+    
+        for i in datos_tabla:
+            fecha_inicio = i['fecha_inicio']
+
+    # Assuming fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
+            try:
+                month = fecha_inicio[5:7]  # Extract month as a string
+                acumulado_mensual[month] += i['energia']
+            except ValueError:
+        # Handle invalid month format (e.g., log or skip entry)
+                print(f"Invalid month format found in fecha_inicio: {fecha_inicio}")
+                pass
+
+        monthly_totals = []
+        for month, energy in acumulado_mensual.items():
+            monthly_totals.append({'month': month, 'energy': round(energy, 2)})
+
+        
+        acu = round(sum(i['energia'] for i in datos_tabla), 2)
+        energia_anual += acu
+        energia_anual = round(energia_anual, 2)
+    
+
     
 
     context = {
@@ -336,6 +601,7 @@ def dashboard(request):
         'fusi_grafico': fusi_grafico,
         'linechart_data': linechart_data,
         'charging': charging,
+        'energia_anual': energia_anual,
     }
     return render(request, 'pages/dashboard.html', context)
 
@@ -772,187 +1038,7 @@ def delete_bus(request, pk):
 
 
 
-@login_required(login_url='login')
-def bus_detail(request, pk):
-    montly_result = monthly_bus_km(pk)
-    results = daily_bus_km(pk)
-    months_dict = {
-        1: 'Enero',
-        2: 'Febrero',
-        3: 'Marzo',
-        4: 'Abril',
-        5: 'Mayo',
-        6: 'Junio',
-        7: 'Julio',
-        8: 'Agosto',
-        9: 'Septiembre',
-        10: 'Octubre',
-        11: 'Noviembre',
-        12: 'Diciembre',
-    }
 
-    result_data = []
-
-    # Iterar sobre el rango correcto para cada mes
-    if montly_result and len(montly_result[0]) > 0:
-      for i in range(1, len(montly_result[0]), 2):
-        if i + 1 < len(montly_result[0]) and montly_result[0][i] is not None and montly_result[0][i + 1] is not None:
-            difference = montly_result[0][i + 1] - montly_result[0][i]
-            month_name = months_dict[(i + 1) // 2]  # Obtener el nombre del mes del diccionario
-            result_data.append({
-                'month': month_name,
-                'value1': montly_result[0][i],
-                'value2': montly_result[0][i + 1],
-                'difference': difference if difference is not None else 'N/A'
-            })
-    else:
-       result_data = [{'month': 'Enero', 'value1': 0, 'value2': 0, 'difference': 0}]  # Valores predeterminados
-    
-    ot = WorkOrder.objects.filter(bus=pk)
-    bus = Bus.bus.get(pk=pk)
-
-    soh = 0
-    try:
-     latest_battery_health = BatteryHealth.battery_health.filter(bus_id=pk).latest('battery_health_value')
-     soh = latest_battery_health
-    except ObjectDoesNotExist:
-     print('No se encontraron registros en BatteryHealth para el bus_id especificado.')
-
-    messages = FusiMessage.fusi.all()
-    fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
-    for code in fusi_codes:
-        for fusi_message in messages:
-            if code.fusi_code == fusi_message.fusi_code:
-                code.fusi_description = fusi_message.fusi_description
-                break
-
-    co2 = 0  # Valor predeterminado en caso de que bus.lts_odometer sea None
-    if bus.lts_odometer is not None and bus.bus_series == 'Tricahue':
-        co2 = (bus.lts_odometer * 857) / 1000
-        co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
-        co2 = round(co2, 2)
-    else: 
-        co2 = (bus.lts_odometer * 443) / 1000
-        co2 /= 1000
-        co2 = round(co2, 2)
-
-    fusi_grafico = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
-    fusi_grafico2 = list(fusi_grafico.values('fusi_code', 'total'))
-
-    isolation = Isolation.isolation.filter(bus_id=pk).values('isolation_value')[:40]
-    isolation2 = list(isolation.values('isolation_value'))
-    # paginador fusi
-    page = request.GET.get('page')
-    result = 15
-    paginator = Paginator(fusi_codes, result)
-    try:
-        fusi_codes = paginator.page(page)
-    except PageNotAnInteger:
-        page = 1
-        fusi_codes = paginator.page(page)
-    except EmptyPage:
-        page = paginator.num_pages
-        fusi_codes = paginator.page(page)
-    
-    
-    
-    
-    
-    
-
-    current_datetime = timezone.now()
-    mes_actual = current_datetime.strftime('%m')
-
-    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
-
-    rangos = []
-    rango_actual = []
-
-    for item in charge_data:
-        if item.charge_status_value == 1:
-            rango_actual.append(item)
-        elif item.charge_status_value == 0:
-            if rango_actual:
-                rangos.append(rango_actual.copy())
-                rango_actual.clear()
-        else:
-            continue
-
-# Agregar el último rango si no termina con Estado 0.0
-    if rango_actual:
-        rangos.append(rango_actual)
-
-    santiago_tz = pytz.timezone('Chile/Continental')
-
-# Preparar los datos para la tabla y calcular acumulados
-    datos_tabla = []
-    for i, rango in enumerate(rangos, 1):
-        fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
-        fecha_termino = rango[-1].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
-        soc_inicial = rango[0].soc_level
-        soc_final = rango[-1].soc_level
-        carga = soc_final - soc_inicial  # Resta de soc_level
-
-        fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
-        fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
-
-        fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
-        fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
-
-    # Calcular la diferencia de tiempo en horas
-        diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
-        diferencia_en_horas = diferencia.total_seconds() / 3600
-
-        datos_tabla.append({
-            'rango': i,
-            'fecha_inicio': fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
-            'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
-            'tiempo': round(diferencia_en_horas, 2),
-            'soc_inicial': soc_inicial,
-            'soc_final': soc_final,
-            'carga': carga,
-            'energia': (carga * 140) / 100,
-        })
-
-    acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)}  
-
-    
-    for i in datos_tabla:
-        fecha_inicio = i['fecha_inicio']
-
-    # Assuming fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
-        try:
-            month = fecha_inicio[5:7]  # Extract month as a string
-            acumulado_mensual[month] += i['energia']
-        except ValueError:
-        # Handle invalid month format (e.g., log or skip entry)
-            print(f"Invalid month format found in fecha_inicio: {fecha_inicio}")
-            pass
-
-    monthly_totals = []
-    for month, energy in acumulado_mensual.items():
-        monthly_totals.append({'month': month, 'energy': round(energy, 2)})
-
-    print(monthly_totals)
-    acu = round(sum(i['energia'] for i in datos_tabla), 2)
-    
-    context = {'bus': bus,
-               'message': messages,
-               'ot': ot, 
-               'results': results,
-               'monthly_result': montly_result,
-               'fusi': fusi_codes,
-               'result_data': result_data, 
-               'co2': co2, 
-               'paginator': paginator,
-               'soh': soh,
-               'fusi_pie': fusi_grafico2,
-               'isolation': isolation2,
-               'datos_tabla': datos_tabla,
-               'acu': acu,
-               'monthly_totals': monthly_totals,
-                }
-    return render(request, 'bus/bus-profile.html', context)
 
 
 @login_required(login_url='login')
