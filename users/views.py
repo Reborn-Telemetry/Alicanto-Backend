@@ -134,7 +134,7 @@ def energy_record(request):
                 bus_existe = False
                 for datos_bus in lista_datos_organizados:
                     if datos_bus['bus'] == bus:
-                        energia_total_formateada = "{:.2f}".format(energia_total)
+                        energia_total_formateada = "{:.1f}".format(energia_total)
                         datos_bus['datos'].append({'fecha': fecha, 'energia_total': energia_total_formateada})
                         bus_existe = True
                         break
