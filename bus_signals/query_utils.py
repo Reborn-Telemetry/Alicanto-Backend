@@ -404,6 +404,39 @@ def get_max_odometer_per_month(bus_id):
     return max_values_dict
 
 
+def km_flota():
+     connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+     cursor = connection.cursor()
+     query = """SELECT sum(max_odometer_value) AS total_odometer_value
+                FROM
+                (SELECT
+                    bus_id,
+                MAX(odometer_value) AS max_odometer_value
+
+                FROM
+                (WITH ranked_data AS (
+                SELECT
+                bus_id,
+                odometer_value,
+                ROW_NUMBER() OVER (PARTITION BY bus_id ORDER BY odometer_value DESC) AS rnk_high
+                FROM
+                bus_signals_odometer
+                )
+                SELECT
+                bus_id,
+                odometer_value
+                FROM
+                    ranked_data
+                WHERE
+                    rnk_high = 1
+                    ) A
+                GROUP BY
+                    bus_id) B"""
+     cursor.execute(query)
+     results = cursor.fetchall()
+     cursor.close()
+     connection.close()
+     return results
 
 
 

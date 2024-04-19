@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
-from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month
+from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -436,8 +436,8 @@ def dashboard(request):
     cant_fs = len(data['data'])
    
   
-    # cantidad de fusi abiertos
-    open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado').count()
+   
+   
     # cantidad de buses en la flota
     total_flota = Bus.bus.exclude(id__in=no_update_list)
     total_flota = total_flota.count()
@@ -447,19 +447,17 @@ def dashboard(request):
     complete_table = complete_table.exclude(lts_update=None)
     complete_table = complete_table.order_by('-lts_update')
     # km total de la flota
-    km_total = Bus.bus.aggregate(Sum('lts_odometer'))['lts_odometer__sum'] or 0
-    km_total_format = '{:,.0f}'.format(km_total)
-    km_total_format = km_total_format.replace(',', '.')
+    km_total_flota = km_flota()
+    km_total = km_total_flota[0][0]
 
+    # co2 ahorrado total flota
     co2_total= (km_total * 670)
     co2_total = co2_total/10000
     co2_total = round(co2_total, 2)
 
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
-    # cantidad de buses sin actualizacion
-    no_update = Bus.bus.filter(lts_update=None)
-    no_update = no_update.exclude(id__in=no_update_list).count()
+  
     # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count.count()
     # cantidad buses con cola de archivos
@@ -479,12 +477,13 @@ def dashboard(request):
     except EmptyPage:
         page = paginator.num_pages
         complete_table = paginator.page(page)
-
+# inicio codigo grafico fusi
     current_month = timezone.now().month
     distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
     fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
-
+# fin codigo grafico fusi
+# inicio codigo kwh anual
     total_per_month = defaultdict(int)
     charging = 0
 
@@ -497,8 +496,9 @@ def dashboard(request):
     # Iterar sobre cada mes en el dict y sumar el valor al total correspondiente
         for month, max_value in max_values_per_month.items():
          total_per_month[month] += max_value
+# Final codigo kwh anual
     
-    
+    # grafico co2 evitado 
     linechart_data = []
     for month, total in total_per_month.items():
         linechart_data.append({'month': month, 'total': round(total * 670 / 10000)})
@@ -587,13 +587,11 @@ def dashboard(request):
     context = {
        
         'operacion': operacion,
-        'km_total': km_total_format,
+        'km_total': km_total,
         'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
         'bus': complete_table,
-        'no_update': no_update,
         'cant_low_50_soc': cant_low_50_soc,
-        'open_fusi': open_fusi,
         'delayed': delayed,
         'paginator': paginator,
         'cant_fs': cant_fs,
