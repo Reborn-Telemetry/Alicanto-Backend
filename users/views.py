@@ -47,8 +47,8 @@ def update_ot(request, pk):
 
 
 def energy_record(request):
-    lista_datos_organizados = []  # Inicializar la lista fuera del bucle
-
+    days_of_month = range(1, 32) 
+    lista_datos_organizados = [] 
     for y in Bus.bus.all():
         charge_data = ChargeStatus.charge_status.filter(bus_id=y.id).order_by('TimeStamp')
 
@@ -65,13 +65,14 @@ def energy_record(request):
             else:
                 continue
 
-        # Agregar el último rango si no termina con Estado 0.0
+    # Agregar el último rango si no termina con Estado 0.0
         if rango_actual:
             rangos.append(rango_actual)
 
         santiago_tz = pytz.timezone('Chile/Continental')
+        
 
-        # Preparar los datos para la tabla y calcular acumulados
+    # Preparar los datos para la tabla y calcular acumulados
         datos_tabla = []
         for i, rango in enumerate(rangos, 1):
             fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
@@ -86,7 +87,7 @@ def energy_record(request):
             fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
             fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
 
-            # Calcular la diferencia de tiempo en horas
+        # Calcular la diferencia de tiempo en horas
             diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
             diferencia_en_horas = diferencia.total_seconds() / 3600
 
@@ -110,35 +111,38 @@ def energy_record(request):
         primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
         ultimo_dia_mes = datetime(fecha_actual.year, fecha_actual.month + 1, 1) - timedelta(days=1)
 
-        # Crear una lista con todas las fechas del mes
+    # Crear una lista con todas las fechas del mes
         dias_mes = [primer_dia_mes + timedelta(days=d) for d in range((ultimo_dia_mes - primer_dia_mes).days + 1)]
 
-        # Inicializar la tabla de energía con todas las fechas del mes y energía total en cero
+    # Inicializar la tabla de energía con todas las fechas del mes y energía total en cero
         tabla_energia = [{'bus':y.bus_name, 'fecha': fecha.strftime('%Y-%m-%d'), 'energia_total': 0} for fecha in dias_mes]
+        complete_table = []
 
-        # Actualizar la energía total en la tabla con los valores calculados
+    # Actualizar la energía total en la tabla con los valores calculados
         for item in tabla_energia:
             for dato in datos_tabla:
                 if dato['fecha_inicio'][:10] == item['fecha']:
                     item['energia_total'] += (dato['carga'] * 140) / 100
-
+        
+    
+    
         for item in tabla_energia:
-            bus = item['bus']
-            fecha = item['fecha']
-            energia_total = item['energia_total']
+                bus = item['bus']
+                fecha = item['fecha']
+                energia_total = item['energia_total']
 
-            bus_existe = False
-            for datos_bus in lista_datos_organizados:
-                if datos_bus['bus'] == bus:
-                    energia_total_formateada = "{:.2f}".format(energia_total)
-                    datos_bus['datos'].append({'fecha': fecha, 'energia_total': energia_total_formateada})
-                    bus_existe = True
-                    break
-            if not bus_existe:
+                bus_existe = False
+                for datos_bus in lista_datos_organizados:
+                    if datos_bus['bus'] == bus:
+                        energia_total_formateada = "{:.2f}".format(energia_total)
+                        datos_bus['datos'].append({'fecha': fecha, 'energia_total': energia_total_formateada})
+                        bus_existe = True
+                        break
+                if not bus_existe:
+                    lista_datos_organizados.append({'bus': bus, 'datos': [{'fecha': fecha, 'energia_total': round(energia_total,2)}]})
                 
-                lista_datos_organizados.append({'bus': bus, 'datos': [{'fecha': fecha, 'energia_total': energia_total}]})
+                context = {'lista_datos_organizados': lista_datos_organizados, 'days_of_month': days_of_month}
 
-        # Actualizar el contexto con los datos organizados hasta este punto
-        context = {'lista_datos_organizados': lista_datos_organizados}
+    # Imprimir la tabla de energía completa para el mes actual
 
     return render(request, 'reports/energy-record.html', context)
