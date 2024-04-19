@@ -1,10 +1,11 @@
+{% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}{% endblock header %}{% block content %}
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Bus</th>
-            {% for item in lista_datos_organizados %} {% for data in item.datos %}
-            <th scope="col">{{ data.fecha }}</th>
-            {% endfor %} {% endfor %}
+            {% for item in days_of_month %}
+            <th scope="col">{{ item }}</th>
+            {% endfor %}
         </tr>
     </thead>
     <tbody>
@@ -18,3 +19,4 @@
         {% endfor %}
     </tbody>
 </table>
+{% endblock content %}
