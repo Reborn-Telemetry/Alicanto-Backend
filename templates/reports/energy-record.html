@@ -1,0 +1,20 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Bus</th>
+            {% for item in lista_datos_organizados %} {% for data in item.datos %}
+            <th scope="col">{{ data.fecha }}</th>
+            {% endfor %} {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in lista_datos_organizados %}
+        <tr>
+            <td>{{ item.bus }}</td>
+            {% for data in item.datos %}
+            <td>{{ data.energia_total }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
