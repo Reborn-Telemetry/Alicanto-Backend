@@ -1,22 +1,45 @@
-{% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}{% endblock header %}{% block content %}
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Bus</th>
-            {% for item in days_of_month %}
-            <th scope="col">{{ item }}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in lista_datos_organizados %}
-        <tr>
-            <td>{{ item.bus }}</td>
-            {% for data in item.datos %}
-            <td>{{ data.energia_total }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}E{% endblock header %}{% block content %}
+<link rel="stylesheet" href="{% static 'styles/energy.css' %}" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card custom-card">
+                <h5 class="card-header custom-header">Cargas Diarias Kwh Flota {{ energia_cargada_flota }}</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <div class="table-responsive overflow-y-scroll" style="max-height: 600px">
+                            <table class="table table-sticky">
+                                <thead class="table sticky-top bar">
+                                    <tr>
+                                        <th scope="col">Bus</th>
+                                        {% for item in days_of_month %}
+                                        <th scope="col">{{ item }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for item in lista_datos_organizados %}
+                                    <tr>
+                                        <td>{{ item.bus }}</td>
+                                        {% for data in item.datos %} {% if data.energia_total == '0.0' %}
+                                        <td style="color: #ededed">{{ data.energia_total }}</td>
+                                        {% elif data.energia_total == 0 %}
+                                        <td style="color: #ededed">{{ data.energia_total }}</td>
+                                        {% else %}
+                                        <td>{{ data.energia_total }}</td>
+                                        {% endif %} {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--divisor codigo-->
 {% endblock content %}

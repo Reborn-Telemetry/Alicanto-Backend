@@ -1,0 +1,18 @@
+.custom-card {
+    background-color: #ededed;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.custom-header {
+    color: #0f8bfd;
+    font-size: 18px;
+}
+.bar {
+    background-color: #ededed;
+}
+.table {
+    --bs-table-bg: transparent;
+}
+td {
+    border-bottom: #c3c5c7 1px solid;
+}
