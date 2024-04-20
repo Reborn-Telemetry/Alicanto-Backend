@@ -1,7 +1,7 @@
 {% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}E{% endblock header %}{% block content %}
 <link rel="stylesheet" href="{% static 'styles/energy.css' %}" />
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-12">
             <div class="card custom-card">
@@ -22,7 +22,7 @@
                                 <tbody class="table-group-divider">
                                     {% for item in lista_datos_organizados %}
                                     <tr>
-                                        <td style="backgorund-color: #ededed" class="sticky-left">{{ item.bus }}</td>
+                                        <td class="sticky-left">{{ item.bus }}</td>
                                         <!-- Añade la clase sticky-col -->
                                         {% for data in item.datos %} {% if data.energia_total == '0.0' %}
                                         <td style="color: #ededed">{{ data.energia_total }}</td>
