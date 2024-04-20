@@ -16,3 +16,9 @@
 td {
     border-bottom: #c3c5c7 1px solid;
 }
+.sticky-left {
+    position: sticky;
+    left: 0;
+    background-color: #ededed; /* Opcional: Cambia el color de fondo según tus necesidades */
+    z-index: 1; /* Asegúrate de que esté por encima del contenido */
+}
