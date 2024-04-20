@@ -10,7 +10,7 @@ import pytz
 from django.utils import timezone
 from collections import defaultdict
 from datetime import datetime, timedelta
-
+no_update_list = [ '27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 # Create your views here.
 @login_required(login_url='login')
 def profile(request):
@@ -47,9 +47,10 @@ def update_ot(request, pk):
 
 
 def energy_record(request):
+    energia_cargada_flota = 0
     days_of_month = range(1, 32) 
     lista_datos_organizados = [] 
-    for y in Bus.bus.all():
+    for y in Bus.bus.all().exclude(id__in=no_update_list):
         charge_data = ChargeStatus.charge_status.filter(bus_id=y.id).order_by('TimeStamp')
 
         rangos = []
@@ -137,11 +138,16 @@ def energy_record(request):
                         energia_total_formateada = "{:.1f}".format(energia_total)
                         datos_bus['datos'].append({'fecha': fecha, 'energia_total': energia_total_formateada})
                         bus_existe = True
+                        energia_cargada_flota += energia_total
                         break
                 if not bus_existe:
                     lista_datos_organizados.append({'bus': bus, 'datos': [{'fecha': fecha, 'energia_total': round(energia_total,2)}]})
                 
-                context = {'lista_datos_organizados': lista_datos_organizados, 'days_of_month': days_of_month}
+                context = {
+                    'lista_datos_organizados': lista_datos_organizados,
+                    'days_of_month': days_of_month,
+                    'energia_cargada_flota': round(energia_cargada_flota,2)
+                    }
 
     # Imprimir la tabla de energía completa para el mes actual
 
