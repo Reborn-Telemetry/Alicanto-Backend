@@ -12,7 +12,8 @@
                             <table class="table table-sticky">
                                 <thead class="table sticky-top bar">
                                     <tr>
-                                        <th scope="col">Bus</th>
+                                        <th scope="col" class="sticky-left">Bus</th>
+                                        <!-- Añade la clase sticky-col -->
                                         {% for item in days_of_month %}
                                         <th scope="col">{{ item }}</th>
                                         {% endfor %}
@@ -21,7 +22,8 @@
                                 <tbody class="table-group-divider">
                                     {% for item in lista_datos_organizados %}
                                     <tr>
-                                        <td>{{ item.bus }}</td>
+                                        <td style="backgorund-color: #ededed" class="sticky-left">{{ item.bus }}</td>
+                                        <!-- Añade la clase sticky-col -->
                                         {% for data in item.datos %} {% if data.energia_total == '0.0' %}
                                         <td style="color: #ededed">{{ data.energia_total }}</td>
                                         {% elif data.energia_total == 0 %}
