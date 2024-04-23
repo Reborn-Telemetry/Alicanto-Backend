@@ -1,8 +1,49 @@
 {% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}E{% endblock header %}{% block content %}
 <link rel="stylesheet" href="{% static 'styles/energy.css' %}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 
 <div class="container-fluid">
     <div class="row">
+        <div class="col-3">
+            <div class="card custom-card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bxs-bolt icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Kwh Anual</h5>
+                            <p class="card-text">Kwh</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 30px" class="card custom-card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bxs-ev-station icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses Cargando</h5>
+                            <p class="card-text">Buses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card custom-card">
+                <h5 class="card-header custom-header">Cargas Buses Dia</h5>
+                <div class="card-body">
+                    <canvas id="chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 30px" class="row">
         <div class="col-12">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Cargas Diarias Kwh Flota</h5>
@@ -42,6 +83,46 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtén los datos de tu vista Django
+        const data = {{ ultimo_valor_energia | safe }};
+        const dataToShow = data.slice(0, 20);
+        // Crea los arrays de labels y values solo con los primeros 20 elementos
+        const labels = dataToShow.map(item => item.bus);
+        const values = dataToShow.map(item => item.energia);
 
+        // Configura el pie chart
+        const ctx = document.getElementById("chart").getContext("2d");
+        const myPieChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label:'Energia Cargada',
+                        data: values,
+                        backgroundColor: [
+                            "#A155B9",
+                            "rgba(54, 162, 235, 0.7)",
+
+
+
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true, // Oculta la leyenda
+                },
+            },
+        });
+    });
+</script>
 <!--divisor codigo-->
 {% endblock content %}

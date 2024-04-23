@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from bus_signals.models import Bus, ChargeStatus
+from bus_signals.query_utils import obtener_ultimo_valor_energia
 # Create your views here.
 from django.shortcuts import render, redirect
 from bus_signals.forms import WorkOrderForm
@@ -143,10 +144,20 @@ def energy_record(request):
                 if not bus_existe:
                     lista_datos_organizados.append({'bus': bus, 'datos': [{'fecha': fecha, 'energia_total': round(energia_total,2)}]})
                 
-                context = {
+    ultimo_valor_energia = obtener_ultimo_valor_energia(lista_datos_organizados)
+    lista_ultimo_valor_energia = [{'bus': bus, 'energia': energia} for bus, energia in ultimo_valor_energia.items()]
+    grafico = list(lista_ultimo_valor_energia)
+
+   
+
+   
+        
+
+    context = {
                     'lista_datos_organizados': lista_datos_organizados,
                     'days_of_month': days_of_month,
-                    'energia_cargada_flota': round(energia_cargada_flota,2)
+                    'energia_cargada_flota': round(energia_cargada_flota,2),
+                    'ultimo_valor_energia': grafico
                     }
 
     # Imprimir la tabla de energía completa para el mes actual

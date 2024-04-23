@@ -438,5 +438,22 @@ def km_flota():
      connection.close()
      return results
 
+def obtener_ultimo_valor_energia(lista_datos):
+    ultimo_valor_por_bus = {}
+    for datos_bus in lista_datos:
+        bus = datos_bus['bus']
+        datos = datos_bus['datos']
+        ultimo_valor = None
+        for dato in reversed(datos):
+            if dato['energia_total'] != '0.0':
+                ultimo_valor = dato['energia_total']
+                break
+        if ultimo_valor is not None:
+            if bus not in ultimo_valor_por_bus:
+                ultimo_valor_por_bus[bus] = ultimo_valor
+    
+    return ultimo_valor_por_bus
+
+
 
 
