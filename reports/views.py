@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from bus_signals.query_utils import matriz_km_diario_flota, daily_bus_km
-from bus_signals.models import Bus, BatteryHealth
+from bus_signals.models import Bus, BatteryHealth, ChargeStatus
 from . models import Prueba, DisponibilidadFlota
-from datetime import date
+from datetime import date, timedelta
 import io
 from reportlab.platypus import Spacer
 from reportlab.lib import colors
@@ -18,7 +18,8 @@ from django.contrib import messages
 from django.db.models import Max
 import requests
 from django.contrib.auth.decorators import login_required
-no_update_list = ['27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81']
+import pytz
+no_update_list = [ '27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 
 def dashboard_disponibilidad_flota(request):
    headers = { 'User-Agent': 'Alicanto/1.0', }
@@ -79,6 +80,132 @@ def disponbilidad_flota(request):
    
    messages.success(request, 'Los registros se actualizaron correctamente.')
    return redirect('disponibilidad-flota')
+
+
+def energy_report(request):
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte_energia_flota_{formatted_datetime}.xls'
+    buf = io.BytesIO()
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
+
+    # Inicializamos table_data con las cabeceras
+    table_data = [["Bus"] + [str(day) for day in range(1, 32)]]
+
+    energia_cargada_flota = 0
+    lista_datos_organizados = []
+    for y in Bus.bus.all().exclude(id__in=no_update_list):
+        charge_data = ChargeStatus.charge_status.filter(bus_id=y.id).order_by('TimeStamp')
+        rangos = []
+        rango_actual = []
+        for item in charge_data:
+            if item.charge_status_value == 1:
+                rango_actual.append(item)
+            elif item.charge_status_value == 0:
+                if rango_actual:
+                    rangos.append(rango_actual.copy())
+                    rango_actual.clear()
+            else:
+                continue
+        if rango_actual:
+            rangos.append(rango_actual)
+
+        santiago_tz = pytz.timezone('Chile/Continental')
+
+        datos_tabla = []
+        for i, rango in enumerate(rangos, 1):
+            fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+            fecha_termino = rango[-1].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+            soc_inicial = rango[0].soc_level
+            soc_final = rango[-1].soc_level
+            carga = soc_final - soc_inicial  # Resta de soc_level
+
+            fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
+            fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
+
+            fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+            fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+
+            # Calcular la diferencia de tiempo en horas
+            diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
+            diferencia_en_horas = diferencia.total_seconds() / 3600
+
+            datos_tabla.append({
+                'rango': i,
+                'fecha_inicio': fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+                'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+                'tiempo': round(diferencia_en_horas, 2),
+                'soc_inicial': soc_inicial,
+                'soc_final': soc_final,
+                'carga': carga,
+                'energia': (carga * 140) / 100,
+                'bus': y.bus_name
+            })
+            acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)}
+
+        fecha_actual = datetime.now()
+        
+
+        # Obtener el primer día del mes y el último día del mes actual
+        primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
+        ultimo_dia_mes = datetime(fecha_actual.year, fecha_actual.month + 1, 1) - timedelta(days=1)
+
+        # Crear una lista con todas las fechas del mes
+        dias_mes = [primer_dia_mes + timedelta(days=d) for d in range((ultimo_dia_mes - primer_dia_mes).days + 1)]
+
+        # Inicializar la tabla de energía con todas las fechas del mes y energía total en cero
+        tabla_energia = [{'bus': y.bus_name, 'fecha': fecha.strftime('%Y-%m-%d'), 'energia_total': 0} for fecha in
+                         dias_mes]
+        complete_table = []
+
+        # Actualizar la energía total en la tabla con los valores calculados
+        for item in tabla_energia:
+            for dato in datos_tabla:
+                if dato['fecha_inicio'][:10] == item['fecha']:
+                    item['energia_total'] += (dato['carga'] * 140) / 100
+
+        energia_por_bus = {}
+
+        # Llenar la estructura de datos con los valores calculados
+        for item in tabla_energia:
+            bus = item['bus']
+            fecha = item['fecha']
+            energia_total = item['energia_total']
+      
+
+            if bus not in energia_por_bus:
+                energia_por_bus[bus] = [0] * len(dias_mes)  # Inicializar la lista con ceros para todos los días del mes
+
+            # Calcular el índice del día en la lista de días del mes
+            indice_dia = (datetime.strptime(fecha, '%Y-%m-%d') - primer_dia_mes).days
+
+            # Actualizar la energía total para el día correspondiente
+            energia_por_bus[bus][indice_dia] += energia_total
+
+        # Agregar los datos de energía por bus a table_data
+        for bus, energias in energia_por_bus.items():
+            row = [bus] + energias
+            table_data.append(row)
+  
+
+    # Después de llenar table_data con todos los datos, escribirlos en el archivo xls
+    for row_index, row_data in enumerate(table_data):
+        for col_index, cell_data in enumerate(row_data):
+            worksheet.write(row_index, col_index, cell_data)
+
+    workbook.save(buf)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+
+
+
+
+
+
 
 
 def reporte_soh_flota(request):
