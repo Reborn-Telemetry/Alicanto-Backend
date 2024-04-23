@@ -50,8 +50,8 @@ def warnings(request):
     data = response.json()
     list_fs_bus = data['data']
     bus_instance = Bus()
-    delayed = bus_instance.delay_data()
-    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
+    delayed = bus_instance.delay_data().exclude(id__in=no_update_list)
+    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50).exclude(id__in=no_update_list)
     low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
     low_50 = list(low_50_soc_count.values('bus_name', 'lts_soc'))
     top_buses = FusiCode.fusi.values('bus__bus_name').annotate(num_registros=Count('bus')).order_by('-num_registros')[:10]
@@ -424,7 +424,6 @@ def bus_detail(request, pk):
 
 
 
-
 @login_required(login_url='login')
 def dashboard(request):
     headers = {
@@ -462,7 +461,7 @@ def dashboard(request):
     cant_low_50_soc = low_50_soc_count.count()
     # cantidad buses con cola de archivos
     bus_instance = Bus()
-    delayed = bus_instance.delay_data().count()
+    delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
 
     operacion = total_flota - cant_fs
 
