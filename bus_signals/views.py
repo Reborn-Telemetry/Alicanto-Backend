@@ -579,6 +579,8 @@ def dashboard(request):
         acu = round(sum(i['energia'] for i in datos_tabla), 2)
         energia_anual += acu
         energia_anual = round(energia_anual)
+        request.session['energia_anual'] = round(energia_anual)
+        request.session['charging'] = charging
     
 
     

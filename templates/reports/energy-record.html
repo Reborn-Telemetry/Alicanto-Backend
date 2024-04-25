@@ -15,7 +15,7 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Kwh Anual</h5>
-                            <p class="card-text">Kwh</p>
+                            <p class="card-text">{{energia_anual}}Kwh</p>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Buses Cargando</h5>
-                            <p class="card-text">Buses</p>
+                            <p class="card-text">{{charging}} Buses</p>
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         // Obtén los datos de tu vista Django
         const data = {{ ultimo_valor_energia | safe }};
-        const dataToShow = data.slice(0, 20);
+        const dataToShow = data.slice(0, 30);
         // Crea los arrays de labels y values solo con los primeros 20 elementos
         const labels = dataToShow.map(item => item.bus);
         const values = dataToShow.map(item => item.energia);
