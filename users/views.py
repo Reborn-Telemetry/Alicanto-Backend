@@ -147,6 +147,8 @@ def energy_record(request):
     ultimo_valor_energia = obtener_ultimo_valor_energia(lista_datos_organizados)
     lista_ultimo_valor_energia = [{'bus': bus, 'energia': energia} for bus, energia in ultimo_valor_energia.items()]
     grafico = list(lista_ultimo_valor_energia)
+    energia_anual = request.session.get('energia_anual')
+    charging = request.session.get('charging')
 
    
 
@@ -157,7 +159,9 @@ def energy_record(request):
                     'lista_datos_organizados': lista_datos_organizados,
                     'days_of_month': days_of_month,
                     'energia_cargada_flota': round(energia_cargada_flota,2),
-                    'ultimo_valor_energia': grafico
+                    'ultimo_valor_energia': grafico,
+                    'energia_anual': energia_anual,
+                    'charging': charging
                     }
 
     # Imprimir la tabla de energía completa para el mes actual

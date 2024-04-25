@@ -4,29 +4,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-lg-12">
             <div class="option-button">
                 {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
                 <a href="{% url 'update_bus' bus.id %}"
-                    ><button type="button" class="btn btn-primary">Editar Bus</button></a
+                    ><button type="button" class="btn btn-primary"><i class="bx bx-edit-alt"></i> Editar Bus</button></a
                 >
                 <a href="{% url 'work_order_form' %}">
-                    <button type="button" class="btn btn-info">Crear Parte</button></a
+                    <button type="button" class="btn btn-outline-info">
+                        <i class="bx bx-plus-medical"></i> Crear Parte
+                    </button></a
                 >
 
                 <a href="{% url 'delete_bus' bus.id %}">
-                    <button type="button" class="btn btn-danger">Eliminar Bus</button></a
-                >
+                    <button type="button" class="btn btn-outline-danger"><i class="bx bx-trash"></i></button
+                ></a>
 
                 {% else %}
                 <a href="{% url 'no-access' %}"> <button type="button" class="btn btn-primary">Editar Bus</button></a>
 
                 <a href="{% url 'work_order_form' %}">
-                    <button type="button" class="btn btn-info">Crear Parte</button></a
+                    <button type="button" class="btn btn-outline-info">Crear Parte</button></a
                 >
-                <a href="{% url 'no-access' %}"><button type="button" class="btn btn-danger">Eliminar Bus</button></a>
+                <a href="{% url 'no-access' %}"
+                    ><button type="button" class="btn btn-outline-danger"><i class="bx bx-trash"></i></button
+                ></a>
 
                 {% endif %}
             </div>
@@ -111,15 +115,15 @@
             </div>
         </div>
         <!--fin tarjeta bus principal-->
-        <div class="col-sm-12 col-lg-4">
+        <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="row">
-                    <div class="col-sm-6 col-lg-6">
+                    <div class="col-lg-6">
                         <div style="box-shadow: none" class="card custom-card">
                             <div class="card-body">
                                 <h5 class="card-title">Bateria Actual</h5>
                                 <div class="card-text">
-                                    <div class="box">
+                                    <div class="box text-center">
                                         <div class="chart" data-percent="{{ bus.lts_soc }}" data-scale-color="#ffb400">
                                             {{ bus.lts_soc }}%
                                         </div>
@@ -318,7 +322,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-6" style="margin-top: 50px">
             <div class="card custom-card">
@@ -345,7 +349,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
     <div class="col-12" style="margin-top: 50px">
         <div class="card custom-card">
             <h5 class="card-header custom-header">Kilometraje maximo diario</h5>
