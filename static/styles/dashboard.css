@@ -16,7 +16,7 @@
 }
 
 .soc-ok {
-    border: 2px solid #2c9b42;
+    border: 2px solid #686868;
     font-size: 12px;
     height: 28px; /* Valor fijo para la altura */
     width: 50px; /* Valor fijo para el ancho */
@@ -140,12 +140,27 @@ td .volt {
     color: #686868;
 }
 .ok {
-    color: #2c9b42;
-    font-size: 2rem;
+    color: #686868;
+    font-size: 2.2rem;
 }
 .notok {
     color: #f0a500;
     font-size: 2rem;
+}
+
+.rotate-y {
+    animation: rotateY 2s linear infinite;
+    color: #30f658;
+    font-size: 1.6rem;
+}
+
+@keyframes rotateY {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
 }
 
 .charging {
