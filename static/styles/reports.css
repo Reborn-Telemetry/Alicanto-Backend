@@ -1,6 +1,30 @@
 .btn-primary {
     --bs-btn-bg: #0f8bfd;
 }
-.title {
-    color: #0f8bfd;
+.card-header {
+    --bs-card-cap-color: #0f8bfd;
+    font-weight: 700;
+    font-size: 25px;
+    padding: 10px;
+    display: flex;
+}
+.card {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: none;
+    background-color: #ededed;
+}
+
+.table {
+    --bs-table-bg: transparent;
+}
+tr .descripcion {
+    color: #686868;
+}
+tr .titulo {
+    color: #686868;
+}
+.page-link {
+    background: transparent;
+    --bs-pagination-active-bg: #0f8bfd;
+    --bs-pagination-active-border-color: #0f8bfd;
 }
