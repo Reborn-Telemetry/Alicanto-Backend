@@ -11,10 +11,12 @@
 
 .box canvas {
     position: absolute;
+    text-align: center;
+    justify-content: center;
     top: 0;
-    left: 0;
-    width: 100%;
-    width: 100%;
+    left: 11px;
+    width: 170px;
+    width: 170px;
 }
 
 h5 {
@@ -36,7 +38,8 @@ h5 {
 }
 .option-button {
     display: flex;
-    justify-content: end;
+    justify-content: start;
+
     gap: 20px;
     margin-bottom: 20px;
 }

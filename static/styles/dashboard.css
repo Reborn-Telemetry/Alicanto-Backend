@@ -70,6 +70,7 @@
 .card-title {
     border-bottom: 1px solid #c3c3cc;
     padding-bottom: 5px;
+    color: #686868;
 }
 .card-text {
     font-size: 22px;
@@ -87,7 +88,7 @@
 /* Dashboard */
 
 .texticon {
-    color: black;
+    color: #686868;
     display: inline-block;
     vertical-align: middle;
     margin-left: -20px;
@@ -105,9 +106,14 @@
 .table {
     --bs-table-bg: transparent;
 }
-.busname {
+tr .busname {
     font-weight: 500;
     font-size: 18px;
+    color: #686868;
+}
+
+tr .odometer {
+    color: #686868;
 }
 
 td .fusi {
@@ -116,11 +122,13 @@ td .fusi {
     justify-content: center;
     align-items: center;
     gap: 5px;
+    color: #686868;
 }
 
 .timestamp {
     font-size: 15px;
     font-weight: 400;
+    color: #686868;
 }
 
 td .volt {
@@ -129,6 +137,7 @@ td .volt {
     justify-content: center;
     align-items: center;
     gap: 5px;
+    color: #686868;
 }
 .ok {
     color: #2c9b42;
@@ -145,7 +154,7 @@ td .volt {
 }
 
 .battok span {
-    color: black;
+    color: #686868;
     font-size: 1rem;
 }
 
