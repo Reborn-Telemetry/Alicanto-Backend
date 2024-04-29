@@ -111,7 +111,9 @@
                                                 <th style="color: #686868">24 Volts</th>
                                                 <th style="color: #686868">Fusi</th>
                                                 <th style="color: #686868">Actualizacion</th>
-                                                <th style="color: #686868">Cargando</th>
+                                                <th style="color: #686868; font-size: 20px">
+                                                    <i class="bx bxs-ev-station"></i>
+                                                </th>
                                                 <th style="color: #686868">Perfil</th>
                                             </tr>
                                         </thead>
@@ -356,16 +358,20 @@
                         label:'codigos fusi',
                         data: values,
                         backgroundColor: [
-                            "#14A4D1",
-                            "#2188E5",
-                            "#6F75DF",
+                            "rgba(33, 136, 229, 0.45)",
+                            "rgba(111, 117, 223, 0.45)",
 
 
 
 
 
                         ],
-                        borderWidth: 1,
+                        borderColor: [
+                        "rgba(33, 136, 229, 1)",
+                            "rgba(111, 117, 223, 1)",
+
+                        ],
+                        borderWidth: 2,
                     },
                 ],
             },
@@ -380,17 +386,16 @@
     });
 </script>
 <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Obtén los datos de tu vista Django
-            const data = {{ linechart_data | safe }};
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtén los datos de tu vista Django
+        const data = {{ linechart_data | safe }};
 
+        // Crea los arrays de labels y values solo con los primeros 20 elementos
+        const labels = data.map((item) => item.month);
+        const values = data.map((item) => item.total);
 
-            // Crea los arrays de labels y values solo con los primeros 20 elementos
-            const labels = data.map((item) => item.month);
-            const values = data.map((item) => item.total);
-
-            // Configura el pie chart
-            const ctx = document.getElementById("co2").getContext("2d");
+        // Configura el pie chart
+        const ctx = document.getElementById("co2").getContext("2d");
         const myLineChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -398,8 +403,9 @@
                 datasets: [{
                     label: 'Valores mes en toneladas',
                     data: values,
-                    fill: false,
-                    borderColor: '#A155B9',
+                    fill: true,
+                    borderColor: "rgba(111, 117, 223, 0.4)",
+                    pointBackgroundColor: "rgba(111, 117, 223, 1)", // Color de los puntos con opacidad total
                     tension: 0.3
                 }]
             },
