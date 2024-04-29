@@ -379,8 +379,8 @@ def bus_detail(request, pk):
             'soc_inicial': soc_inicial,
             'soc_final': soc_final,
             'carga': carga,
-            'energia': (carga * 140) / 100,
-        })
+            'energia': (carga * 140) / 100 if bus.bus_series == 'Queltehue' else (carga * 280) / 100,
+})
 
     acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)}  
 
