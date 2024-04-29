@@ -6,13 +6,13 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <div class="card custom-card">
                 <div class="row g-0">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="icon-card"><i class="bx bxs-bolt icon-alert"></i></div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div class="card-body">
                             <h5 class="card-title">Kwh Anual</h5>
                             <p class="card-text">{{energia_anual}}Kwh</p>
@@ -22,10 +22,10 @@
             </div>
             <div style="margin-top: 30px" class="card custom-card">
                 <div class="row g-0">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="icon-card"><i class="bx bxs-ev-station icon-alert"></i></div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div class="card-body">
                             <h5 class="card-title">Buses Cargando</h5>
                             <p class="card-text">{{charging}} Buses</p>
@@ -34,11 +34,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-9">
-            <div class="card custom-card">
+        <div class="col-10">
+            <div class="card custom-card" style="max-height: 400px">
                 <h5 class="card-header custom-header">Cargas Buses Dia</h5>
                 <div class="card-body">
-                    <canvas id="chart"></canvas>
+                    <canvas style="max-height: 300px" id="chart"></canvas>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         // Obtén los datos de tu vista Django
         const data = {{ ultimo_valor_energia | safe }};
-        const dataToShow = data.slice(0, 30);
+        const dataToShow = data.slice(0, 63);
         // Crea los arrays de labels y values solo con los primeros 20 elementos
         const labels = dataToShow.map(item => item.bus);
         const values = dataToShow.map(item => item.energia);
@@ -96,30 +96,25 @@
         // Configura el pie chart
         const ctx = document.getElementById("chart").getContext("2d");
         const myPieChart = new Chart(ctx, {
-            type: "bar",
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [
                     {
                         label:'Energia Cargada',
                         data: values,
-                        backgroundColor: [
-                            "#A155B9",
-                            "rgba(54, 162, 235, 0.7)",
-
-
-
-                        ],
-                        borderWidth: 1,
-                    },
-                ],
+                        fill: true,
+                        borderColor: "rgba(111, 117, 223, 0.4)",
+                        pointBackgroundColor: "rgba(111, 117, 223, 1)", // Color de los puntos con opacidad total
+                        tension: 0.3
+                }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    display: true, // Oculta la leyenda
-                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             },
         });
     });
