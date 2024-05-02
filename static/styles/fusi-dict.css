@@ -1,0 +1,18 @@
+.custom {
+    --bs-card-cap-color: #0f8bfd;
+    font-weight: 700;
+    font-size: 25px;
+    padding: 10px;
+    display: flex;
+}
+tr .codigo {
+    color: #686868;
+}
+
+tr .description {
+    color: #686868;
+}
+
+tr .clase {
+    color: #686868;
+}
