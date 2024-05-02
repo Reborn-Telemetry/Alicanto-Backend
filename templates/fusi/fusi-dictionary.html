@@ -1,19 +1,35 @@
-{% extends "main.html" %} {% load static %} {% block title %} Diccionario fusi {% endblock title %}
+{% extends "main.html" %} {% load static %} {% block title %} Diccionario fusi {% endblock title %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/fusi-dict.css' %}" />
-{% block content %}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-3">
-            <a href="{% url 'create_fusi' %}"
-                ><button type="button" class="btn btn-primary"><i class="bx bx-plus"></i> Crear Fusi</button></a
-            >
+    <form id="searchForm" class="form" action="{% url 'dic_fusi' %}" method="get">
+        <div class="row">
+            <div class="col-3">
+                <a href="{% url 'create_fusi' %}"
+                    ><button type="button" class="btn btn-primary"><i class="bx bx-plus"></i> Crear Fusi</button></a
+                >
+            </div>
+            <div style="margin-left: auto" class="col-6">
+                <input
+                    type="text"
+                    class="form-control narrow-input"
+                    height="50px"
+                    id="formInput#search"
+                    name="search_query"
+                    value="{{ search_query }}"
+                    placeholder="Ingrese : Codigo, Componente, Descripcion, Tipo ECU"
+                    style="--bs-input-height: 220px"
+                />
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary"><i class="bx bx-search-alt-2"></i> Buscar</button>
+            </div>
         </div>
-    </div>
+    </form>
     <div style="margin-top: 30px" class="row">
         <div class="col-12">
             <div class="card">
-                <h5 class="card-header">Diccionario Fusi</h5>
+                <h5 class="card-header custom">Diccionario Fusi</h5>
                 <div class="card-body">
                     <div class="col-12 text-center">
                         <div class="table-responsive">
@@ -29,94 +45,47 @@
                                 <tbody class="table-group-divider"></tbody>
                                 {% for i in fusi %}
                                 <tr>
-                                    <td>{{ i.fusi_code }}</td>
-                                    <td>{{ i.fusi_description }}</td>
-                                    <td>{{ i.message_class }}</td>
+                                    <td class="codigo">{{ i.fusi_code }}</td>
+                                    <td class="description">{{ i.fusi_description }}</td>
+                                    <td class="clase">{{ i.message_class }}</td>
                                     <td>
-                                        {% if user.username == 'usuario_link' %}
-                                        <button type="button" class="btn btn-outline-success" disabled>Editar</button>
-                                        {% else %}
+                                        {% if user.username == 'hurbx' %}
                                         <a href="{% url 'update_fusi' i.id %}">
-                                            <button type="button" class="btn btn-outline-success" disabled>
-                                                Editar
-                                            </button></a
-                                        >
-                                        {% endif %}
+                                            <button type="button" class="btn btn-primary">Editar</button>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'no-access' %}">
+                                            <button type="button" class="btn btn-primary">Editar</button></a
+                                        >{% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </table>
+                            <div class=""></div>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    {% if fusi.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{fusi.previous_page_number}}">Anterior</a>
+                                    </li>
+                                    {% endif %} {% for page in paginator.page_range %} {% if page == fusi.number %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="?page={{page}}">{{page}}</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                                    {% endif %} {% endfor %} {% if fusi.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{fusi.next_page_number}}">Siguiente</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!--Divisor codigo-->
-    <div class="container text-center" style="margin-left: 300px">
-        <form id="searchForm" class="form" action="{% url 'dic_fusi' %}" method="get">
-            <div class="form__field">
-                <label for="formInput#search">Buscar Codigo Fusi </label>
-                <input
-                    class="input input--text"
-                    id="formInput#search"
-                    type="text"
-                    name="search_query"
-                    value="{{ search_query }}"
-                    placeholder="Ingrese : Codigo, Componente, Descripcion, Tipo ECU"
-                />
-            </div>
-
-            <input class="btn btn--sub btn--lg" type="submit" value="Buscar" />
-        </form>
-
-        <table>
-            <tr>
-                <th>Codigo</th>
-                <th>Descripcion</th>
-                <th>Clase</th>
-                <th></th>
-            </tr>
-            {% for i in fusi %}
-            <tr>
-                <td>{{ i.fusi_code }}</td>
-                <td>{{ i.fusi_description }}</td>
-                <td>{{ i.message_class }}</td>
-                <td>
-                    {% if user.username == 'usuario_link' %}
-                    <button type="button" class="btn btn-outline-success" disabled>Editar</button>
-                    {% else %}
-                    <a href="{% url 'update_fusi' i.id %}">
-                        <button type="button" class="btn btn-outline-success" disabled>Editar</button></a
-                    >
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        <!--paginador-->
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                {% if fusi.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{fusi.previous_page_number}}">Anterior</a>
-                </li>
-                {% endif %} {% for page in paginator.page_range %} {% if page == fusi.number %}
-                <li class="page-item active">
-                    <a class="page-link" href="?page={{page}}">{{page}}</a>
-                </li>
-                {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
-                {% endif %} {% endfor %} {% if fusi.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{fusi.next_page_number}}">Siguiente</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        <!--fin paginador-->
-    </div>
-
-    {% endblock content %}
 </div>
+{% endblock content %}
