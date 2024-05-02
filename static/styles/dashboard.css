@@ -143,10 +143,6 @@ td .volt {
     color: #686868;
     font-size: 2.2rem;
 }
-.notok {
-    color: #f0a500;
-    font-size: 2rem;
-}
 
 .rotate-y {
     animation: rotateY 2s linear infinite;
@@ -195,7 +191,7 @@ td .volt {
 }
 
 .navpag {
-    margin-top: 43px;
+    margin-top: 20px;
 }
 .container-button {
     display: flex;
@@ -211,6 +207,7 @@ td .volt {
 }
 .page-link {
     background: transparent;
-    --bs-pagination-active-bg: #0f8bfd;
-    --bs-pagination-active-border-color: #0f8bfd;
+    --bs-pagination-active-bg: #686868;
+    --bs-pagination-active-border-color: #686868;
+    --bs-pagination-color: #686868;
 }

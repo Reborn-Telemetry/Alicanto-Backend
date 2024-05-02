@@ -110,10 +110,11 @@
                                                 <th style="color: #686868">Kilometraje</th>
                                                 <th style="color: #686868">24 Volts</th>
                                                 <th style="color: #686868">Fusi</th>
-                                                <th style="color: #686868">Actualizacion</th>
                                                 <th style="color: #686868; font-size: 20px">
                                                     <i class="bx bxs-ev-station"></i>
                                                 </th>
+                                                <th style="color: #686868">Actualizacion</th>
+
                                                 <th style="color: #686868">Perfil</th>
                                             </tr>
                                         </thead>
@@ -161,20 +162,31 @@
                                                         {% if i.lts_fusi == 0.0 %}
                                                         <i class="bx bx-check-circle ok"></i>
                                                         {% else %}
-                                                        <i class="bx bx-info-circle notok"></i>
-                                                        {{i.lts_fusi}} {% endif %}
+                                                        <button
+                                                            style="
+                                                                --bs-btn-border-radius: 50px;
+                                                                --bs-btn-color: #686868;
+                                                            "
+                                                            type="button"
+                                                            class="btn btn-outline-warning btn-sm"
+                                                        >
+                                                            {{i.lts_fusi}}
+                                                        </button>
+                                                        <!--<i class="bx bx-info-circle notok"></i>-->
+                                                        {% endif %}
                                                     </div>
                                                 </td>
                                                 <!--Inicio timestamp-->
+                                                <td>
+                                                    {% if i.charging == 1 %}
+                                                    <i class="bx bxs-zap rotate-y"></i> {% endif %}
+                                                </td>
                                                 <td>
                                                     <div class="timestamp">{{i.lts_update}}</div>
                                                 </td>
                                                 <!--Fin timestamp-->
                                                 <!--Inicio cargando-->
-                                                <td>
-                                                    {% if i.charging == 1 %}
-                                                    <i class="bx bxs-zap rotate-y"></i> {% endif %}
-                                                </td>
+
                                                 <!--Fin cargando-->
                                                 <!--Inicio perfil-->
                                                 <td>
