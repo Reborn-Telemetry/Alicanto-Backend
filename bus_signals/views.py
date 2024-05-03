@@ -499,7 +499,7 @@ def dashboard(request):
     # grafico co2 evitado 
     linechart_data = []
     for month, total in total_per_month.items():
-        linechart_data.append({'month': month, 'total': round(total * 670 / 10000)})
+        linechart_data.append({'month': month, 'total': round(total * 0.00067)})
 
     # energia total cargada año
     energia_anual = 0
