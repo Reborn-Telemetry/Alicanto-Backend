@@ -451,7 +451,6 @@ def dashboard(request):
 
     # co2 ahorrado total flota
     co2_total= (km_total * 670)
-    co2_total = co2_total/10000
     co2_total = round(co2_total, 2)
 
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
