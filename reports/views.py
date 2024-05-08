@@ -19,7 +19,10 @@ from django.db.models import Max
 import requests
 from django.contrib.auth.decorators import login_required
 import pytz
-no_update_list = [ '27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
+no_update_list = ['24', '87', '61','87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
+
+def historical_data(request):
+    return render(request, 'reports/historicos.html')
 
 def dashboard_disponibilidad_flota(request):
    headers = { 'User-Agent': 'Alicanto/1.0', }
@@ -198,14 +201,6 @@ def energy_report(request):
     buf.seek(0)
 
     return FileResponse(buf, as_attachment=True, filename=filename)
-
-
-
-
-
-
-
-
 
 
 def reporte_soh_flota(request):
