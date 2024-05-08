@@ -30,13 +30,14 @@
     padding-bottom: 5px;
     color: #0f8bfd;
     font-size: 1.6rem;
+    border-bottom: 1px solid #c3c3cc;
+}
+.card-text {
+    font-size: 22px;
+    font-weight: 300;
+    color: #686868;
 }
 .icon-alert {
     color: #0f8bfd;
     font-size: 30px;
-}
-.card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
