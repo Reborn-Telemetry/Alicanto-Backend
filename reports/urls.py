@@ -11,4 +11,5 @@ urlpatterns = [
     path('disponibilidad_flota/', views.disponbilidad_flota, name='action-disponibilidad'),
     path('soh-flota/', views.reporte_soh_flota, name='reporte-soh-flota'),
     path("bus_dailykm_report_pdf/<str:pk>/", views.daily_bus_km_report_pdf, name="bus_dailykm_pdf_report"),
+    path("historicos/", views.historical_data, name="historicos"),
 ]

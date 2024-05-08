@@ -1037,8 +1037,6 @@ def delete_bus(request, pk):
 
 
 
-
-
 @login_required(login_url='login')
 def dic_fusi(request):
     search_query = ''

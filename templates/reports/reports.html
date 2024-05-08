@@ -1,6 +1,16 @@
 {% extends "main.html" %} {% load static %} {% block header %}Reportes Buses{% endblock header %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/reports.css' %}" />
+<div class="container-fluid">
+    <div class="option-button">
+       
+        <a href="{% url 'historicos' %}"
+            ><button type="button" class="btn btn-primary"><i class="bx bx-edit-alt"></i> Consultar historicos</button></a
+        >
+
+    </div>
+
     <div class="container-fluid text-center">
+       
         <div class="col-12" style="margin-top: 50px">
             <div class="card">
                 <h5 class="card-header title">Reportes Flota</h5>
