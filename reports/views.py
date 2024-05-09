@@ -21,6 +21,8 @@ from django.contrib.auth.decorators import login_required
 import pytz
 no_update_list = ['24', '87', '61','87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 
+#funcion reporte matriz seleccionando mes y año
+@login_required(login_url='login')
 def historical_data(request):
      if request.method == 'GET':
         # Lógica para manejar la solicitud GET
@@ -44,7 +46,7 @@ def historical_data(request):
         ]
         
         formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-        filename = f'matriz km diario flota :{formatted_datetime}.xls'
+        filename = f'matriz km diario flota historico mes:{mes}-{año}.xls'
         buf = io.BytesIO()
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet = workbook.add_sheet('Report')
@@ -157,9 +159,7 @@ def historical_data(request):
 
         return FileResponse(buf, as_attachment=True, filename=filename)
 
-    
-    
-
+@login_required(login_url='login')
 def dashboard_disponibilidad_flota(request):
    headers = { 'User-Agent': 'Alicanto/1.0', }
    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
@@ -178,9 +178,7 @@ def dashboard_disponibilidad_flota(request):
    }
    return render(request, 'reports/disponibilidad_flota.html', context)
 
-"""Desde aqui en adelante todas las funciones son para la generacion de reportes"""
-
-
+@login_required(login_url='login')
 def disponbilidad_flota(request):
    headers = { 'User-Agent': 'Alicanto/1.0', }
    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
@@ -220,7 +218,7 @@ def disponbilidad_flota(request):
    messages.success(request, 'Los registros se actualizaron correctamente.')
    return redirect('disponibilidad-flota')
 
-
+@login_required(login_url='login')
 def energy_report(request):
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%d-%m-%Y")
@@ -338,7 +336,7 @@ def energy_report(request):
 
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
+@login_required(login_url='login')
 def reporte_soh_flota(request):
   current_datetime = datetime.now()
   formatted_datetime = current_datetime.strftime("%d-%m-%Y")
@@ -368,7 +366,7 @@ def reporte_soh_flota(request):
    
   return FileResponse(buf, as_attachment=True, filename=filename)    
 
-
+@login_required(login_url='login')
 def matriz_km_diario_flota(request):
    dbname = 'alicanto-db-dev'
    user = 'postgres'
