@@ -27,13 +27,14 @@
 }
 
 .card-title {
-    padding-bottom: 5px;
+    margin-bottom: 0; /* Eliminar el margen inferior */
     color: #0f8bfd;
     font-size: 1.6rem;
     border-bottom: 1px solid #c3c3cc;
 }
 .card-text {
-    font-size: 22px;
+    margin-top: 10px;
+    font-size: 18spx;
     font-weight: 300;
     color: #686868;
 }
