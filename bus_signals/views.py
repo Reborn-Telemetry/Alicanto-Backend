@@ -498,8 +498,10 @@ def dashboard(request):
     
     # grafico co2 evitado 
     linechart_data = []
+    linechart_data2 = []
     for month, total in total_per_month.items():
         linechart_data.append({'month': month, 'total': round(total * 0.00067)})
+        linechart_data2.append({'month': month, 'total': round(total * 0.0004187)})
 
     # energia total cargada año
     energia_anual = 0
@@ -580,9 +582,6 @@ def dashboard(request):
         energia_anual = round(energia_anual)
         request.session['energia_anual'] = round(energia_anual)
         request.session['charging'] = charging
-    
-
-    
 
     context = {
        
@@ -598,6 +597,7 @@ def dashboard(request):
         'co2_total': co2_total,
         'fusi_grafico': fusi_grafico,
         'linechart_data': linechart_data,
+        'linechart_data2': linechart_data2,
         'charging': charging,
         'energia_anual': energia_anual,
     }
