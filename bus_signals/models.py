@@ -9,6 +9,7 @@ series_choices = (
     ('Queltehue-Q2', 'Queltehue-Q2'),
     ('Tricahue', 'Tricahue'),
     ('Retrofit', 'Retrofit'),
+    ('Prueba', 'Prueba'),
 )
 job_choices = (
     ('Electro Mecanico', 'Electro Mecanico'),
@@ -30,7 +31,7 @@ class Bus(models.Model):
     bus_name = models.CharField('Name', max_length=40, unique=True, blank=False, null=False)
     sniffer = models.CharField('Sniffer', max_length=10, unique=True, blank=False, null=False)
     plate_number = models.CharField('Plate Number', max_length=10, unique=False, blank=True, null=True)
-    bus_series = models.CharField('Serie', max_length=30, choices=series_choices, blank=False, null=False)
+    bus_series = models.CharField('Serie', max_length=100, choices=series_choices, blank=False, null=False)
     client = models.CharField('Client', max_length=20, blank=False, null=False, default='Link')
     lts_soc = models.IntegerField('LTS SOC', default=None, blank=True, null=True)
     lts_odometer = models.IntegerField('LTS Odometer', default=0, blank=True, null=True)
