@@ -19,7 +19,7 @@
     border: 2px solid #686868;
     font-size: 12px;
     height: 28px; /* Valor fijo para la altura */
-    width: 50px; /* Valor fijo para el ancho */
+
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -47,7 +47,6 @@
     border: 2px solid #d80000;
     font-size: 12px;
     height: 28px; /* Valor fijo para la altura */
-    width: 50px; /* Valor fijo para el ancho */
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -213,4 +212,8 @@ td .volt {
 }
 .bar {
     background-color: #ededed;
+}
+tr td .vehicle {
+    text-transform: capitalize;
+    color: #686868;
 }
