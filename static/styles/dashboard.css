@@ -211,3 +211,6 @@ td .volt {
     --bs-pagination-active-border-color: #686868;
     --bs-pagination-color: #686868;
 }
+.bar {
+    background-color: #ededed;
+}
