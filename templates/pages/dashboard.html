@@ -75,6 +75,121 @@
         </div>
     </div>
     <!--fin primera linea tarjetas-->
+    <!--inicio grafico de barras-->
+    <div class="row">
+        <div class="col-8" style="margin-top: 30px">
+            <div class="card">
+                <h5 class="card-header">Informe Fusi Flota</h5>
+                <div class="card-body" style="height: 200px">
+                    <div class="col-12">
+                        <canvas id="myPieChart2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--grafico lineas-->
+        <div class="col-4" style="margin-top: 30px">
+            <div class="card d-flex">
+                <h5 class="card-header">Co2 evitado vs generado mensual</h5>
+                <div class="card-body" style="height: 200px">
+                    <canvas id="co2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--nueva row tarjetas-->
+    <div class="row" style="margin-top: 30px">
+        <div class="col-3">
+            <a class="nav-link" href="{% url 'energy-record' %}">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-3">
+                            <div class="icon-card">
+                                <i class="bx bxs-bolt icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="card-body">
+                                <h5 class="card-title">Kwh Anual</h5>
+                                <p class="card-text">
+                                    {{energia_anual}} kwh
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a class="nav-link" href="{% url 'disponibilidad-flota' %}">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <div class="icon-card">
+                                <i class="bx bx-x-circle icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">Buses FS</h5>
+                                <p class="card-text">
+                                    {{cant_fs}} Buses
+
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a class="nav-link" href="{% url 'energy-record' %}">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <div class="icon-card">
+                                <i class="bx bxs-ev-station icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">Buses Cargando</h5>
+                                <p class="card-text">
+                                    {{charging}} Buses
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a class="nav-link" href="{% url 'warnings' %}">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <div class="icon-card">
+                                <i class="bx bxs-battery-low icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">SOC Bajo</h5>
+                                <p class="card-text">
+                                    {{cant_low_50_soc}} Buses
+                                    <i class="bx bx-chevron-right indicator"></i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
     <!--tabla principal-->
     <div style="margin-top: 30px" class="row">
         <div class="col-9">
@@ -217,101 +332,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--fin tabla principal-->
-    <!--segunda linea tarjetas-->
-    <div class="row" style="margin-top: 30px">
-        <div class="col-3">
-            <a class="nav-link" href="{% url 'energy-record' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-3">
-                            <div class="icon-card">
-                                <i class="bx bxs-bolt icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-9">
-                            <div class="card-body">
-                                <h5 class="card-title">Kwh Anual</h5>
-                                <p class="card-text">
-                                    {{energia_anual}} kwh
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-3">
-            <a class="nav-link" href="{% url 'disponibilidad-flota' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-3">
-                            <div class="icon-card">
-                                <i class="bx bx-x-circle icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">Buses FS</h5>
-                                <p class="card-text">
-                                    {{cant_fs}} Buses
-
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-3">
-            <a class="nav-link" href="{% url 'energy-record' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-3">
-                            <div class="icon-card">
-                                <i class="bx bxs-ev-station icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">Buses Cargando</h5>
-                                <p class="card-text">
-                                    {{charging}} Buses
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-3">
-            <a class="nav-link" href="{% url 'warnings' %}">
-                <div class="card">
-                    <div class="row g-0">
-                        <div class="col-md-3">
-                            <div class="icon-card">
-                                <i class="bx bxs-battery-low icon-alert"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">SOC Bajo</h5>
-                                <p class="card-text">
-                                    {{cant_low_50_soc}} Buses
-                                    <i class="bx bx-chevron-right indicator"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="row" style="margin-top: 30px">
         <div class="col-3">
             <a class="nav-link" href="{% url 'warnings' %}">
                 <div class="card">
@@ -333,6 +353,31 @@
                     </div>
                 </div>
             </a>
+            <div class="card" style="margin-top: 30px">
+                <h5 class="card-header">Fuera de Servicio</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <div class="table-responsive overflow-y-scroll" style="max-height: 386px">
+                            <table class="table table-sticky">
+                                <thead class="table bar">
+                                    <tr>
+                                        <th>Bus</th>
+                                        <th>Causa</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for i in fs_vehicles %}
+                                    <tr>
+                                        <td>{{i.vehicle}}</td>
+                                        <td>{{i.state}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -340,53 +385,12 @@
 
 <!--...........................................divisor codigo..............................................-->
 
-<div class="container-fluid">
-    <div class="row">
-        <!--fin perimera linea tarjetas-->
-
-        <div class="col-6" style="margin-top: 30px">
-            <div class="card">
-                <h5 class="card-header">Informe Fusi Flota</h5>
-                <div class="card-body" style="height: 200px">
-                    <div class="col-12">
-                        <canvas id="myPieChart2"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6" style="margin-top: 30px">
-            <div class="card d-flex">
-                <h5 class="card-header">Co2 evitado vs generado mensual</h5>
-                <div class="card-body" style="height: 200px">
-                    <canvas id="co2"></canvas>
-                </div>
-            </div>
-        </div>
-        <!--iniciotabla actualizaciones de buses -->
-        <div class="container">
-            <div class="row" style="margin-top: 30px">
-                <div class="col-9"></div>
-                <!--fin tabla actualizaciones de buses -->
-                <div class="col-3">
-                    <!--fin tarjeta -->
-
-                    <!--fin tarjeta -->
-
-                    <!--fin tarjeta -->
-
-                    <!--fin-->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Obtén los datos de tu vista Django
         const data = {{ fusi_grafico | safe }};
-        const dataToShow = data.slice(0, 10);
+        const dataToShow = data.slice(0, 25);
 
         // Crea los arrays de labels y values solo con los primeros 20 elementos
         const labels = dataToShow.map((item) => item.fusi_code);
