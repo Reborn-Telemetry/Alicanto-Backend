@@ -35,7 +35,7 @@ class Bus(models.Model):
     client = models.CharField('Client', max_length=20, blank=False, null=False, default='Link')
     lts_soc = models.IntegerField('LTS SOC', default=None, blank=True, null=True)
     lts_odometer = models.IntegerField('LTS Odometer', default=0, blank=True, null=True)
-    lts_isolation = models.FloatField('LTS Isolation', default=0, blank=True, null=True)
+    lts_isolation = models.IntegerField('LTS Isolation', default=0, blank=True, null=True)
     lts_24_volt = models.FloatField('LTS 24 Volt', default=0, blank=True, null=True)
     lts_fusi = models.IntegerField(blank=True, null=True)
     charging = models.IntegerField('Charging', default=0, blank=True, null=True)
