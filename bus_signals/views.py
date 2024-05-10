@@ -433,10 +433,7 @@ def dashboard(request):
     response = requests.get(api_url, headers=headers)
     data = response.json()
     cant_fs = len(data['data'])
-   
-  
-   
-   
+    fs_vehicles = data['data']
     # cantidad de buses en la flota
     total_flota = Bus.bus.exclude(id__in=no_update_list)
     total_flota = total_flota.count()
@@ -600,6 +597,7 @@ def dashboard(request):
         'linechart_data2': linechart_data2,
         'charging': charging,
         'energia_anual': energia_anual,
+        'fs_vehicles': fs_vehicles,
     }
     return render(request, 'pages/dashboard.html', context)
 
