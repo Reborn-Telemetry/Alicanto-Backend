@@ -357,19 +357,26 @@
                 <h5 class="card-header">Fuera de Servicio</h5>
                 <div class="card-body">
                     <div class="col-12">
-                        <div class="table-responsive overflow-y-scroll" style="max-height: 386px">
+                        <div class="table-responsive overflow-y-scroll" style="max-height: 383px">
                             <table class="table table-sticky">
                                 <thead class="table bar">
                                     <tr>
-                                        <th>Bus</th>
-                                        <th>Causa</th>
+                                        <th style="color: #686868">Bus</th>
+                                        <th style="color: #686868">Causa</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
                                     {% for i in fs_vehicles %}
                                     <tr>
-                                        <td>{{i.vehicle}}</td>
-                                        <td>{{i.state}}</td>
+                                        <td><div class="vehicle">{{i.vehicle}}</div></td>
+
+                                        <td>
+                                            {% if i.state == 2 %}
+                                            <div class="soc-no">Reparacion</div>
+                                            {% else %}
+                                            <div class="soc-ok">Mantenimiento</div>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
