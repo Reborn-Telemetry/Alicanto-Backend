@@ -22,3 +22,8 @@
     height: 100%;
     object-fit: contain;
 }
+.card-title {
+    color: #686868;
+    font-weight: 700;
+    font-size: 24px;
+}
