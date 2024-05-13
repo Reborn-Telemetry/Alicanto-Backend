@@ -37,15 +37,15 @@
                     </div>
                     <div class="col-md-7">
                         <div class="card-body">
+                            <h5 class="card-title">Bus {{bus.bus_name}}</h5>
+                            <p class="card-text">
+                                Patente: {{bus.plate_number}} <br />
+                                Sniffer: {{bus.sniffer}} <br />
+                                Kilometraje: {{bus.lts_odometer}} Kms. <br />
+                                Cliente : {{bus.client}} <br />
+                                Actualizacion: {{bus.lts_update}}
+                            </p>
                             <a href="{% url 'bus_detail' bus.id %}">
-                                <h5 class="card-title">Bus {{bus.bus_name}}</h5>
-                                <p class="card-text">
-                                    Patente: {{bus.plate_number}} <br />
-                                    Sniffer: {{bus.sniffer}} <br />
-                                    Kilometraje: {{bus.lts_odometer}} Kms. <br />
-                                    Cliente : {{bus.client}} <br />
-                                    Actualizacion: {{bus.lts_update}}
-                                </p>
                                 <p class="card-text">
                                     <button type="button" class="btn btn-primary">Ver mas</button>
                                 </p>
