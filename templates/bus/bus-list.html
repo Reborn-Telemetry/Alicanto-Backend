@@ -2,10 +2,9 @@
 
 <link rel="stylesheet" href="{% static 'styles/bus-list.css' %}" />
 
-<div class="container-fluid text-center">
+<div class="container-fluid">
     <div class="row">
-        <!-- Botones Nuevo y Lista al principio -->
-        <div class="col-md-4 d-flex align-items-center justify-content-start">
+        <div class="col-4 justify-content-start">
             {% if user.username == 'hurbx' or user.username == 'jose-troncoso' or user.username == 'Luis-Perez' %}
             <a href="{% url 'create_bus' %}" class="btn btn-primary me-2"> <i class="bx bx-plus"></i> Nuevo </a>
             {% else %}
@@ -14,8 +13,6 @@
 
             <a href="{% url 'bus_list_view' %}" class="btn btn-primary"> <i class="bx bx-list-ul"></i> Lista </a>
         </div>
-
-        <!-- Formulario al final -->
         <div class="col-md-8 d-flex align-items-center justify-content-end">
             <form action="{% url 'bus_list' %}" method="get" id="formulario" class="d-flex align-items-center">
                 <div class="input-group me-2">
@@ -25,27 +22,33 @@
             </form>
         </div>
     </div>
+</div>
+
+<!--divisor de codigo-->
+
+<div class="container-fluid">
     <div style="margin-top: 20px" class="row">
         {% for bus in bus %}
-        <div class="col-sm-4">
-            <div class="card mb-4" style="max-width: 540px">
+        <div class="col-4">
+            <div class="card">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="{{ bus.bus_img.url }}" class="img-fluid rounded-start" alt="bus image" />
+                    <div class="col-md-5">
+                        <img class="bus-img" src="{{ bus.bus_img.url }}" alt="bus image" />
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-7">
                         <div class="card-body">
-                            <a href="{% url 'bus_detail' bus.id %}">
-                                <h5 class="card-title">{{bus.bus_name}}</h5>
-                                <p class="card-text">
-                                    {{bus.plate_number}} <br />
-                                    {{bus.lts_soc}}% <br />
-                                    {{bus.lts_odometer}} Kms.
-                                </p>
-                                <p class="card-text">
-                                    <small class="text-body-secondary">{{bus.lts_update}}</small>
-                                </p>
-                            </a>
+                            <!--<a href="{% url 'bus_detail' bus.id %}">-->
+                            <h5 class="card-title">Bus : {{bus.bus_name}}</h5>
+                            <p class="card-text">
+                                Patente: {{bus.plate_number}} <br />
+                                Sniffer: {{bus.sniffer}} <br />
+                                Kilometraje: {{bus.lts_odometer}} Kms. <br />
+                                Actualizacion: {{bus.lts_update}}
+                            </p>
+                            <p class="card-text">
+                                <button type="button" class="btn btn-primary">Ver mas</button>
+                            </p>
+                            <!--</a>-->
                         </div>
                     </div>
                 </div>
