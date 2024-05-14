@@ -10,7 +10,6 @@
 .navpag {
     margin-top: 70px;
 }
-
 .card {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border: none;
@@ -26,4 +25,37 @@
     color: #686868;
     font-weight: 700;
     font-size: 24px;
+}
+.card-text {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten a varias filas */
+    justify-content: space-between; /* Espacio uniforme entre las columnas */
+    gap: 10px; /* Espacio entre las filas y columnas */
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column; /* Los elementos se apilan verticalmente */
+    width: calc(50% - 5px); /* Ancho del 50% del contenedor principal con espacio */
+    gap: 5px; /* Espacio entre los elementos internos */
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho */
+}
+
+.content-container > div {
+    margin-right: 10px; /* Espacio entre los elementos internos */
+}
+.button-link {
+    display: flex;
+    justify-content: end;
+    margin-top: 20px;
+}
+.name {
+    font-weight: 700;
+    font-size: 17px;
+    color: #686868;
+}
+.item {
+    font-weight: 400;
+    font-size: 17px;
+    color: #686868;
 }
