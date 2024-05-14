@@ -59,3 +59,13 @@
     font-size: 17px;
     color: #686868;
 }
+.card-header {
+    --bs-card-cap-color: #0f8bfd;
+    font-weight: 700;
+    font-size: 25px;
+    padding: 10px;
+    display: flex;
+}
+.table {
+    --bs-table-bg: transparent;
+}
