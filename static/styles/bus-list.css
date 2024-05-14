@@ -69,3 +69,6 @@
 .table {
     --bs-table-bg: transparent;
 }
+.button-pro {
+    --bs-btn-border-radius: 50px;
+}
