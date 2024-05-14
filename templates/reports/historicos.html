@@ -16,8 +16,8 @@
                             {% csrf_token %}
                         <select name="mes" class="form-select" aria-label="Default select example">
                             <option selected>Mes</option>
-                            {% for i in meses %}
-                            <option value="{{i}}">{{i}}</option>
+                            {% for i in meses2 %}
+                            <option value="{{i.numero}}">{{i.mes}}</option>
                             {% endfor %}
                             
                         </select>
@@ -55,8 +55,8 @@
                             </select>
                         <select name="mes" style="margin-top: 10px" class="form-select" aria-label="Default select example">
                             <option selected>Mes</option>
-                            {% for i in meses %}
-                            <option value="{{i}}">{{i}}</option>
+                            {% for i in meses2 %}
+                            <option value="{{i.numero}}">{{i.mes}}</option>
                             {% endfor %}
                            
                         </select>
