@@ -1,28 +1,36 @@
 {% extends 'main.html' %} {% load static %} {% block header %}Staff {% endblock header %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/profiles.css' %}" />
-<div style="height: 100vh" class="container text-center">
-    <div class="row" style="height: 100vh" >
+<div class="container-fluid">
+    <!--divisor de codigo-->
+    <div class="row">
         {% for i in workers %}
-        <div class="col-lg-4">
-            <div class="card mb-3" style="max-width: 600px">
+        <div class="col-4">
+            <div style="margin-top: 30px" class="card">
                 <div class="row g-0">
-                    <div class="col-md-4">
-                        <img style="object-fit:cover; "src="{{i.profile_image.url}}" class="img-fluid rounded-start serie" alt="profileimage" />
+                    <div class="col-3">
+                        <img
+                            style="object-fit: cover"
+                            src="{{i.profile_image.url}}"
+                            class="img-fluid rounded-start serie"
+                            alt="profileimage"
+                        />
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-9">
                         <div class="card-body">
-                            <h5 class="card-title name">{{i.name}}</h5>
-                            <p class="card-text">
-                                <div class="data">
-                                    <div>{{i.short_intro}}</div>
-                                    <div>{{i.phone}}</div>
-                                    <div>{{i.email}}</div>
-
+                            <h5 class="card-title">{{i.name}}</h5>
+                            <br />
+                            <div class="card-text">
+                                <div class="content-container">
+                                    <div class="name">Area:</div>
+                                    <div class="name">Correo</div>
+                                    <div class="name">Telefono:</div>
                                 </div>
-                            </p>
-                            <p class="card-text">
-                                <small class="text-body-secondary"> ultima conexion<br/>{{i.user.last_login}} </small>
-                            </p>
+                                <div class="content-container">
+                                    <div class="item">{{i.short_intro}}</div>
+                                    <div class="item">{{i.email}}</div>
+                                    <div class="item">{{i.phone}}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

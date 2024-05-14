@@ -2,17 +2,39 @@
     margin-top: 15px;
     margin-bottom: 20px;
 }
-.data {
-    display: flex;
-    flex-direction: column;
-    margin-top: -18px;
-}
+
 .card {
     background-color: #ededed;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.card-text {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten a varias filas */
+    justify-content: space-around; /* Espacio uniforme entre las columnas */
+    gap: 1px; /* Espacio reducido entre las filas y columnas */
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column; /* Los elementos se apilan verticalmente */
+    width: calc(50% - 10px); /* Ancho del 50% del contenedor principal con espacio reducido */
+    gap: 0; /* Elimina el espacio entre los elementos internos */
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho */
+}
+
+.content-container > div {
+    margin-right: 0; /* Elimina el margen entre los elementos internos */
+}
+
 .name {
-    color: #0f8bfd;
-    margin-top: -8px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #686868;
+}
+
+.item {
+    font-weight: 400;
+    font-size: 14px;
+    color: #686868;
 }
