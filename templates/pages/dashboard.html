@@ -362,7 +362,8 @@
                                 <thead class="table bar">
                                     <tr>
                                         <th style="color: #686868">Bus</th>
-                                        <th style="color: #686868">Causa</th>
+                                        <th style="color: #686868">Responsable</th>
+                                        <th style="color: #686868">Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
@@ -372,11 +373,12 @@
 
                                         <td>
                                             {% if i.state == 2 %}
-                                            <div class="soc-no">Reparacion</div>
+                                            <div class="soc-no">Rem</div>
                                             {% else %}
-                                            <div class="soc-ok">Mantenimiento</div>
+                                            <div class="soc-ok">Link</div>
                                             {% endif %}
                                         </td>
+                                        <td>{% if i.state == 2 %} Reparacion {% else %} Mantencion {% endif %}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
