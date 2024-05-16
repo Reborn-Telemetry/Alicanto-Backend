@@ -19,7 +19,7 @@
     border: 2px solid #686868;
     font-size: 12px;
     height: 28px; /* Valor fijo para la altura */
-
+    width: 50px;
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -44,6 +44,7 @@
     transform: translateY(-5%);
 }
 .soc-no {
+    width: 50px;
     border: 2px solid #d80000;
     font-size: 12px;
     height: 28px; /* Valor fijo para la altura */
@@ -96,8 +97,8 @@
 
 .card-header {
     --bs-card-cap-color: #0f8bfd;
-    font-weight: 700;
-    font-size: 25px;
+    font-weight: 600;
+    font-size: 20px;
     padding: 10px;
     display: flex;
 }
