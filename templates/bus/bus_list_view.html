@@ -48,6 +48,7 @@
                                 <th>V. Vision</th>
                                 <th>Ultima Actualizacion</th>
                                 <th>Ecu</th>
+                                <th>Tipo</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -74,6 +75,7 @@
                                 <!--Fin perfil-->
                                 <td>{{i.lts_update}}</td>
                                 <td>{{i.bus_ecu}}</td>
+                                <td>{{i.bus_type}}</td>
 
                                 <td>
                                     <a href="{% url 'bus_detail' i.id %}">

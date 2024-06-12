@@ -53,24 +53,24 @@
                             <table class="table table-sticky">
                                 <thead class="table sticky-top bar">
                                     <tr>
-                                        <th scope="col" class="sticky-left">Bus</th>
+                                        <th scope="col" class="sticky-left" style="color: #686868">Bus</th>
                                         <!-- Añade la clase sticky-col -->
                                         {% for item in days_of_month %}
-                                        <th scope="col">{{ item }}</th>
+                                        <th scope="col" style="color: #686868">{{ item }}</th>
                                         {% endfor %}
                                     </tr>
                                 </thead>
-                                <tbody class="table-group-divider">
+                                <tbody style="border-top: 1px solid #686868" class="table-group-divider">
                                     {% for item in lista_datos_organizados %}
                                     <tr>
-                                        <td class="sticky-left">{{ item.bus }}</td>
+                                        <td class="sticky-left" style="color: #686868">{{ item.bus }}</td>
                                         <!-- Añade la clase sticky-col -->
                                         {% for data in item.datos %} {% if data.energia_total == '0.0' %}
                                         <td style="color: #ededed">{{ data.energia_total }}</td>
                                         {% elif data.energia_total == 0 %}
                                         <td style="color: #ededed">{{ data.energia_total }}</td>
                                         {% else %}
-                                        <td>{{ data.energia_total }}</td>
+                                        <td class="edata">{{ data.energia_total }}</td>
                                         {% endif %} {% endfor %}
                                     </tr>
                                     {% endfor %}
