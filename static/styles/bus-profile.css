@@ -1,3 +1,49 @@
+.icon-card {
+    max-width: 50px;
+    max-height: 50px;
+    border: 3px solid #0f8bfd;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    position: relative; /* Agrega posición relativa para que funcione el centrado vertical */
+    top: 50%; /* Mueve el círculo hacia abajo un 50% de la altura de su contenedor */
+    transform: translateY(-50%); /* Vuelve a subir el círculo un 50% de su propia altura */
+}
+
+.icon-alert {
+    color: #0f8bfd;
+    font-size: 30px;
+}
+.card {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: none;
+    background-color: #ededed;
+}
+.card-title {
+    border-bottom: 1px solid #c3c3cc;
+    padding-bottom: 5px;
+    color: #686868;
+    font-size: 15px;
+    font-weight: 400;
+}
+.card-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #0f8bfd;
+}
+.big-icon {
+    display: flex;
+    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    color: #7ada00;
+}
+
 .box .chart {
     position: relative;
     width: 100%;
@@ -17,17 +63,6 @@
     left: 11px;
     width: 170px;
     width: 170px;
-}
-
-h5 {
-    font-size: 15px;
-    font-weight: 400;
-}
-
-.custom-card {
-    background-color: #ededed;
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .twin {
