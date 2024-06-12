@@ -212,6 +212,7 @@
                                         </th>
                                         <th style="color: #686868">Actualizacion</th>
                                         <th style="color: #686868">Serie</th>
+                                        <th style="color: #686868">Tipo</th>
 
                                         <th style="color: #686868">Perfil</th>
                                     </tr>
@@ -284,11 +285,10 @@
                                         <td>
                                             <div class="timestamp">{{i.bus_series}}</div>
                                         </td>
-                                        <!--Fin timestamp-->
-                                        <!--Inicio cargando-->
+                                        <td>
+                                            <div class="timestamp">{{i.bus_type}}</div>
+                                        </td>
 
-                                        <!--Fin cargando-->
-                                        <!--Inicio perfil-->
                                         <td>
                                             <a href="{% url 'bus_detail' i.id %}">
                                                 <button type="button" class="btn btn-outline-primary button-pro">

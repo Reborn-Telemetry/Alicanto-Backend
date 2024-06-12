@@ -30,10 +30,12 @@ import pytz
 from collections import defaultdict
 
 
-filter_fusi_code = [21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0, 16911.0, 20519.0, 20499.0, 20505.0,
-20502.0, 21777.0, 21780.0, 20500.0, 20508.0, 20510.0, 20504.0, 20520.0, 20515.0, 20501.0]
+filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
+                     16911.0, 20519.0, 20499.0, 20505.0, 20502.0, 21777.0, 21780.0, 20500.0, 
+                     20508.0, 20510.0, 20504.0, 20520.0, 20515.0, 20501.0 ]
 
-no_update_list = [ '27','34', '60', '24', '87', '116', '21', '61', '82', '83', '81', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
+no_update_list = [ '27','34', '60', '24', '87', '116', '21', '61', '82', '83',
+                   '81', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 
 @login_required(login_url='login')
 def no_access(request):
@@ -59,10 +61,7 @@ def warnings(request):
     no_update = no_update.exclude(id__in=no_update_list)
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
-
     low_24_grafico = list(low_battery.values('bus_name', 'lts_24_volt'))
-
-
      # fusicodes monthly
     current_month = timezone.now().month
     distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
@@ -118,9 +117,6 @@ def warnings(request):
         page_fusi = paginator_fusi.num_pages
         distinct_fusi_code = paginator_fusi.page(page_fusi)
 
-    
-
-
     context = {
         'top_grafico': top_grafico,
         'low_24_grafico': low_24_grafico,
@@ -162,7 +158,7 @@ def reports_page(request):
         'paginator': paginator}
     return render(request, 'reports/reports.html', context)
 
-
+@login_required
 def fusi_dashboard(request):
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     open_fusi = open_fusi.exclude(fusi_code__in=filter_fusi_code)
@@ -321,12 +317,6 @@ def bus_detail(request, pk):
     except EmptyPage:
         page = paginator.num_pages
         fusi_codes = paginator.page(page)
-    
-    
-    
-    
-    
-    
 
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%m')
@@ -601,7 +591,7 @@ def dashboard(request):
     }
     return render(request, 'pages/dashboard.html', context)
 
-
+@login_required
 def monthly_bus_report_xls(request):
     report_data = monthly_fleet_km()
     current_datetime = datetime.now()
@@ -633,7 +623,7 @@ def monthly_bus_report_xls(request):
 
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
+@login_required
 def monthly_bus_report(request):
     report_data = monthly_fleet_km()
     current_datetime = datetime.now()
@@ -686,7 +676,7 @@ def monthly_bus_report(request):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
+@login_required
 def xls_report(request):
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%d-%m-%Y")
@@ -885,7 +875,7 @@ def bus_historic_fusi(request, pk):
     return FileResponse(buf, as_attachment=True, filename=filename)
     
 
-
+@login_required
 def pdf_report(request):
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%d-%m-%Y")
@@ -952,7 +942,7 @@ def login_page(request):
 
     return render(request, 'pages/login.html')
 
-
+@login_required
 def logout_user(request):
     logout(request)
     messages.error(request, 'Sesion cerrada correctamente')
@@ -1031,8 +1021,6 @@ def delete_bus(request, pk):
         return redirect('bus_list')
     context = {'object': bus}
     return render(request, 'pages/delete_object.html', context)
-
-
 
 
 @login_required(login_url='login')

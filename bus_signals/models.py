@@ -46,7 +46,9 @@ class Bus(models.Model):
     bus_img = models.ImageField(null=True, blank=True, default='bus.png')
     bus_ecu = models.CharField('Bus ECU', max_length=20, blank=True, null=True, choices=message_class_choices)
     soh = models.IntegerField('SOH', blank=True, null=True)
-
+    bus_type = models.CharField('Type', max_length=20, blank=True, null=True)
+    key_state = models.ImageField('Key State', null=True, blank=True)
+ 
     bus = models.Manager()
 
     def __str__(self):
@@ -198,6 +200,20 @@ class ChargeStatus(models.Model):
         verbose_name_plural = 'Charge Status'
         ordering = ['TimeStamp']
 
+class HvilStatus(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    hvil_status_value = models.IntegerField('HVIL Status Value', blank=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+
+    hvil_status = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.hvil_status_value} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'HVIL Status'
+        verbose_name_plural = 'HVIL Status'
+        ordering = ['TimeStamp']
 
 
 class PackTemperature(models.Model):
