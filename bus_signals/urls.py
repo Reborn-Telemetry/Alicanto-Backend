@@ -22,6 +22,7 @@ urlpatterns = [
   path("bus_historic_fusi_pdf_report/<str:pk>/", views.bus_historic_fusi, name="bus_historic_fusi_pdf_report"),
   path("montly-km-report/", views.monthly_bus_report, name="montly-km-report"),
   path("xls-report/", views.xls_report, name="xls-report"),
+  path("software_version", views.software_version, name="software_version"),
   path("monthly-bus-report-xls/", views.monthly_bus_report_xls, name="monthly-bus-report-xls"),
   path("warnings/", views.warnings, name="warnings"),
   path("fusi_dashboard/", views.fusi_dashboard, name="fusi_dashboard"),

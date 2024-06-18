@@ -36,7 +36,7 @@
             </div>
         </div>
         <!--inicio tarjeta bus principal-->
-        <div class="col-sm-12 col-lg-5">
+        <div class="col-sm-12 col-lg-4">
             <div class="card custom-card">
                 <img src="{{bus.bus_img.url}}" class="card-img-top" alt="..." />
                 <div class="card-body">
@@ -219,6 +219,21 @@
                     </div>
                 </div>
             </div>
+            <div style="margin-top: 20px" class="card">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <div class="icon-card">
+                            <i class="bx bx-error icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Ultimo Fusi: {{bus.lts_fusi}}</h5>
+                            <p class="card-text">{{bus.lts_update|date:"d-m-Y H:m"}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-2">
             <div class="card">
@@ -274,6 +289,21 @@
                     </div>
                 </div>
             </div>
+            <div style="margin-top: 20px" class="card">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <div class="icon-card">
+                            <i class="bx bxs-car-battery icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Bateria 24 Volts</h5>
+                            <p class="card-text">{{bus.lts_24_volt}} V.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-3">
             <div class="card">
@@ -306,7 +336,7 @@
             </div>
 
             <div style="margin-top: 20px" class="card">
-                <h5 class="card-header">Recorrido buses</h5>
+                <h5 style="color: #686868" class="card-header">Recorrido buses</h5>
                 <div class="card-body">
                     <table class="table table-sm">
                         <thead>
