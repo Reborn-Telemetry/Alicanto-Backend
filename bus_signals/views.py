@@ -634,8 +634,8 @@ def monthly_bus_report(request):
     doc = SimpleDocTemplate(buf, pagesize=landscape(letter))
     elements = []
 
-    table_data = [
-        [
+    table_data = [[
+        
             'Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
             'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
             'Sep I', 'Sep F', 'Oct I', 'Oct F', 'Nov I', 'Nov F', 'Dic I', 'Dic F'
@@ -675,6 +675,39 @@ def monthly_bus_report(request):
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
+
+@login_required
+def software_version(request):
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte versiones software :{formatted_datetime}.xls'
+    buf = io.BytesIO()
+
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
+
+    table_data = [[
+        'Bus', 'Mark', 'Jarvis', 'Vision', 'Fecha de actualización'
+    ]]
+    buses = Bus.bus.all()
+
+    for i in buses:
+        formatted_datetime = i.lts_update.strftime("%d/%m/%Y %H:%M") if i.lts_update else "sin actualizacion"
+        row = [
+            i.bus_name, i.mark, i.jarvis, i.vision, formatted_datetime
+               ]
+        table_data.append(row)
+    
+    style = xlwt.easyxf('font: bold on; align: horiz center')
+    for row_num, row_data in enumerate(table_data):
+        for col_num, cell_value in enumerate(row_data):
+            worksheet.write(row_num, col_num, cell_value, style)
+
+    workbook.save(buf)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
 
 @login_required
 def xls_report(request):
