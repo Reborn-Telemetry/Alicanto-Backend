@@ -116,3 +116,8 @@ td {
 .bar {
     background-color: #ededed;
 }
+.titulo {
+    color: #0f8bfd;
+    font-weight: 700;
+    font-size: 16px;
+}

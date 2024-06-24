@@ -1,4 +1,6 @@
-{% extends "main.html" %}{% load humanize %}{% load static %}{% block header %}E{% endblock header %}{% block content %}
+{% extends "main.html" %}{% load humanize %}{% load static %}{% block page %}
+<h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Reporte de Energia</h1>
+{% endblock page %}{% block content %}
 <link rel="stylesheet" href="{% static 'styles/energy.css' %}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
@@ -69,6 +71,9 @@
                                         <td style="color: #ededed">{{ data.energia_total }}</td>
                                         {% elif data.energia_total == 0 %}
                                         <td style="color: #ededed">{{ data.energia_total }}</td>
+                                        {% elif data.energia_total < '0.0' %}
+                                        <td style="color: red">{{ data.energia_total }}</td>
+
                                         {% else %}
                                         <td class="edata">{{ data.energia_total }}</td>
                                         {% endif %} {% endfor %}

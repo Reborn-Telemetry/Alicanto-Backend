@@ -200,118 +200,48 @@
                         </ul>
                     </div>
                 </div>
-                <!--<div style="height: 100vh" class="container-fluid">
-            <div class="row flex-nowrap">
-                <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-                    <div
-                        class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 sidebar"
+                <!--barra-->
+
+                <div class="col">
+                    <nav
+                        class="navbar sticky-top"
+                        style="
+                            background-color: #ededed;
+                            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                            margin-bottom: 20px;
+                        "
                     >
-                        <a
-                            href="{% url 'dashboard' %}"
-                            class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
-                        >
-                            <span class="fs-5 d-none d-sm-inline">
-                                <div class="d-flex justify-content-center align-items-center" style="width: 100%">
-                                    <img alt="logoReborn" src="{% static "img/logo/reblogo.png" %}" style="width:180px;
-                                    margin-left:30px">
+                        <div class="container-fluid">
+                            <a class="navbar-brand">{% block page %}{% endblock page %}</a>
+                            <div class="d-flex">
+                                <div class="dropdown">
+                                    <a
+                                        href="#"
+                                        class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle"
+                                        id="dropdownUser3"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <img
+                                            src="https://github.com/mdo.png"
+                                            alt="mdo"
+                                            width="24"
+                                            height="24"
+                                            class="rounded-circle"
+                                        />
+                                    </a>
+                                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <hr class="hr" />
-                            </span>
-                        </a>
-                        <ul
-                            class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
-                            id="menu"
-                        >
-                            <li class="nav-item">
-                                <a href="{% url 'dashboard' %}" class="nav-link align-middle px-0">
-                                    <i class="bx bx-home-alt-2 icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'reports_page' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-pie-chart-alt-2 icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Reportes</span></a
-                                >
-                            </li>
-                            <li>
-                                <a href="{% url 'warnings' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-error-circle icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Alertas</span></a
-                                >
-                            </li>
-                            <li>
-                                <a href="{% url 'bus_list' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-bus icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Flota</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'dic_fusi' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-book icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Diccionario Fusi</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-time icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Prog. Buses</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'work_order_form' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-edit-alt icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Crear Parte</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'disponibilidad-flota' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-calendar-check icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Informe Disponibilidad</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'profile' %}" class="nav-link px-0 align-middle">
-                                    <i class="bx bx-user-pin icon"></i>
-                                    <span class="ms-1 d-none d-sm-inline">Staff</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <hr />
-                        <div class="dropdown pb-4">
-                            <a
-                                href="#"
-                                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                                id="dropdownUser1"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <img
-                                    src="https://github.com/mdo.png"
-                                    alt="hugenerd"
-                                    width="30"
-                                    height="30"
-                                    class="rounded-circle"
-                                />
-                                <span class="d-none d-sm-inline mx-1">{{user.profile.name}}</span>
-                            </a>
-                            <ul
-                                class="dropdown-menu dropdown-menu-dark text-small shadow"
-                                aria-labelledby="dropdownUser1"
-                            >
-                                <li><a class="dropdown-item" href="">Pelfil</a></li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a>
-                                </li>
-                            </ul>
+                            </div>
                         </div>
-                    </div>
-                </div>-->
-                <div class="col py-3">
-                    <h1 class="header">{% block header %}{% endblock header %}</h1>
+                    </nav>
+
                     {% block content %}{% endblock content %}
                 </div>
             </div>
