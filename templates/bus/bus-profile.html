@@ -1,4 +1,6 @@
-{% extends "main.html" %} {% load static %}{% block header%}BUS {{ bus.bus_name}}{%endblock header%} {% block content %}
+{% extends "main.html" %} {% load static %}{% block page %}
+<h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Perfil Bus {{ bus.bus_name}}</h1>
+{% endblock page %} {% block content %}
 <link rel="stylesheet" href="{% static 'styles/bus-profile.css' %}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
@@ -526,7 +528,11 @@
                                         <td>{{i.soc_inicial}}%</td>
                                         <td>{{i.soc_final}}%</td>
                                         <td>{{i.carga}}%</td>
-                                        <td>{{i.energia}} kwh</td>
+                                        <td>
+                                            {% if i.carga < 0 %}
+                                            <p style="color: red">{{i.energia}} kwh</p>
+                                            {% else %} {{i.energia}} kwh {% endif %}
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
