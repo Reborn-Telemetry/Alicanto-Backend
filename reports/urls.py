@@ -13,4 +13,5 @@ urlpatterns = [
     path("bus_dailykm_report_pdf/<str:pk>/", views.daily_bus_km_report_pdf, name="bus_dailykm_pdf_report"),
     path("historicos/", views.historical_data, name="historicos"),
     path("bus_historico/", views.historic_bus_report, name="bus_historico"),
+    path("historico_energia/", views.historical_energy_report, name="historico_energia"),
 ]

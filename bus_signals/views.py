@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, BatteryPackCellMaxVoltage, BatteryPackCellMinVoltage
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota
@@ -411,7 +411,15 @@ def bus_detail(request, pk):
 
     
     acu = round(sum(i['energia'] for i in datos_tabla), 2)
-    
+    max_voltage_list = []
+    min_voltage_list = []
+    max_voltage = BatteryPackCellMaxVoltage.battery_pack_cell_max_voltage.filter(bus_id=pk).values('battery_pack_cell_max_voltage_value').order_by('-TimeStamp').values_list('battery_pack_cell_max_voltage_value', flat=True)[:50]
+    min_voltage = BatteryPackCellMinVoltage.battery_pack_cell_min_voltage.filter(bus_id=pk).values('battery_pack_cell_min_voltage_value').order_by('-TimeStamp').values_list('battery_pack_cell_min_voltage_value', flat=True)[:50]
+    for i in max_voltage:
+        max_voltage_list.append({'max_voltage': i})
+    for i in min_voltage:
+        min_voltage_list.append({'min_voltage': i})
+   
     context_perfil = {'bus': bus,
                'message': messages,
                'ot': ot, 
@@ -427,6 +435,8 @@ def bus_detail(request, pk):
                'datos_tabla': datos_tabla,
                'acu': acu,
                'monthly_totals': monthly_totals,
+                'max_voltage_list': max_voltage_list,
+                'min_voltage_list': min_voltage_list,
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
 
