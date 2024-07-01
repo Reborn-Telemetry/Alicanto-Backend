@@ -702,12 +702,6 @@ def historical_energy_report(request):
         año = int(request.POST['año'])
         bus_list = Bus.bus.all().exclude(id__in=no_update_list)
 
-        table_data = [
-            ["Mes", "Bus", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
-             "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27",
-             "28", "29", "30", "31"]
-        ]
-
         santiago_tz = pytz.timezone('Chile/Continental')
         lista_datos_organizados = []
 
@@ -789,16 +783,20 @@ def historical_energy_report(request):
         worksheet = workbook.add_sheet('Reporte')
 
         row_num = 0
-        columns = ["Bus", "Fecha", "Energía Total (kWh)"]
-        for col_num, column_title in enumerate(columns):
-            worksheet.write(row_num, col_num, column_title)
+        # Encabezado de la primera fila
+        worksheet.write(row_num, 0, "Bus")
+        for col_num, dia in enumerate(dias_mes, start=1):
+            worksheet.write(row_num, col_num, dia.strftime('%d'))
 
+        # Datos de los buses
         for bus_data in lista_datos_organizados:
+            row_num += 1
+            worksheet.write(row_num, 0, bus_data['bus'])
             for dato in bus_data['datos']:
-                row_num += 1
-                worksheet.write(row_num, 0, bus_data['bus'])
-                worksheet.write(row_num, 1, dato['fecha'])
-                worksheet.write(row_num, 2, dato['energia_total'])
+                for col_num, dia in enumerate(dias_mes, start=1):
+                    if dato['fecha'] == dia.strftime('%Y-%m-%d'):
+                        worksheet.write(row_num, col_num, dato['energia_total'])
+                        break
 
         workbook.save(buf)
         buf.seek(0)
@@ -807,5 +805,3 @@ def historical_energy_report(request):
         response['Content-Disposition'] = f'attachment; filename="informe_consumo_kwh_historico_mes_{mes}_{año}.xls"'
 
         return response
-        
-    
