@@ -179,28 +179,6 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="dropdown">
-                        <a
-                            href="#"
-                            class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle"
-                            id="dropdownUser3"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <img
-                                src="https://github.com/mdo.png"
-                                alt="mdo"
-                                width="24"
-                                height="24"
-                                class="rounded-circle"
-                            />
-                        </a>
-                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a></li>
-                        </ul>
-                    </div>
                 </div>
                 <!--barra-->
 
@@ -216,7 +194,7 @@
                         <div class="container-fluid">
                             <a class="navbar-brand">{% block page %}{% endblock page %}</a>
                             <div class="d-flex">
-                                <div class="dropdown">
+                                <div class="dropstart">
                                     <a
                                         href="#"
                                         class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle"
@@ -224,13 +202,7 @@
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                     >
-                                        <img
-                                            src="https://github.com/mdo.png"
-                                            alt="mdo"
-                                            width="24"
-                                            height="24"
-                                            class="rounded-circle"
-                                        />
+                                        <i class="bx bx-user user"></i>
                                     </a>
                                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
                                         <li><a class="dropdown-item" href="#">Profile</a></li>
