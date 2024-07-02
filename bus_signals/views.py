@@ -997,7 +997,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, 'Ingresaste coreectamente')
+            messages.success(request, 'Ingresaste correctamente')
             return redirect('dashboard')
         else:
             messages.error(request, 'nombre de usuario o contraseña incorrectos')
