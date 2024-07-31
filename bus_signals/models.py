@@ -296,6 +296,23 @@ class BatteryPackCellMaxVoltage(models.Model):
         verbose_name_plural = 'Batteries Pack Cell Max Voltage'
         ordering = ['TimeStamp']
 
+class CellsVoltage(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
+    max_v = models.FloatField('Max', null=True, blank=True)
+    min_v = models.FloatField('Min', null=True, blank=True)
+    avg = models.FloatField('Avg', null=True, blank=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+
+    cells_voltage = models.Manager()
+
+    def __str__(self):
+        return f'{self.TimeStamp} - {self.max_v} - {self.min_v} - {self.avg} - {self.bus}'
+    
+    class Meta:
+        verbose_name = 'Cells Voltage'
+        verbose_name_plural = 'Cells Voltage'
+        
+
 
 class BatteryPackCellMinVoltage(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
