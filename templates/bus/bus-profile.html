@@ -6,6 +6,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 
+<style>
+    .filter-controls {
+        display: flex;
+        margin-left: 10px;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .input-group {
+        flex: 1; /* Permite que el input ocupe todo el espacio disponible, si es necesario */
+    }
+
+    .btn {
+        line-height: 1.5; /* Ajusta la altura de línea para una mejor alineación */
+    }
+</style>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-lg-12">
@@ -518,30 +535,47 @@
                                         <th>Energia</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tableBody">
+                                    <!-- Aquí se insertarán los datos dinámicamente -->
                                     {% for i in datos_tabla %}
-                                    <tr>
-                                        <td>{{i.rango}}</td>
-                                        <td>{{i.fecha_inicio}}</td>
-                                        <td>{{i.fecha_termino}}</td>
-                                        <td>{{i.tiempo}} hrs</td>
-                                        <td>{{i.soc_inicial}}%</td>
-                                        <td>{{i.soc_final}}%</td>
-                                        <td>{{i.carga}}%</td>
+                                    <tr class="table-row" data-soc-final="{{ i.soc_final }}">
+                                        <td>{{ i.rango }}</td>
+                                        <td>{{ i.fecha_inicio }}</td>
+                                        <td>{{ i.fecha_termino }}</td>
+                                        <td>{{ i.tiempo }} hrs</td>
+                                        <td>{{ i.soc_inicial }}%</td>
+                                        <td>{{ i.soc_final }}%</td>
+                                        <td>{{ i.carga }}%</td>
                                         <td>
                                             {% if i.carga < 0 %}
-                                            <p style="color: red">{{i.energia}} kwh</p>
-                                            {% else %} {{i.energia}} kwh {% endif %}
+                                            <p style="color: red">{{ i.energia }} kwh</p>
+                                            {% else %} {{ i.energia }} kwh {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
+                                <tfoot></tfoot>
                             </table>
                         </div>
                     </div>
                 </div>
+                <div class="filter-controls">
+                    <div class="input-group input-group mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">SOC Final</span>
+                        <input type="text" class="form-control" id="filterInput" aria-label="Filtro SOC Final" />
+                    </div>
+                    <button
+                        style="margin-top: -13px"
+                        type="button"
+                        class="btn btn-primary me-2 btn-sm"
+                        id="filterButton"
+                    >
+                        Buscar
+                    </button>
+                </div>
             </div>
         </div>
+
         <div style="margin-top: 50px" class="col-3">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Energia Cargada</h5>
@@ -767,6 +801,27 @@
                     }
                 }
             }
+        });
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#filterButton").on("click", function () {
+            var filterValue = $("#filterInput").val().trim(); // Obtener el valor del input y eliminar espacios extra
+
+            $("#tableBody tr").each(function () {
+                var socFinal = $(this).data("soc-final").toString();
+
+                if (filterValue === "" || socFinal.indexOf(filterValue) !== -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
         });
     });
 </script>
