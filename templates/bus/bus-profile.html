@@ -609,6 +609,58 @@
     <div class="row">
         <div class="col-12" style="margin-top: 50px">
             <div class="card custom-card">
+                <h5 class="card-header custom-header">Voltajes Celdas</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                                <table class="table">
+                                    <thead class="table sticky">
+                                        <tr class="table sticky-top bar">
+                                            <th>Fecha</th>
+                                            <th>Voltaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in max_voltage %}
+                                        <tr>
+                                            <td>{{i.TimeStamp}}</td>
+                                            <td>{{i.max_voltage}} V</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                                <table class="table">
+                                    <thead class="table sticky">
+                                        <tr class="table sticky-top bar">
+                                            <th>Fecha</th>
+                                            <th>Voltaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in min_voltage %}
+                                        <tr>
+                                            <td>{{i.TimeStamp}}</td>
+                                            <td>{{i.min_voltage}} V</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" style="margin-top: 50px">
+            <div class="card custom-card">
                 <h5 class="card-header custom-header">Bitacora Fusi Bus</h5>
                 <div class="card-body">
                     <div class="col-12">
