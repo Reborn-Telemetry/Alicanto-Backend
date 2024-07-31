@@ -338,8 +338,8 @@ def bus_detail(request, pk):
 
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%m')
-
-    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('-TimeStamp')
+# bitacora de carga comienzo
+    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
 
     rangos = []
     rango_actual = []
@@ -411,6 +411,8 @@ def bus_detail(request, pk):
 
     
     acu = round(sum(i['energia'] for i in datos_tabla), 2)
+
+
     max_voltage_list = []
     min_voltage_list = []
     max_voltage = BatteryPackCellMaxVoltage.battery_pack_cell_max_voltage.filter(bus_id=pk).values('battery_pack_cell_max_voltage_value').order_by('-TimeStamp').values_list('battery_pack_cell_max_voltage_value', flat=True)[:50]
@@ -420,7 +422,8 @@ def bus_detail(request, pk):
     for i in min_voltage:
         min_voltage_list.append({'min_voltage': i})
     
-    print(datos_tabla)
+    print(max_voltage_list)
+    
    
     context_perfil = {'bus': bus,
                'message': messages,
