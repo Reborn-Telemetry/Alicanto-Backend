@@ -27,6 +27,7 @@ fusi_code_options = (
 )
 
 
+
 class Bus(models.Model):
     bus_name = models.CharField('Name', max_length=40, unique=True, blank=False, null=False)
     sniffer = models.CharField('Sniffer', max_length=10, unique=True, blank=False, null=False)
@@ -604,3 +605,19 @@ class AwsPathBucket(models.Model):
         verbose_name = 'Aws Path Bucket'
         verbose_name_plural = 'Aws Path Buckets'
         ordering = ['path_sniffer']
+
+class EcuState(models.Model):
+    TimeStamp = models.DateTimeField('Timestamp', blank=True, null=True)
+    sleep_state = models.IntegerField(blank=True, null=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+    lts_kms = models.IntegerField('LTS Kms', blank=True, null=True)
+
+    ecu_state = models.Manager()
+
+    def __str__(self):
+        return f'{self.ecu_state} - {self.bus}'
+
+    class Meta:
+        verbose_name = 'ECU State'
+        verbose_name_plural = 'ECU States'
+        

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, BatteryPackCellMaxVoltage, BatteryPackCellMinVoltage
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
-from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota
+from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -396,7 +396,7 @@ def bus_detail(request, pk):
     for i in datos_tabla:
         fecha_inicio = i['fecha_inicio']
 
-    # Assuming fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
+    # fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
         try:
             month = fecha_inicio[5:7]  # Extract month as a string
             acumulado_mensual[month] += i['energia']
@@ -419,6 +419,8 @@ def bus_detail(request, pk):
         max_voltage_list.append({'max_voltage': i})
     for i in min_voltage:
         min_voltage_list.append({'min_voltage': i})
+    
+    print(datos_tabla)
    
     context_perfil = {'bus': bus,
                'message': messages,
@@ -981,6 +983,9 @@ def pdf_report(request):
 
 
 def login_page(request):
+    bus_id = 88
+    report = get_battery_health_report(bus_id)
+    print(report)
     if request.user.is_authenticated:
         return redirect('bus_list')
 
@@ -1001,6 +1006,8 @@ def login_page(request):
             return redirect('dashboard')
         else:
             messages.error(request, 'nombre de usuario o contraseña incorrectos')
+
+
            
 
     return render(request, 'pages/login.html')

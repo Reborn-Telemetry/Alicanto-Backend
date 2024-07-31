@@ -1,7 +1,7 @@
 import psycopg2
 from django.db.models import Max
 from django.db.models.functions import ExtractMonth
-from bus_signals.models import Odometer
+from bus_signals.models import Odometer, BatteryHealth
 
 dbname = 'alicanto-db-dev'
 user = 'postgres'
@@ -455,5 +455,26 @@ def obtener_ultimo_valor_energia(lista_datos):
     return ultimo_valor_por_bus
 
 
+def get_battery_health_report(bus_id):
+    health_report = {}
+    healt_values = []
+    
+    # Obtener los datos de BatteryHealth para el bus específico
+    bus_battery_historic_health = BatteryHealth.battery_health.filter(bus=bus_id).order_by('TimeStamp')
+    
+    if bus_battery_historic_health.exists():
+        # Formatear el inicio y fin
+        health_report['inicio'] = bus_battery_historic_health.first().TimeStamp.strftime('%d/%m/%Y %H:%M')
+        health_report['fin'] = bus_battery_historic_health.last().TimeStamp.strftime('%d/%m/%Y %H:%M')
 
+        # Agregar los valores distintos a healt_values junto con su timestamp formateado
+        previous_value = None
+        for i in bus_battery_historic_health:
+            if i.battery_health_value != previous_value:
+                healt_values.append((i.TimeStamp.strftime('%d/%m/%Y %H:%M'), i.battery_health_value))
+                previous_value = i.battery_health_value
+        
+        health_report['values'] = healt_values
 
+    return health_report
+   
