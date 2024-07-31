@@ -415,14 +415,32 @@ def bus_detail(request, pk):
 
     max_voltage_list = []
     min_voltage_list = []
-    max_voltage = BatteryPackCellMaxVoltage.battery_pack_cell_max_voltage.filter(bus_id=pk).values('battery_pack_cell_max_voltage_value').order_by('-TimeStamp').values_list('battery_pack_cell_max_voltage_value', flat=True)[:50]
-    min_voltage = BatteryPackCellMinVoltage.battery_pack_cell_min_voltage.filter(bus_id=pk).values('battery_pack_cell_min_voltage_value').order_by('-TimeStamp').values_list('battery_pack_cell_min_voltage_value', flat=True)[:50]
+    max_voltage = BatteryPackCellMaxVoltage.battery_pack_cell_max_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:50]
+    min_voltage = BatteryPackCellMinVoltage.battery_pack_cell_min_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:50]
     for i in max_voltage:
-        max_voltage_list.append({'max_voltage': i})
+        max_voltage_list.append({'max_voltage': i.battery_pack_cell_max_voltage_value, 'TimeStamp': i.TimeStamp.strftime("%d-%m-%Y %H:%M:%S")})
     for i in min_voltage:
-        min_voltage_list.append({'min_voltage': i})
+        min_voltage_list.append({'min_voltage': i.battery_pack_cell_min_voltage_value, 'TimeStamp': i.TimeStamp.strftime("%d-%m-%Y %H:%M:%S")})
     
-    print(max_voltage_list)
+    max_voltage_dict = {item['TimeStamp']: item['max_voltage'] for item in max_voltage_list}
+    min_voltage_dict = {item['TimeStamp']: item['min_voltage'] for item in min_voltage_list}
+
+# Crear la lista final combinando los datos basados en el timestamp
+    result_list = []
+    for timestamp in max_voltage_dict:
+        if timestamp in min_voltage_dict:
+            result_list.append({
+            'timestamp': timestamp,
+            'max': max_voltage_dict[timestamp],
+            'min': min_voltage_dict[timestamp]
+        })
+
+    for i in result_list:
+        print(i)
+
+    
+    
+
     
    
     context_perfil = {'bus': bus,
@@ -440,8 +458,9 @@ def bus_detail(request, pk):
                'datos_tabla': datos_tabla,
                'acu': acu,
                'monthly_totals': monthly_totals,
-                'max_voltage_list': max_voltage_list,
-                'min_voltage_list': min_voltage_list,
+                'max_voltage': max_voltage_list,
+                'min_voltage': min_voltage_list,
+                
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
 
@@ -986,9 +1005,6 @@ def pdf_report(request):
 
 
 def login_page(request):
-    bus_id = 88
-    report = get_battery_health_report(bus_id)
-    print(report)
     if request.user.is_authenticated:
         return redirect('bus_list')
 
