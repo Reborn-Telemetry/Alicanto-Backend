@@ -339,7 +339,7 @@ def bus_detail(request, pk):
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%m')
 
-    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
+    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('-TimeStamp')
 
     rangos = []
     rango_actual = []
