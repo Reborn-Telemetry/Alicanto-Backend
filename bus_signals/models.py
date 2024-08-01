@@ -302,6 +302,10 @@ class CellsVoltage(models.Model):
     min_v = models.FloatField('Min', null=True, blank=True)
     avg = models.FloatField('Avg', null=True, blank=True)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+    diff_min_max = models.FloatField('Diff Min Max', null=True, blank=True) 
+    diff_min_avg = models.FloatField('Diff Min Avg', null=True, blank=True)
+    diff_max_avg = models.FloatField('Diff Max Avg', null=True, blank=True)
+
 
     cells_voltage = models.Manager()
 
