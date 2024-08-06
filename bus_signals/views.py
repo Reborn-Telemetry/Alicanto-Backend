@@ -301,7 +301,7 @@ def bus_detail(request, pk):
      print('No se encontraron registros en BatteryHealth para el bus_id especificado.')
 
     messages = FusiMessage.fusi.all()
-    fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')
+    fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')[:600]
     for code in fusi_codes:
         for fusi_message in messages:
             if code.fusi_code == fusi_message.fusi_code:
