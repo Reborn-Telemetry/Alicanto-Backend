@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, BatteryPackCellMaxVoltage, BatteryPackCellMinVoltage
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
@@ -413,37 +413,18 @@ def bus_detail(request, pk):
     acu = round(sum(i['energia'] for i in datos_tabla), 2)
 
 
-    max_voltage_list = []
-    min_voltage_list = []
-    max_voltage = BatteryPackCellMaxVoltage.battery_pack_cell_max_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:50]
-    min_voltage = BatteryPackCellMinVoltage.battery_pack_cell_min_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:50]
-    for i in max_voltage:
-        max_voltage_list.append({'max_voltage': i.battery_pack_cell_max_voltage_value, 'TimeStamp': i.TimeStamp.strftime("%d-%m-%Y %H:%M:%S")})
-    for i in min_voltage:
-        min_voltage_list.append({'min_voltage': i.battery_pack_cell_min_voltage_value, 'TimeStamp': i.TimeStamp.strftime("%d-%m-%Y %H:%M:%S")})
+    cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:50]
+    print(cells_voltage)
+ 
     
-    max_voltage_dict = {item['TimeStamp']: item['max_voltage'] for item in max_voltage_list}
-    min_voltage_dict = {item['TimeStamp']: item['min_voltage'] for item in min_voltage_list}
-
-# Crear la lista final combinando los datos basados en el timestamp
-    result_list = []
-    for timestamp in max_voltage_dict:
-        if timestamp in min_voltage_dict:
-            result_list.append({
-            'timestamp': timestamp,
-            'max': max_voltage_dict[timestamp],
-            'min': min_voltage_dict[timestamp]
-        })
-
-    for i in result_list:
-        print(i)
 
     
     
 
     
    
-    context_perfil = {'bus': bus,
+    context_perfil = {
+               'bus': bus,
                'message': messages,
                'ot': ot, 
                'results': results,
@@ -458,8 +439,7 @@ def bus_detail(request, pk):
                'datos_tabla': datos_tabla,
                'acu': acu,
                'monthly_totals': monthly_totals,
-                'max_voltage': max_voltage_list,
-                'min_voltage': min_voltage_list,
+                'cells_voltage': cells_voltage,
                 
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
