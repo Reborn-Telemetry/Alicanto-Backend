@@ -612,40 +612,30 @@
                 <h5 class="card-header custom-header">Voltajes Celdas</h5>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
                                 <table class="table">
                                     <thead class="table sticky">
                                         <tr class="table sticky-top bar">
                                             <th>Fecha</th>
-                                            <th>Voltaje</th>
+                                            <th>Voltaje Max</th>
+                                            <th>Voltaje Min</th>
+                                            <th>Avg Voltaje</th>
+                                            <th>Δ Max/Avg</th>
+                                            <th>Δ Min/Avg</th>
+                                            <th>Δ Min/Max</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for i in max_voltage %}
+                                        {% for i in cells_voltage %}
                                         <tr>
                                             <td>{{i.TimeStamp}}</td>
-                                            <td>{{i.max_voltage}} V</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
-                                <table class="table">
-                                    <thead class="table sticky">
-                                        <tr class="table sticky-top bar">
-                                            <th>Fecha</th>
-                                            <th>Voltaje</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for i in min_voltage %}
-                                        <tr>
-                                            <td>{{i.TimeStamp}}</td>
-                                            <td>{{i.min_voltage}} V</td>
+                                            <td>{{i.max_v}} V</td>
+                                            <td>{{i.min_v}} V</td>
+                                            <td>{{i.avg}} V</td>
+                                            <td>{{i.diff_max_avg}} V</td>
+                                            <td>{{i.diff_min_avg}} V</td>
+                                            <td>{{i.diff_min_max}} V</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
