@@ -805,3 +805,126 @@ def historical_energy_report(request):
         response['Content-Disposition'] = f'attachment; filename="informe_consumo_kwh_historico_mes_{mes}_{año}.xls"'
 
         return response
+
+def historic_soh(request):
+    if request.method == 'GET':
+         return render(request, 'reports/historicos.html')
+    
+    if request.method == 'POST':
+        dbname = 'alicanto-db-dev'
+        user = 'postgres'
+        password = 'postgres'
+        host = 'alicanto-db-v1.cyydo36bjzsy.us-west-1.rds.amazonaws.com'
+        port = '5432'
+        bus = request.POST['bus']
+        año = request.POST['año']
+        buf = io.BytesIO()
+        filename = f'soh anual id:{bus}-año:{año}.pdf' 
+        doc = SimpleDocTemplate(buf, pagesize=letter)
+        elements = []
+        table_data = [
+        ["Dia", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        ]
+        connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+        cursor = connection.cursor()
+
+        query = """ WITH all_days AS (
+             SELECT generate_series(1, 31) AS dia
+                )
+                SELECT
+                    all_days.dia,
+                    MAX(CASE WHEN mes = 1 THEN max_soh END) AS enero,
+                    MAX(CASE WHEN mes = 2 THEN max_soh END) AS febrero,
+                    MAX(CASE WHEN mes = 3 THEN max_soh END) AS marzo,
+                    MAX(CASE WHEN mes = 4 THEN max_soh END) AS abril,
+                    MAX(CASE WHEN mes = 5 THEN max_soh END) AS mayo,
+                    MAX(CASE WHEN mes = 6 THEN max_soh END) AS junio,
+                    MAX(CASE WHEN mes = 7 THEN max_soh END) AS julio,
+                    MAX(CASE WHEN mes = 8 THEN max_soh END) AS agosto,
+                    MAX(CASE WHEN mes = 9 THEN max_soh END) AS septiembre,
+                    MAX(CASE WHEN mes = 10 THEN max_soh END) AS octubre,
+                    MAX(CASE WHEN mes = 11 THEN max_soh END) AS noviembre,
+                    MAX(CASE WHEN mes = 12 THEN max_soh END) AS diciembre
+                FROM all_days
+                LEFT JOIN (
+                    SELECT
+                        EXTRACT(DAY FROM "TimeStamp") AS dia,
+                        bus_id,
+                        battery_health_value as max_soh,
+                        EXTRACT(MONTH FROM "TimeStamp") AS mes,
+                        EXTRACT(YEAR FROM "TimeStamp") AS año
+                    FROM (
+                        WITH ranked_data AS (
+                            SELECT
+                                bus_id,
+                                battery_health_value,
+                                "TimeStamp",
+                                ROW_NUMBER() OVER (PARTITION BY bus_id, DATE_TRUNC('day', "TimeStamp") ORDER BY battery_health_value DESC) AS rnk
+                            FROM
+                                bus_signals_batteryhealth
+                        )
+                        SELECT
+                            bus_id,
+                            battery_health_value,
+                            "TimeStamp"
+                        FROM
+                            ranked_data
+                        WHERE
+                            rnk = 1
+                        ORDER BY
+                            bus_id, "TimeStamp" DESC
+                    ) A
+                    WHERE bus_id = %s
+
+                ) A ON all_days.dia = A.dia
+                WHERE año = %s
+                GROUP BY all_days.dia; 
+                """
+        cursor.execute(query, (bus, año))
+        result = cursor.fetchall()
+
+        data_by_month = [[] for _ in range(12)]  # 12 meses
+    for item in result:
+        for idx, value in enumerate(item[1:], start=1):
+            if value is not None:
+                data_by_month[idx - 1].append(value)
+            else:
+                data_by_month[idx - 1].append('')
+
+    # Llenar la tabla con los datos organizados
+    for i in range(31):  # 31 días
+        row = [f"Día {i+1}"]
+        for month_data in data_by_month:
+            if i < len(month_data):
+                row.append(month_data[i])
+            else:
+                row.append('')
+        table_data.append(row)
+
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
+    ])
+
+    table = Table(table_data)
+    table.setStyle(style)
+    elements.append(table)
+
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    doc.build(elements)
+
+    buf.seek(0)
+        
+
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+    pass
