@@ -165,7 +165,7 @@
                                 <option selected>Año</option>
                                 <option value="2024">2024</option>
                             </select>
-                            {% if user is staff %}
+                            {% if user.is_staff %}
                             <a href="" class="card-link d-flex justify-content-end"
                                 ><button style="margin-top: 10px" type="submit" class="btn btn-primary">
                                     Descargar
