@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
@@ -117,6 +117,14 @@ def warnings(request):
         page_fusi = paginator_fusi.num_pages
         distinct_fusi_code = paginator_fusi.page(page_fusi)
 
+    # speed table
+    speed_records = Speed.speed.filter(speed_value__gt=39)
+    speed_records = speed_records.select_related('bus').order_by('-TimeStamp')
+    
+
+  
+    
+
     context = {
         'top_grafico': top_grafico,
         'low_24_grafico': low_24_grafico,
@@ -133,6 +141,7 @@ def warnings(request):
         'distinct_fusi_code': distinct_fusi_code,
         'paginator_fusi': paginator_fusi,
         'low_50':low_50,
+        'speed_records': speed_records,
     }
     return render(request, 'pages/warnings.html', context)
 
