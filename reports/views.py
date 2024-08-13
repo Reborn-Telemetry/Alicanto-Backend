@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
+from openpyxl import Workbook
 from bus_signals.query_utils import matriz_km_diario_flota, daily_bus_km
-from bus_signals.models import Bus, BatteryHealth, ChargeStatus
+from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage
 from . models import Prueba, DisponibilidadFlota
 from datetime import date, timedelta
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 import io
 from reportlab.platypus import Spacer
 from reportlab.lib import colors
@@ -927,4 +930,124 @@ def historic_soh(request):
     return FileResponse(buf, as_attachment=True, filename=filename)
 
 
-    pass
+def last_value_cells_deltas(request):
+    dbname = 'alicanto-db-dev'
+    user = 'postgres'
+    password = 'postgres'
+    host = 'alicanto-db-v1.cyydo36bjzsy.us-west-1.rds.amazonaws.com'
+    port = '5432'   
+    buf = io.BytesIO()
+    bus = Bus.bus.all()
+    filename = 'last_value_cells_deltas_flota.pdf' 
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+    table_data = [[
+            "Bus", "Max Voltaje", "Min Voltaje", "Prom Voltaje" ,"Δ Min/Max"
+        ]]
+    connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+    cursor = connection.cursor()
+    for i in bus:
+        bus_id = i.id
+        query = """SELECT *
+                   FROM bus_signals_cellsvoltage
+                   WHERE bus_id = %s
+                   ORDER BY "TimeStamp" DESC
+                   LIMIT 1;"""
+        cursor.execute(query, (bus_id,))
+        results = cursor.fetchall()
+        
+        if results:
+            row = [
+                i.bus_name, 
+                results[0][2], 
+                results[0][3], 
+                results[0][4], 
+                round(results[0][2] - results[0][3], 4)
+            ]
+            table_data.append(row)
+        else:
+            print(f"No se encontraron resultados para el bus {i.bus_name}.")
+
+    # Estilo de la tabla
+    table = Table(table_data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    
+    # Agregar título
+    styles = getSampleStyleSheet()
+    title = Paragraph("Reporte de Últimos Valores de Voltaje de Celdas Flota", styles['Title'])
+    elements.append(title)
+    
+    # Agregar la tabla al PDF
+    elements.append(table)
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Configurar el buffer para que FileResponse pueda leerlo
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+def last_value_cells_deltas_excel(request):
+    dbname = 'alicanto-db-dev'
+    user = 'postgres'
+    password = 'postgres'
+    host = 'alicanto-db-v1.cyydo36bjzsy.us-west-1.rds.amazonaws.com'
+    port = '5432'   
+    bus = Bus.bus.all()
+    
+    # Crear un nuevo Workbook de Excel
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Last Value Cells Deltas"
+    
+    # Especificar el nombre del archivo
+    filename = 'last_value_cells_deltas_flota.xlsx' 
+    
+    # Encabezado de la hoja
+    headers = ["Bus", "Max Voltaje", "Min Voltaje", "Prom Voltaje", "Δ Min/Max"]
+    ws.append(headers)
+    
+    # Conectar a la base de datos
+    connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+    cursor = connection.cursor()
+    
+    for i in bus:
+        bus_id = i.id
+        query = """SELECT *
+                   FROM bus_signals_cellsvoltage
+                   WHERE bus_id = %s
+                   ORDER BY "TimeStamp" DESC
+                   LIMIT 1;"""
+        cursor.execute(query, (bus_id,))
+        results = cursor.fetchall()
+        
+        if results:
+            row = [
+                i.bus_name, 
+                results[0][2], 
+                results[0][3], 
+                results[0][4], 
+                round(results[0][2] - results[0][3], 4)
+            ]
+            ws.append(row)
+        else:
+            print(f"No se encontraron resultados para el bus {i.bus_name}.")
+    
+    # Guardar el archivo en un buffer
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    
+    # Retornar el archivo Excel como un FileResponse
+    return FileResponse(buf, as_attachment=True, filename=filename)
+    
+            

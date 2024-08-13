@@ -15,4 +15,6 @@ urlpatterns = [
     path("bus_historico/", views.historic_bus_report, name="bus_historico"),
     path("historico_energia/", views.historical_energy_report, name="historico_energia"),
     path("soh_historico/", views.historic_soh, name="soh_historico"),
+    path("ultimo_voltaje_celdas/", views.last_value_cells_deltas, name="ultimo_voltaje_celdas"),
+    path("ultimo_voltaje_celdas_excel/", views.last_value_cells_deltas_excel, name="ultimo_voltaje_celdas_excel"),
 ]
