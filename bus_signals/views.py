@@ -422,8 +422,8 @@ def bus_detail(request, pk):
     acu = round(sum(i['energia'] for i in datos_tabla), 2)
 
 
-    cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:50]
-    print(cells_voltage)
+    cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')
+    
  
     
 

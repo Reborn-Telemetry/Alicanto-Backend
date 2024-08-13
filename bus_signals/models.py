@@ -49,6 +49,7 @@ class Bus(models.Model):
     soh = models.IntegerField('SOH', blank=True, null=True)
     bus_type = models.CharField('Type', max_length=20, blank=True, null=True)
     key_state = models.ImageField('Key State', null=True, blank=True)
+    ecu_state = models.IntegerField('ECU State', blank=True, null=True)
  
     bus = models.Manager()
 
@@ -98,7 +99,6 @@ class Soc(models.Model):
         verbose_name = 'SOC'
         verbose_name_plural = 'SOCs'
         ordering = ['TimeStamp']
-
 
 
 class Battery24Volts(models.Model):
@@ -310,13 +310,12 @@ class CellsVoltage(models.Model):
     cells_voltage = models.Manager()
 
     def __str__(self):
-        return f'{self.TimeStamp} - {self.max_v} - {self.min_v} - {self.avg} - {self.bus}'
+        return f'{self.TimeStamp} - {self.max_v} - {self.min_v} - {self.avg} - {self.diff_max_avg} - {self.diff_min_avg} - {self.diff_min_max} - {self.bus}'
     
     class Meta:
         verbose_name = 'Cells Voltage'
         verbose_name_plural = 'Cells Voltage'
         
-
 
 class BatteryPackCellMinVoltage(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', null=True, blank=True)
