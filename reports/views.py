@@ -1040,7 +1040,7 @@ def last_value_cells_deltas_excel(request):
             ]
             ws.append(row)
         else:
-            print(f"No se encontraron resultados para el bus {i.bus_name}.")
+            print(f"No se encontraron resultados para el bus. {i.bus_name}.")
     
     # Guardar el archivo en un buffer
     buf = io.BytesIO()
