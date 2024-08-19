@@ -712,7 +712,6 @@
 
     <!--divisor-->
 </div>
-<script src="{% static 'js/bus-profile-js.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -722,7 +721,6 @@
     document.addEventListener("DOMContentLoaded", function () {
         // Obtén los datos de tu vista Django
         const data = {{ fusi_pie | safe }};
-        console.log(data);
         const labels = data.map((item) => item.fusi_code);
         const values = data.map((item) => item.total);
 

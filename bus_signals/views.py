@@ -424,14 +424,6 @@ def bus_detail(request, pk):
 
     cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')
     
- 
-    
-
-    
-    
-
-    
-   
     context_perfil = {
                'bus': bus,
                'message': messages,
