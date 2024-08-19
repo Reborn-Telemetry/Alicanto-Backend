@@ -119,7 +119,7 @@ def warnings(request):
 
     # speed table
     speed_records = Speed.speed.filter(speed_value__gt=39)
-    speed_records = speed_records.select_related('bus').order_by('-TimeStamp')
+    speed_records = speed_records.select_related('bus').order_by('-TimeStamp')[:50]
     
 
   
