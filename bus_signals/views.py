@@ -442,13 +442,8 @@ def bus_detail(request, pk):
 
 @login_required(login_url='login')
 def dashboard(request):
-    headers = {
-    'User-Agent': 'Alicanto/1.0',
-}
-    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
-    response = requests.get(api_url, headers=headers)
-    data = response.json()
-    cant_fs = len(data['data'])
+    data = fs_link_api()
+    cant_fs = (data['cant_fs'])
     fs_vehicles = data['data']
     # cantidad de buses en la flota
     total_flota = Bus.bus.exclude(id__in=no_update_list)

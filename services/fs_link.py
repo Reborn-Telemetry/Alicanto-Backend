@@ -10,5 +10,3 @@ def fs_link_api():
    }
    return api_data
 
-hola = fs_link_api()
-
