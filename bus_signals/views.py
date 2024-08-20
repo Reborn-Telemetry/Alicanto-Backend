@@ -28,6 +28,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 import pytz
 from collections import defaultdict
+from services.fs_link import fs_link_api
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -44,13 +45,6 @@ def no_access(request):
 
 @login_required(login_url='login')
 def warnings(request):
-    headers = {
-    'User-Agent': 'Alicanto/1.0',
-}
-    api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
-    response = requests.get(api_url, headers=headers)
-    data = response.json()
-    list_fs_bus = data['data']
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list)
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50).exclude(id__in=no_update_list)
@@ -129,8 +123,7 @@ def warnings(request):
         'top_grafico': top_grafico,
         'low_24_grafico': low_24_grafico,
         'fusi_grafico': fusi_grafico,
-         'mes_actual': mes_actual,
-        'list_fs_bus': list_fs_bus,
+        'mes_actual': mes_actual,
         'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
