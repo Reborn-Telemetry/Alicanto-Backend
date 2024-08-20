@@ -422,7 +422,7 @@ def bus_detail(request, pk):
     acu = round(sum(i['energia'] for i in datos_tabla), 2)
 
 
-    cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')
+    cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:100]
     
     context_perfil = {
                'bus': bus,
@@ -440,7 +440,7 @@ def bus_detail(request, pk):
                'datos_tabla': datos_tabla,
                'acu': acu,
                'monthly_totals': monthly_totals,
-                'cells_voltage': cells_voltage,
+               'cells_voltage': cells_voltage,
                 
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
