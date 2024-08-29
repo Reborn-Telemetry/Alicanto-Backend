@@ -608,7 +608,11 @@
                                             <td>{{i.avg}} V</td>
                                             <td>{{i.diff_max_avg}} V</td>
                                             <td>{{i.diff_min_avg}} V</td>
+                                            {% if i.diff_min_max > 0.016 %}
+                                            <td style="color: red">{{i.diff_min_max}} mv</td>
+                                            {% else %}
                                             <td>{{i.diff_min_max}} V</td>
+                                            {% endif %}
                                         </tr>
                                         {% endfor %}
                                     </tbody>
