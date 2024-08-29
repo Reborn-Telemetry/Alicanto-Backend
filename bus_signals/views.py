@@ -455,21 +455,24 @@ def bus_detail(request, pk):
     'Diciembre': '12'
 }
     combined_data = []
-    calc_rendimiento = lambda diff, energy: float(energy) / float(diff) if energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
+    calc_rendimiento = lambda energy, diff: round(float(energy) / float(diff), 2) if diff and energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
 
 
     for item in result_data:
-       
         month_name = item['month']
         month_number = month_name_to_number[month_name]
-        energy = monthly_totals_dict.get(month_number, 0)
+        energy = float(monthly_totals_dict.get(month_number, 0))
+    
+        difference = item['difference']
+        if isinstance(difference, str) or difference == 0:
+            difference = None  # O manejar de otra forma, dependiendo de la lógica de negocio
+
         combined_data.append({
-        'month': month_name,
-        'value2': item['value2'],
-        'difference': item['difference'],
-        'energy': energy,
-        'rendimiento': calc_rendimiento(energy, item['difference'])
-    })
+            'month': month_name,
+            'difference': difference,
+            'energy': energy,
+            'rendimiento': calc_rendimiento(energy, difference)
+        })
 
 # Ahora 'combined_data' tiene la combinación de ambas listas
 
