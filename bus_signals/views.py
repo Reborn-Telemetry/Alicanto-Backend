@@ -455,7 +455,8 @@ def bus_detail(request, pk):
     'Diciembre': '12'
 }
     combined_data = []
-    calc_rendimiento = lambda diff, energy: diff / energy if energy else None
+    calc_rendimiento = lambda diff, energy: float(diff) / float(energy) if energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
+
 
     for item in result_data:
        
