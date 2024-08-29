@@ -611,7 +611,7 @@
                                             {% if i.diff_min_max > 0.016 %}
                                             <td style="color: red">{{i.diff_min_max}} mv</td>
                                             {% else %}
-                                            <td>{{i.diff_min_max}} V</td>
+                                            <td style="color: green">{{i.diff_min_max}} V</td>
                                             {% endif %}
                                         </tr>
                                         {% endfor %}
