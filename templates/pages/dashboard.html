@@ -215,7 +215,9 @@
                                         <th style="color: #686868">Actualizacion</th>
                                         <th style="color: #686868">Serie</th>
                                         <th style="color: #686868">Tipo</th>
-                                        <th style="color: #686868">Switch</th>
+                                        <th style="color: #686868; font-size: 20px">
+                                            <i class="bx bx-analyse"></i>
+                                        </th>
                                         <th style="color: #686868">Perfil</th>
                                     </tr>
                                 </thead>
@@ -291,7 +293,25 @@
                                             <div class="timestamp">{{i.bus_type}}</div>
                                         </td>
                                         <td>
-                                            <div class="timestamp">{{i.ecu_state}}</div>
+                                            {% if i.ecu_state == 0 %}
+                                            <div class="timestamp">sleep</div>
+                                            {% elif i.ecu_state == 3 %}
+                                            <div class="timestamp">on</div>
+                                            {% elif i.ecu_state == 5 %}
+                                            <div class="timestamp">aux</div>
+                                            {% elif i.ecu_state == 6 %}
+                                            <div class="timestamp">off</div>
+                                            {% elif i.ecu_state == 9 %}
+                                            <div class="timestamp">drive</div>
+                                            {% elif i.ecu_state == 10 %}
+                                            <div class="timestamp">charge</div>
+                                            {% elif i.ecu_state == 12 %}
+                                            <div class="timestamp">error</div>
+                                            {% elif i.ecu_state == 15 %}
+                                            <div class="timestamp">mantenimiento</div>
+                                            {% else %}
+                                            <div class="timestamp">implementando</div>
+                                            {% endif %}
                                         </td>
 
                                         <td>
