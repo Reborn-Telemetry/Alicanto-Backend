@@ -455,7 +455,7 @@ def bus_detail(request, pk):
     'Diciembre': '12'
 }
     combined_data = []
-    calc_rendimiento = lambda diff, energy: float(diff) / float(energy) if energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
+    calc_rendimiento = lambda diff, energy: float(energy) / float(diff) if energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
 
 
     for item in result_data:
@@ -468,7 +468,7 @@ def bus_detail(request, pk):
         'value2': item['value2'],
         'difference': item['difference'],
         'energy': energy,
-        'rendimiento': calc_rendimiento(item['difference'], energy)
+        'rendimiento': calc_rendimiento(energy, item['difference'])
     })
 
 # Ahora 'combined_data' tiene la combinación de ambas listas
