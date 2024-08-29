@@ -493,7 +493,7 @@ def bus_detail(request, pk):
                'acu': acu,
                'monthly_totals': monthly_totals,
                'cells_voltage': cells_voltage,
-               'combined_data': combined_data,
+               'rendimiento': combined_data,
                 
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
