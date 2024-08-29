@@ -580,7 +580,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12" style="margin-top: 50px">
+        <div class="col-9" style="margin-top: 50px">
             <div class="card custom-card">
                 <h5 class="card-header custom-header">Voltajes Celdas</h5>
                 <div class="card-body">
@@ -616,6 +616,38 @@
                                         </tr>
                                         {% endfor %}
                                     </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3" style="margin-top: 50px">
+            <div class="card custom-card">
+                <h5 class="card-header custom-header">Rendimiento Bus</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                                <table class="table">
+                                    <thead class="table sticky">
+                                        <tr class="table sticky-top bar">
+                                            <th>Mes</th>
+                                            <th>Recorrido</th>
+                                            <th>Energia</th>
+                                            <th>Rendimiento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    {% for i in rendimiento %}
+                                    <tr>
+                                        <td>{{i.month}}</td>
+                                        <td>{{i.difference}} Km</td>
+                                        <td>{{i.energy}} kwh</td>
+                                        <td>{{i.rendimiento}} kWh/km</td>
+                                    </tr>
+                                    {% endfor %}
                                 </table>
                             </div>
                         </div>
@@ -684,7 +716,6 @@
                 </div>
             </div>
         </div>
-        {% for i in combined_data %} {{ i }} {% endfor %}
     </div>
 
     <!--divisor-->
