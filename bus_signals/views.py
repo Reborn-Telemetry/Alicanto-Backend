@@ -308,8 +308,7 @@ def bus_detail(request, pk):
             'difference': 0
         })
             
-    for i in result_data:
-        print(i)
+    
 
     #calculo de 
     
@@ -437,7 +436,42 @@ def bus_detail(request, pk):
 
 
     cells_voltage = CellsVoltage.cells_voltage.filter(bus_id=pk).order_by('-TimeStamp')[:100]
-    
+    #tabla de rendimiento
+    monthly_totals_dict = {item['month']: item['energy'] for item in monthly_totals}
+
+# Combinar ambas listas en una nueva lista
+    month_name_to_number = {
+    'Enero': '01',
+    'Febrero': '02',
+    'Marzo': '03',
+    'Abril': '04',
+    'Mayo': '05',
+    'Junio': '06',
+    'Julio': '07',
+    'Agosto': '08',
+    'Septiembre': '09',
+    'Octubre': '10',
+    'Noviembre': '11',
+    'Diciembre': '12'
+}
+    combined_data = []
+    calc_rendimiento = lambda diff, energy: diff / energy if energy else None
+
+    for item in result_data:
+       
+        month_name = item['month']
+        month_number = month_name_to_number[month_name]
+        energy = monthly_totals_dict.get(month_number, 0)
+        combined_data.append({
+        'month': month_name,
+        'value2': item['value2'],
+        'difference': item['difference'],
+        'energy': energy,
+        'rendimiento': calc_rendimiento(item['difference'], energy)
+    })
+
+# Ahora 'combined_data' tiene la combinación de ambas listas
+
     context_perfil = {
                'bus': bus,
                'message': messages,
@@ -455,6 +489,7 @@ def bus_detail(request, pk):
                'acu': acu,
                'monthly_totals': monthly_totals,
                'cells_voltage': cells_voltage,
+               'combined_data': combined_data,
                 
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
