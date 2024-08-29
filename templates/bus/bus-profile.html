@@ -634,8 +634,8 @@
                                     <thead class="table sticky">
                                         <tr class="table sticky-top bar">
                                             <th>Mes</th>
-                                            <th>Recorrido</th>
-                                            <th>Energia</th>
+                                            <th>Recorrido KM</th>
+                                            <th>Energia Kwh</th>
                                             <th>Rendimiento</th>
                                         </tr>
                                     </thead>
@@ -643,9 +643,9 @@
                                     {% for i in rendimiento %}
                                     <tr>
                                         <td>{{i.month}}</td>
-                                        <td>{{i.difference}} Km</td>
-                                        <td>{{i.energy}} kwh</td>
-                                        <td>{{i.rendimiento}} kWh/km</td>
+                                        <td>{{i.difference}}</td>
+                                        <td>{{i.energy}}</td>
+                                        <td>{{i.rendimiento}} kWh/Km</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
