@@ -4,6 +4,7 @@ from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
 import requests
+import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -115,10 +116,6 @@ def warnings(request):
     speed_records = Speed.speed.filter(speed_value__gt=39)
     speed_records = speed_records.select_related('bus').order_by('-TimeStamp')[:50]
     
-
-  
-    
-
     context = {
         'top_grafico': top_grafico,
         'low_24_grafico': low_24_grafico,
@@ -243,54 +240,78 @@ def bus_detail(request, pk):
     montly_result = monthly_bus_km(pk)
     results = daily_bus_km(pk)
     months_dict = {
-        1: 'Enero',
-        2: 'Febrero',
-        3: 'Marzo',
-        4: 'Abril',
-        5: 'Mayo',
-        6: 'Junio',
-        7: 'Julio',
-        8: 'Agosto',
-        9: 'Septiembre',
-        10: 'Octubre',
-        11: 'Noviembre',
-        12: 'Diciembre',
-    }
+    1: 'Enero',
+    2: 'Febrero',
+    3: 'Marzo',
+    4: 'Abril',
+    5: 'Mayo',
+    6: 'Junio',
+    7: 'Julio',
+    8: 'Agosto',
+    9: 'Septiembre',
+    10: 'Octubre',
+    11: 'Noviembre',
+    12: 'Diciembre',
+}
 
     result_data = []
 
-    # Iterar sobre el rango correcto para cada mes
+# Obtener el mes actual
+    current_month = datetime.now().month
+
+# Iterar sobre el rango correcto para cada mes
     if montly_result and len(montly_result[0]) > 0:
     # Iterar sobre todos los meses
         for month in range(1, 13):
-            index = (month - 1) * 2 + 1  # Calcular el índice correspondiente en los resultados
-            if index < len(montly_result[0]) and montly_result[0][index] is not None and montly_result[0][index + 1] is not None:
-                difference = montly_result[0][index + 1] - montly_result[0][index]
-                month_name = months_dict[month]  # Obtener el nombre del mes del diccionario
+         index = (month - 1) * 2 + 1  # Calcular el índice correspondiente en los resultados
+         if index < len(montly_result[0]):
+            value1 = montly_result[0][index]
+            value2 = montly_result[0][index + 1] if index + 1 < len(montly_result[0]) else None
+            difference = value2 - value1 if value2 is not None else None
+
+            # Si el mes es el actual y solo hay un valor disponible (value1), indicar que está en curso
+            if month == current_month and value2 is None:
                 result_data.append({
-                    'month': month_name,
-                    'value1': montly_result[0][index],
-                    'value2': montly_result[0][index + 1],
-                    'difference': difference if difference is not None else 'N/A'
+                    'month': months_dict[month],
+                    'value1': value1,
+                    'value2': 'En curso',
+                    'difference': 'Calculando'
+                })
+            elif value1 is not None and value2 is not None:
+                result_data.append({
+                    'month': months_dict[month],
+                    'value1': value1,
+                    'value2': value2,
+                    'difference': difference if difference is not None else 'Calculando'
                 })
             else:
-                month_name = months_dict[month]
                 result_data.append({
-                    'month': month_name,
+                    'month': months_dict[month],
                     'value1': 0,
                     'value2': 0,
                     'difference': 0
                 })
-    else:
-        # Si no hay resultados, agregar todos los meses con ceros
-        for month in range(1, 13):
-            month_name = months_dict[month]
+        else:
             result_data.append({
-                'month': month_name,
+                'month': months_dict[month],
                 'value1': 0,
                 'value2': 0,
                 'difference': 0
-            })  # Valores predeterminados
+            })
+    else:
+    # Si no hay resultados, agregar todos los meses con ceros
+        for month in range(1, 13):
+            result_data.append({
+            'month': months_dict[month],
+            'value1': 0,
+            'value2': 0,
+            'difference': 0
+        })
+            
+    for i in result_data:
+        print(i)
+
+    #calculo de 
     
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
