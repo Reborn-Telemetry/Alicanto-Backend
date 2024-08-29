@@ -177,7 +177,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Bateria Actual</h5>
                     <div class="card-text">
-                        <div class="box text-center">{{ bus.lts_soc }}%</div>
+                        <div class="box text-center">{{ bus.lts_soc }} %</div>
                     </div>
                 </div>
             </div>
@@ -245,7 +245,9 @@
                     <h5 class="card-title">SOH</h5>
 
                     <div class="card-text">
-                        <div class="box"><!--{{soh.battery_health_value }}%-->wip</div>
+                        <div class="box text-center">
+                            {% if user.is_staff %} {{ soh.battery_health_value }} % {% else %}wip{% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
