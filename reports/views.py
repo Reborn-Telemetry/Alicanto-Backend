@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from openpyxl import Workbook
-from bus_signals.query_utils import matriz_km_diario_flota, daily_bus_km
+from bus_signals.query_utils import matriz_km_diario_flota, daily_bus_km, monthly_bus_km
 from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage
 from . models import Prueba, DisponibilidadFlota
-from datetime import date, timedelta
+from datetime import date, timedelta, timezone
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 import io
@@ -19,6 +19,8 @@ from io import BytesIO
 import psycopg2
 from django.contrib import messages
 from django.db.models import Max
+from datetime import datetime
+from django.utils import timezone
 import requests
 from django.contrib.auth.decorators import login_required
 import pytz
@@ -686,7 +688,7 @@ def daily_bus_km_report_pdf(request, pk):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
+@login_required(login_url='login')
 def historical_energy_report(request):
     if request.method == 'GET':
         context = {
@@ -809,6 +811,7 @@ def historical_energy_report(request):
 
         return response
 
+@login_required(login_url='login')
 def historic_soh(request):
     if request.method == 'GET':
          return render(request, 'reports/historicos.html')
@@ -929,7 +932,7 @@ def historic_soh(request):
 
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
+@login_required(login_url='login')
 def last_value_cells_deltas(request):
     dbname = 'alicanto-db-dev'
     user = 'postgres'
@@ -995,7 +998,7 @@ def last_value_cells_deltas(request):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
+@login_required(login_url='login')
 def last_value_cells_deltas_excel(request):
     dbname = 'alicanto-db-dev'
     user = 'postgres'
@@ -1050,4 +1053,188 @@ def last_value_cells_deltas_excel(request):
     # Retornar el archivo Excel como un FileResponse
     return FileResponse(buf, as_attachment=True, filename=filename)
     
-            
+@login_required(login_url='login')
+def bus_performance_report_excel(request, pk):
+    montly_result = monthly_bus_km(pk)
+    bus = Bus.bus.get(pk=pk)
+    current_datetime = timezone.now()
+    mes_actual = current_datetime.strftime('%m')
+    charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
+    rangos = []
+    rango_actual = []
+    months_dict = {
+    1: 'Enero',
+    2: 'Febrero',
+    3: 'Marzo',
+    4: 'Abril',
+    5: 'Mayo',
+    6: 'Junio',
+    7: 'Julio',
+    8: 'Agosto',
+    9: 'Septiembre',
+    10: 'Octubre',
+    11: 'Noviembre',
+    12: 'Diciembre',
+    }
+    result_data = []
+# Obtener el mes actual
+    current_month = datetime.now().month
+# Iterar sobre el rango correcto para cada mes
+    if montly_result and len(montly_result[0]) > 0:
+    # Iterar sobre todos los meses
+        for month in range(1, 13):
+         index = (month - 1) * 2 + 1  # Calcular el índice correspondiente en los resultados
+         if index < len(montly_result[0]):
+            value1 = montly_result[0][index]
+            value2 = montly_result[0][index + 1] if index + 1 < len(montly_result[0]) else None
+            difference = value2 - value1 if value2 is not None else None
+
+            # Si el mes es el actual y solo hay un valor disponible (value1), indicar que está en curso
+            if month == current_month and value2 is None:
+                result_data.append({
+                    'month': months_dict[month],
+                    'value1': value1,
+                    'value2': 'En curso',
+                    'difference': 'Calculando'
+                })
+            elif value1 is not None and value2 is not None:
+                result_data.append({
+                    'month': months_dict[month],
+                    'value1': value1,
+                    'value2': value2,
+                    'difference': difference if difference is not None else 'Calculando'
+                })
+            else:
+                result_data.append({
+                    'month': months_dict[month],
+                    'value1': 0,
+                    'value2': 0,
+                    'difference': 0
+                })
+        else:
+            result_data.append({
+                'month': months_dict[month],
+                'value1': 0,
+                'value2': 0,
+                'difference': 0
+            })
+    else:
+    # Si no hay resultados, agregar todos los meses con ceros
+        for month in range(1, 13):
+            result_data.append({
+            'month': months_dict[month],
+            'value1': 0,
+            'value2': 0,
+            'difference': 0
+        })
+
+
+    for item in charge_data:
+        if item.charge_status_value == 1:
+            rango_actual.append(item)
+        elif item.charge_status_value == 0:
+            if rango_actual:
+                rangos.append(rango_actual.copy())
+                rango_actual.clear()
+        else:
+            continue
+# Agregar el último rango si no termina con Estado 0.0
+    if rango_actual:
+        rangos.append(rango_actual)
+
+    santiago_tz = pytz.timezone('Chile/Continental')
+# Preparar los datos para la tabla y calcular acumulados
+    datos_tabla = []
+    for i, rango in enumerate(rangos, 1):
+        fecha_inicio = rango[0].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+        fecha_termino = rango[-1].TimeStamp.strftime("%Y-%m-%d %H:%M:%S")
+        soc_inicial = rango[0].soc_level
+        soc_final = rango[-1].soc_level
+        carga = soc_final - soc_inicial  # Resta de soc_level
+
+        fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d %H:%M:%S')
+        fecha_termino_dt = datetime.strptime(fecha_termino, '%Y-%m-%d %H:%M:%S')
+
+        fecha_inicio_dt_santiago = fecha_inicio_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+        fecha_termino_dt_santiago = fecha_termino_dt.replace(tzinfo=pytz.utc).astimezone(santiago_tz)
+# Calcular la diferencia de tiempo en horas
+        diferencia = fecha_termino_dt_santiago - fecha_inicio_dt_santiago
+        diferencia_en_horas = diferencia.total_seconds() / 3600
+        datos_tabla.append({
+            'rango': i,
+            'fecha_inicio': fecha_inicio_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+            'fecha_termino': fecha_termino_dt_santiago.strftime("%Y-%m-%d %H:%M:%S"),
+            'tiempo': round(diferencia_en_horas, 2),
+            'soc_inicial': soc_inicial,
+            'soc_final': soc_final,
+            'carga': carga,
+            'energia': (carga * 140) / 100 if bus.bus_series == 'Queltehue' else (carga * 280) / 100,
+        })
+    acumulado_mensual = {str(month).zfill(2): 0 for month in range(1, 13)} 
+    for i in datos_tabla:
+        fecha_inicio = i['fecha_inicio']
+# fecha_inicio is in the format "YYYY-MM-DD HH:MM:SS"
+        try:
+            month = fecha_inicio[5:7]  # Extract month as a string
+            acumulado_mensual[month] += i['energia']
+        except ValueError:
+        # Handle invalid month format (e.g., log or skip entry)
+            print(f"Invalid month format found in fecha_inicio: {fecha_inicio}")
+            pass
+    monthly_totals = []
+    for month, energy in acumulado_mensual.items():
+        monthly_totals.append({'month': month, 'energy': round(energy, 2)})
+    acu = round(sum(i['energia'] for i in datos_tabla), 2)
+
+# Comenzamos con rendimiento --------------------------------------------------------->
+    monthly_totals_dict = {item['month']: item['energy'] for item in monthly_totals}
+    month_name_to_number = {
+    'Enero': '01',
+    'Febrero': '02',
+    'Marzo': '03',
+    'Abril': '04',
+    'Mayo': '05',
+    'Junio': '06',
+    'Julio': '07',
+    'Agosto': '08',
+    'Septiembre': '09',
+    'Octubre': '10',
+    'Noviembre': '11',
+    'Diciembre': '12'
+    }
+    combined_data = []
+    calc_rendimiento = lambda energy, diff: round(float(energy) / float(diff), 2) if diff and energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
+    for item in result_data:
+        month_name = item['month']
+        month_number = month_name_to_number[month_name]
+        energy = float(monthly_totals_dict.get(month_number, 0))
+    
+        difference = item['difference']
+        if isinstance(difference, str) or difference == 0:
+            difference = None  # O manejar de otra forma, dependiendo de la lógica de negocio
+
+        combined_data.append({
+            'month': month_name,
+            'difference': difference,
+            'energy': energy,
+            'rendimiento': calc_rendimiento(energy, difference)
+        })
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Reporte Rendimiento Bus"
+    filename = "Rendimiento Bus f'{bus.bus_name}'.xlsx"
+    headers = ["Mes", "Recorrido KM", "Energia KWH", "Rendimiento KWH/KM"]
+    ws.append(headers)
+    for i in combined_data:
+        if combined_data:
+            ws.append([i['month'], i['difference'], i['energy'], i['rendimiento']])
+        else:
+            print(f"No se encontraron resultados para el bus. {i.bus_name}.")
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+    
+
