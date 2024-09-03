@@ -707,23 +707,21 @@ def historical_energy_report(request):
         bus_list = Bus.bus.exclude(id__in=no_update_list)
 
         santiago_tz = pytz.timezone('Chile/Continental')
-        lista_datos_organizados = []
+        lista_datos_organizados = {bus.id: {'bus': bus.bus_name, 'datos': {}} for bus in bus_list}
 
-        for bus in bus_list:
-            charge_data = ChargeStatus.charge_status.filter(bus_id=bus.id).order_by('TimeStamp')
-            rangos = []
-            rango_actual = []
+        charge_data = ChargeStatus.charge_status.filter(bus_id__in=bus_list.values_list('id', flat=True)).order_by('TimeStamp')
 
-            for item in charge_data:
+        for item in charge_data:
+            bus_id = item.bus_id
+            if bus_id in lista_datos_organizados:
                 if item.charge_status_value == 1:
-                    rango_actual.append(item)
-                elif item.charge_status_value == 0 and rango_actual:
-                    rangos.append(rango_actual)
-                    rango_actual = []
+                    lista_datos_organizados[bus_id].setdefault('rango_actual', []).append(item)
+                elif item.charge_status_value == 0 and 'rango_actual' in lista_datos_organizados[bus_id]:
+                    rango_actual = lista_datos_organizados[bus_id].pop('rango_actual')
+                    lista_datos_organizados[bus_id].setdefault('rangos', []).append(rango_actual)
 
-            if rango_actual:
-                rangos.append(rango_actual)
-
+        for bus_id, data in lista_datos_organizados.items():
+            rangos = data.get('rangos', [])
             datos_tabla = []
             for i, rango in enumerate(rangos, 1):
                 fecha_inicio = rango[0].TimeStamp
@@ -731,10 +729,8 @@ def historical_energy_report(request):
                 soc_inicial = rango[0].soc_level
                 soc_final = rango[-1].soc_level
                 carga = soc_final - soc_inicial
-
                 diferencia = fecha_termino - fecha_inicio
                 diferencia_en_horas = diferencia.total_seconds() / 3600
-
                 datos_tabla.append({
                     'rango': i,
                     'fecha_inicio': fecha_inicio,
@@ -744,31 +740,21 @@ def historical_energy_report(request):
                     'soc_final': soc_final,
                     'carga': carga,
                     'energia': (carga * 140) / 100,
-                    'bus': bus.bus_name
+                    'bus': data['bus']
                 })
 
             primer_dia_mes = datetime(año, mes, 1, tzinfo=santiago_tz)
             ultimo_dia_mes = (primer_dia_mes + timedelta(days=32)).replace(day=1) - timedelta(days=1)
             dias_mes = [primer_dia_mes + timedelta(days=d) for d in range((ultimo_dia_mes - primer_dia_mes).days + 1)]
 
-            tabla_energia = [{'bus': bus.bus_name, 'fecha': fecha.strftime('%Y-%m-%d'), 'energia_total': 0} for fecha in dias_mes]
+            tabla_energia = {fecha.strftime('%Y-%m-%d'): 0 for fecha in dias_mes}
+            for dato in datos_tabla:
+                fecha = dato['fecha_inicio'].strftime('%Y-%m-%d')
+                if fecha in tabla_energia:
+                    tabla_energia[fecha] += (dato['carga'] * 140) / 100
 
-            for item in tabla_energia:
-                item['energia_total'] = sum(
-                    (dato['carga'] * 140) / 100 for dato in datos_tabla if dato['fecha_inicio'].strftime('%Y-%m-%d') == item['fecha']
-                )
-
-            for item in tabla_energia:
-                bus_name = item['bus']
-                fecha = item['fecha']
-                energia_total = item['energia_total']
-
-                datos_bus = next((db for db in lista_datos_organizados if db['bus'] == bus_name), None)
-                if datos_bus:
-                    energia_total_formateada = "{:.1f}".format(energia_total)
-                    datos_bus['datos'].append({'fecha': fecha, 'energia_total': energia_total_formateada})
-                else:
-                    lista_datos_organizados.append({'bus': bus_name, 'datos': [{'fecha': fecha, 'energia_total': round(energia_total, 2)}]})
+            for fecha, energia_total in tabla_energia.items():
+                data['datos'][fecha] = round(energia_total, 2)
 
         # Generación del archivo Excel
         buf = io.BytesIO()
@@ -776,18 +762,18 @@ def historical_energy_report(request):
         worksheet = workbook.add_sheet('Reporte')
         filename = f'energia_flota_{mes}-{año}.xls'
 
-        row_num = 0
-        worksheet.write(row_num, 0, "Bus")
+        # Encabezado de la primera fila
+        worksheet.write(0, 0, "Bus")
         for col_num, dia in enumerate(dias_mes, start=1):
-            worksheet.write(row_num, col_num, dia.strftime('%d'))
+            worksheet.write(0, col_num, dia.strftime('%d'))
 
-        for bus_data in lista_datos_organizados:
-            row_num += 1
-            worksheet.write(row_num, 0, bus_data['bus'])
-            for dato in bus_data['datos']:
-                col_num = next((i + 1 for i, dia in enumerate(dias_mes) if dato['fecha'] == dia.strftime('%Y-%m-%d')), None)
+        # Datos de los buses
+        for row_num, data in enumerate(lista_datos_organizados.values(), start=1):
+            worksheet.write(row_num, 0, data['bus'])
+            for fecha, energia_total in data['datos'].items():
+                col_num = next((i + 1 for i, dia in enumerate(dias_mes) if fecha == dia.strftime('%Y-%m-%d')), None)
                 if col_num:
-                    worksheet.write(row_num, col_num, dato['energia_total'])
+                    worksheet.write(row_num, col_num, energia_total)
 
         workbook.save(buf)
         buf.seek(0)
