@@ -357,10 +357,10 @@ def bus_detail(request, pk):
     except EmptyPage:
         page = paginator.num_pages
         fusi_codes = paginator.page(page)
-
+# bitacora de carga comienzo ----------------------------------------------------------------------->
     current_datetime = timezone.now()
     mes_actual = current_datetime.strftime('%m')
-# bitacora de carga comienzo
+
     charge_data = ChargeStatus.charge_status.filter(bus_id=pk).order_by('TimeStamp')
 
     rangos = []
@@ -439,7 +439,7 @@ def bus_detail(request, pk):
     #tabla de rendimiento
     monthly_totals_dict = {item['month']: item['energy'] for item in monthly_totals}
 
-# Combinar ambas listas en una nueva lista
+# Combinar ambas listas en una nueva lista para rendimiento ----------------------------------->
     month_name_to_number = {
     'Enero': '01',
     'Febrero': '02',
