@@ -786,6 +786,7 @@ def historical_energy_report(request):
         buf = io.BytesIO()
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet = workbook.add_sheet('Reporte')
+        filename = f'energia_flota_{mes}-{año}.xls'
 
         row_num = 0
         # Encabezado de la primera fila
@@ -805,11 +806,7 @@ def historical_energy_report(request):
 
         workbook.save(buf)
         buf.seek(0)
-
-        response = HttpResponse(buf, content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = f'attachment; filename="informe_consumo_kwh_historico_mes_{mes}_{año}.xls"'
-
-        return response
+        return FileResponse(buf, as_attachment=True, filename=filename)
 
 @login_required(login_url='login')
 def historic_soh(request):
