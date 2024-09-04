@@ -6,7 +6,9 @@ After=network.target
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/Alicanto-Backend
-ExecStart=/home/ubuntu/env/bin/gunicorn --access-logfile - --workers 4 --bind unix:/home/ubuntu/Alicanto-Backend/Alicanto/Alicanto.sock Alicanto.wsgi:application
+ExecStart=/home/ubuntu/env/bin/gunicorn --access-logfile - --workers 4 --bind unix:/home/ubuntu/Alicanto-Backend/Alicanto/Alicanto.sock --timeout 1800 Alicanto.wsgi:application
+
+
 
        
 [Install]
