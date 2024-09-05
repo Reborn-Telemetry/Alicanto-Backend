@@ -1227,8 +1227,8 @@ def bus_performance_report_excel(request, pk):
 @login_required(login_url='login')
 def switch_report_xls(request, pk):
     selected_bus = pk
+    bus = Bus.bus.get(id=selected_bus)
     switch_state = EcuState.ecu_state.filter(bus_id=selected_bus).order_by('-TimeStamp')
-    
     ranges = []
     rango = 0
     start_time = None
@@ -1254,8 +1254,8 @@ def switch_report_xls(request, pk):
             start_time = None  # Resetea para el siguiente rango
     wb = Workbook()
     ws = wb.active
-    filename = "Reporte Estado Ecu Sleep Bus.xlsx"
-    ws.title = "Reporte Estado Ecu Sleep"
+    filename = f"Reporte Estado EcuSleep Bus '{bus.bus_name}'.xlsx"
+    ws.title = f"Reporte Estado Ecu Sleep Bus '{bus.bus_name}'"
     headers = ["Rango", "Inicio", "Final", "Periodo Hrs"]
     ws.append(headers)
     for i in ranges:
