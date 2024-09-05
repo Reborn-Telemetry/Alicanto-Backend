@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed
+
+from reports.views import switch_report_xls
+from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed, EcuState
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
-from .query_utils import daily_bus_km, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
+from .query_utils import daily_bus_km, format_date, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
 import requests
 import datetime
 from django.contrib.auth import authenticate, login, logout
@@ -138,9 +140,7 @@ def warnings(request):
 
 @login_required(login_url='login')
 def reports_page(request):
-    nombres_buses_max_id = BatteryHealth.battery_health.values('bus__bus_name').annotate(max_id=Max('id'))
-    for i in nombres_buses_max_id:
-        print(i)
+    
     bus = Bus.bus.all()
     bus = bus.exclude(id__in=no_update_list)
 
@@ -501,8 +501,6 @@ def bus_detail(request, pk):
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
 
-
-
 @login_required(login_url='login')
 def dashboard(request):
     #data = fs_link_api()
@@ -794,7 +792,6 @@ def software_version(request):
 
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
 @login_required
 def xls_report(request):
     current_datetime = datetime.now()
@@ -886,7 +883,6 @@ def recorrido_mensual_flota(request):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
 @login_required(login_url='login')
 def recorrido_mensual_bus_pdf(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -941,7 +937,6 @@ def recorrido_mensual_bus_pdf(request, pk):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
 @login_required(login_url='login')
 def bus_historic_fusi(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -993,7 +988,6 @@ def bus_historic_fusi(request, pk):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
     
-
 @login_required
 def pdf_report(request):
     current_datetime = datetime.now()
@@ -1035,7 +1029,6 @@ def pdf_report(request):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
-
 def login_page(request):
     if request.user.is_authenticated:
         return redirect('bus_list')
@@ -1070,7 +1063,6 @@ def logout_user(request):
 
     return redirect('login')
 
-
 @login_required(login_url='login')
 def create_bus(request):
     form = BusForm()
@@ -1081,7 +1073,6 @@ def create_bus(request):
             return redirect('bus_list')
     context = {'form': form}
     return render(request, 'bus/bus-form.html', context)
-
 
 @login_required(login_url='login')
 def create_fusi(request):
@@ -1175,6 +1166,5 @@ def dic_fusi(request):
         'paginator': paginator
     }
     return render(request, 'fusi/fusi-dictionary.html', context)
-
 
 
