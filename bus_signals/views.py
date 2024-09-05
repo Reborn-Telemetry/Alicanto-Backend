@@ -138,6 +138,9 @@ def warnings(request):
 
 @login_required(login_url='login')
 def reports_page(request):
+    nombres_buses_max_id = BatteryHealth.battery_health.values('bus__bus_name').annotate(max_id=Max('id'))
+    for i in nombres_buses_max_id:
+        print(i)
     bus = Bus.bus.all()
     bus = bus.exclude(id__in=no_update_list)
 
