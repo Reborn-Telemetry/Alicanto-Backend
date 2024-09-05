@@ -19,4 +19,5 @@ urlpatterns = [
     path("ultimo_voltaje_celdas_excel/", views.last_value_cells_deltas_excel, name="ultimo_voltaje_celdas_excel"),
     path("rendimiento_bus/<int:pk>/", views.bus_performance_report_excel, name="bus_performance"),
     path("ecu_state/<int:pk>/", views.switch_report_xls, name="ecu_state"),
+    path("drive_report/<int:pk>/", views.drive_report, name="drive_report"),
 ]
