@@ -114,17 +114,23 @@
                                        
                                     </td>
                                 </tr>
-                                <!--<tr>
+                                <tr>
                                     <th class="titulo" scope="row">Estado Baterias Flota</th>
                                     <td class="descripcion">Informe de SOH baterias flota</td>
                                     <td>
                                        
                                     </td>
+                                    {% if user.is_staff %}
                                     <td>
                                         <a href="{% url 'reporte-soh-flota' %}" class="btn btn-primary"> <i class="bx bx-download"></i></a>
                                        
                                     </td>
-                                </tr>-->
+                                    {% else %}
+                                    <td>
+                                    </td>
+                                    {% endif %}
+
+                                </tr>
                                 
                                 <!--fin sexto informe-->
                                 <tr>
