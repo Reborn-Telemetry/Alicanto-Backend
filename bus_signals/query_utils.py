@@ -9,6 +9,9 @@ password = 'postgres'
 host = 'alicanto-db-v1.cyydo36bjzsy.us-west-1.rds.amazonaws.com'
 port = '5432'
 
+def format_date(date):
+        return date.strftime('%d-%m-%Y %H:%M:%S')
+
 def daily_bus_km(id_bus):
     connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
     cursor = connection.cursor()

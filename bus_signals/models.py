@@ -635,7 +635,7 @@ class EcuState(models.Model):
     ecu_state = models.Manager()
 
     def __str__(self):
-        return f'{self.ecu_state} - {self.bus}'
+        return f'{self.sleep_state} - {self.bus} - {self.TimeStamp}'
 
     class Meta:
         verbose_name = 'ECU State'

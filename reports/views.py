@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from openpyxl import Workbook
-from bus_signals.query_utils import matriz_km_diario_flota, daily_bus_km, monthly_bus_km
-from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage
+from bus_signals.query_utils import matriz_km_diario_flota, format_date, daily_bus_km, monthly_bus_km
+from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage, EcuState
 from . models import Prueba, DisponibilidadFlota
 from datetime import date, timedelta, timezone
 from reportlab.lib.styles import getSampleStyleSheet
@@ -1224,6 +1224,52 @@ def bus_performance_report_excel(request, pk):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
 
+@login_required(login_url='login')
+def switch_report_xls(request, pk):
+    selected_bus = pk
+    switch_state = EcuState.ecu_state.filter(bus_id=selected_bus).order_by('-TimeStamp')
+    
+    ranges = []
+    rango = 0
+    start_time = None
+    for record in switch_state:
+        # Accede a los campos del modelo directamente
+        if record.sleep_state == 0 and start_time is None:
+            start_time = record.TimeStamp  # Inicia el rango con la primera aparición de 0
+        elif record.sleep_state != 0 and start_time is not None:
+            end_time = record.TimeStamp  # Finaliza el rango con el primer valor diferente de 0
+            rango += 1
+            # Calcula la diferencia entre las fechas
+            periodo = start_time - end_time
+            # Convierte el periodo a minutos
+            minutos = periodo.total_seconds() / 60
+            hrs = minutos / 60
+            # Almacena las fechas formateadas y el periodo en minutos
+            ranges.append({
+                "rango": rango,
+                "inicio": format_date(end_time),
+                "final": format_date(start_time),
+                "periodo": f"{hrs:.2f} hrs"  # Formateamos el resultado en hrs
+            })
+            start_time = None  # Resetea para el siguiente rango
+    wb = Workbook()
+    ws = wb.active
+    filename = "Reporte Estado Ecu Sleep Bus.xlsx"
+    ws.title = "Reporte Estado Ecu Sleep"
+    headers = ["Rango", "Inicio", "Final", "Periodo Hrs"]
+    ws.append(headers)
+    for i in ranges:
+        if ranges:
+            ws.append([i['rango'], i['inicio'], i['final'], i['periodo']])
+        else:
+            print(f"No se encontraron resultados para el bus.")
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
 
+    
+    return print("Generando reporte de switches...")
+    
     
 
