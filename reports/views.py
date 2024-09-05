@@ -1272,4 +1272,46 @@ def switch_report_xls(request, pk):
     return print("Generando reporte de switches...")
     
     
-
+def drive_report(request, pk):
+    selected_bus = pk
+    bus = Bus.bus.get(id=selected_bus)
+    drive_state = EcuState.ecu_state.filter(bus_id=selected_bus).order_by('-TimeStamp')
+    ranges = []
+    rango = 0
+    start_time = None
+    for record in drive_state:
+        # Accede a los campos del modelo directamente
+        if record.sleep_state == 9 and start_time is None:
+            start_time = record.TimeStamp  # Inicia el rango con la primera aparición de 0
+        elif record.sleep_state != 9 and start_time is not None:
+            end_time = record.TimeStamp  # Finaliza el rango con el primer valor diferente de 0
+            rango += 1
+            # Calcula la diferencia entre las fechas
+            periodo = start_time - end_time
+            # Convierte el periodo a minutos
+            minutos = periodo.total_seconds() / 60
+            hrs = minutos / 60
+            # Almacena las fechas formateadas y el periodo en minutos
+            ranges.append({
+                "rango": rango,
+                "inicio": format_date(end_time),
+                "final": format_date(start_time),
+                "periodo": f"{hrs:.2f} hrs"  # Formateamos el resultado en hrs
+            })
+            start_time = None  # Resetea para el siguiente rango
+    wb = Workbook()
+    ws = wb.active
+    filename = f"Reporte Estado Drive Bus '{bus.bus_name}'.xlsx"
+    ws.title = f"Reporte Estado Drive Bus '{bus.bus_name}'"
+    headers = ["Rango", "Inicio", "Final", "Periodo Hrs"]
+    ws.append(headers)
+    for i in ranges:
+        if ranges:
+            ws.append([i['rango'], i['inicio'], i['final'], i['periodo']])
+        else:
+            print(f"No se encontraron resultados para el bus.")
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+    
