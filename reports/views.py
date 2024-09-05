@@ -476,33 +476,54 @@ def energy_report(request):
 
 @login_required(login_url='login')
 def reporte_soh_flota(request):
-  current_datetime = datetime.now()
-  formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-  table_data = [
-        ["Bus", "Kilometraje", 'Capacidad Bateria', 'desgaste bateria x km']
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    table_data = [
+        ["Bus", "Kilometraje", 'Capacidad Bateria', 'Desgaste Bateria x km']
     ]
-  filename = f'estado baterias flota :{formatted_datetime}.xls'
-  buf = io.BytesIO()
-  workbook = xlwt.Workbook(encoding='utf-8')
-  worksheet = workbook.add_sheet('Report')
+    filename = f'estado baterias flota :{formatted_datetime}.xls'
+    buf = io.BytesIO()
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
 
-  nombres_buses_max_id = BatteryHealth.battery_health.values('bus__bus_name').annotate(max_id=Max('id'))
+    # Obtener los nombres de los buses y el máximo ID de BatteryHealth para cada uno
+    nombres_buses_max_id = BatteryHealth.battery_health.values('bus__bus_name').annotate(max_id=Max('id'))
 
-# Obtén todos los registros asociados a los buses sin duplicados y que tengan el ID máximo
-  baterias = BatteryHealth.battery_health.filter(id__in=nombres_buses_max_id.values('max_id')).select_related('bus').order_by('bus__bus_name', 'bus__lts_odometer')
+    # Obtener los registros asociados a los buses con el ID máximo, sin duplicados
+    baterias = BatteryHealth.battery_health.filter(id__in=nombres_buses_max_id.values('max_id')).select_related('bus').order_by('bus__bus_name', 'bus__lts_odometer')
 
-  for bateria in baterias:
-     row =  [bateria.bus.bus_name, bateria.bus.lts_odometer, str(bateria.battery_health_value) + '%', round(bateria.bus.lts_odometer / (100 - bateria.battery_health_value),2)]
-     table_data.append(row)
+    for bateria in baterias:
+        if bateria.battery_health_value < 100:
+            desgaste = round(bateria.bus.lts_odometer / (100 - bateria.battery_health_value), 2)
+        else:
+            desgaste = 'N/A'  # O cualquier otro valor que prefieras
 
-  for row_index, row_data in enumerate(table_data):
-    for col_index, cell_data in enumerate(row_data):
-      worksheet.write(row_index, col_index, cell_data)
-  workbook.save(buf)
-  buf.seek(0)
-   
-   
-  return FileResponse(buf, as_attachment=True, filename=filename)    
+        row = [bateria.bus.bus_name, bateria.bus.lts_odometer, f"{bateria.battery_health_value}%", desgaste]
+        table_data.append(row)
+
+    for row_index, row_data in enumerate(table_data):
+        for col_index, cell_data in enumerate(row_data):
+            worksheet.write(row_index, col_index, cell_data)
+
+    workbook.save(buf)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename=filename)   
+
+
+@login_required(login_url='login')
+def last_soh_report(request):
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    table_data = [
+        ["Bus","Capacidad Bateria", "fecha"]
+    ]
+    filename = f'estado baterias flota :{formatted_datetime}.xls'
+    buf = io.BytesIO()
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
+
+
 
 @login_required(login_url='login')
 def matriz_km_diario_flota(request):
