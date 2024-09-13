@@ -503,9 +503,9 @@ def bus_detail(request, pk):
 
 @login_required(login_url='login')
 def dashboard(request):
-    #data = fs_link_api()
-    #cant_fs = (data['cant_fs'])
-    #fs_vehicles = data['data']
+    data = fs_link_api()
+    cant_fs = (data['cant_fs'])
+    fs_vehicles = data['data']
     # cantidad de buses en la flota
     total_flota = Bus.bus.exclude(id__in=no_update_list)
     total_flota = total_flota.count()
@@ -531,7 +531,7 @@ def dashboard(request):
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
 
-    #operacion = total_flota - cant_fs
+    operacion = total_flota - cant_fs
 
     page = request.GET.get('page', 1)
     results = 7
@@ -656,7 +656,7 @@ def dashboard(request):
 
     context = {
        
-        #'operacion': operacion,
+        'operacion': operacion,
         'km_total': km_total,
         'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
@@ -664,14 +664,14 @@ def dashboard(request):
         'cant_low_50_soc': cant_low_50_soc,
         'delayed': delayed,
         'paginator': paginator,
-        #'cant_fs': cant_fs,
+        'cant_fs': cant_fs,
         'co2_total': co2_total,
         'fusi_grafico': fusi_grafico,
         'linechart_data': linechart_data,
         'linechart_data2': linechart_data2,
         'charging': charging,
         #'energia_anual': energia_anual,
-        #'fs_vehicles': fs_vehicles,
+        'fs_vehicles': fs_vehicles,
     }
     return render(request, 'pages/dashboard.html', context)
 
