@@ -522,8 +522,8 @@ def dashboard(request):
     co2_total= (km_total * 0.00067)
     co2_total = round(co2_total, 2)
 
-    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
-    low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
+    # menor 50 optimizada
+    low_50_soc_count = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
   
     # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count.count()
