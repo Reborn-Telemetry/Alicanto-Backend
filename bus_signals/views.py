@@ -521,8 +521,9 @@ def dashboard(request):
     
 
     # co2 ahorrado total flota
-    co2_total= (km_total * 0.00067)
-    co2_total = round(co2_total, 2)
+    # optimizada
+  
+    co2_total = round(km_total * 0.00067, 2)
 
     # menor 50 optimizada
   
