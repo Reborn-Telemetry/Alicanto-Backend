@@ -1,8 +1,7 @@
 import psycopg2
 from django.db.models import Max
 from django.db.models.functions import ExtractMonth
-from bus_signals.models import Odometer, BatteryHealth, Bus
-from django.db.models import Q, Count, Sum, Max, F, Avg
+from bus_signals.models import Odometer, BatteryHealth
 
 dbname = 'alicanto-db-dev'
 user = 'postgres'
@@ -407,13 +406,40 @@ def get_max_odometer_per_month(bus_id):
     max_values_dict = {entry['month']: entry['max_odometer_value'] for entry in max_values_per_month}
     return max_values_dict
 
+
 def km_flota():
-    # Asegúrate de que 'odometer' sea el nombre correcto de la relación en tu modelo
-    total_km = (
-        Bus.bus.annotate(max_odometer=Max('odometer__odometer_value'))
-        .aggregate(total_km=Sum('max_odometer'))['total_km'] or 0
-    )
-    return total_km
+     connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+     cursor = connection.cursor()
+     query = """SELECT sum(max_odometer_value) AS total_odometer_value
+                FROM
+                (SELECT
+                    bus_id,
+                MAX(odometer_value) AS max_odometer_value
+
+                FROM
+                (WITH ranked_data AS (
+                SELECT
+                bus_id,
+                odometer_value,
+                ROW_NUMBER() OVER (PARTITION BY bus_id ORDER BY odometer_value DESC) AS rnk_high
+                FROM
+                bus_signals_odometer
+                )
+                SELECT
+                bus_id,
+                odometer_value
+                FROM
+                    ranked_data
+                WHERE
+                    rnk_high = 1
+                    ) A
+                GROUP BY
+                    bus_id) B"""
+     cursor.execute(query)
+     results = cursor.fetchall()
+     cursor.close()
+     connection.close()
+     return results
 
 def obtener_ultimo_valor_energia(lista_datos):
     ultimo_valor_por_bus = {}
