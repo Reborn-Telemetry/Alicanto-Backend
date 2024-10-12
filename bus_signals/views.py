@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect
-from asgiref.sync import sync_to_async
-import httpx
 
 from reports.views import switch_report_xls
 from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed, EcuState
@@ -509,25 +507,26 @@ def dashboard(request):
     cant_fs = (data['cant_fs'])
     fs_vehicles = data['data']
     # cantidad de buses en la flota
-    # total flota optimizado
-    total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
-
-
+    total_flota = Bus.bus.exclude(id__in=no_update_list)
+    total_flota = total_flota.count()
     
     # datos tabla de buses
-    # optimizada
-    complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update')
+    complete_table = Bus.bus.all()
+    complete_table = complete_table.exclude(lts_update=None)
+    complete_table = complete_table.order_by('-lts_update')
     # km total de la flota
-    # optimizado
-    km_total = km_flota()
+    km_total_flota = km_flota()
+    km_total = km_total_flota[0][0]
 
     # co2 ahorrado total flota
-    co2_total = round(km_total * 0.00067, 2)
+    co2_total= (km_total * 0.00067)
+    co2_total = round(co2_total, 2)
 
-   
+    low_50_soc_records = Bus.bus.filter(lts_soc__lt=50)
+    low_50_soc_count = low_50_soc_records.all().exclude(lts_soc=0.0)
   
     # cantidad de buses con soc menor a 50
-    low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
+    cant_low_50_soc = low_50_soc_count.count()
     # cantidad buses con cola de archivos
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
@@ -662,7 +661,7 @@ def dashboard(request):
         'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
         'bus': complete_table,
-        'cant_low_50_soc': low_50_soc_count,
+        'cant_low_50_soc': cant_low_50_soc,
         'delayed': delayed,
         'paginator': paginator,
         'cant_fs': cant_fs,
