@@ -59,8 +59,12 @@ class Bus(models.Model):
     def delay_data(self):
         ahora = timezone.now()
         fecha_limite = ahora - timedelta(days=3)
-        registros = Bus.bus.filter(models.Q(lts_update__isnull=True) | models.Q(lts_update__lt=fecha_limite))
-        registros = registros.exclude(lts_update=None)
+        
+        # Filtramos directamente en una sola consulta
+        registros = Bus.bus.filter(
+            lts_update__lt=fecha_limite
+        )
+
         return registros
 
 
