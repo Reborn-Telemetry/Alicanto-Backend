@@ -400,11 +400,13 @@ def get_max_odometer_per_month(bus_id):
         .annotate(month=ExtractMonth('TimeStamp'))
         .values('month')
         .annotate(max_odometer_value=Max('odometer_value'))
-        .order_by('month')  # Ordenar por mes
+        .order_by('month')  # Asegúrate de que los resultados estén ordenados por mes
     )
 
-    max_values_dict = {entry['month']: entry['max_odometer_value'] for entry in max_values_per_month}
-    return max_values_dict
+    # Convertir directamente a un diccionario usando dict comprehension
+    return {entry['month']: entry['max_odometer_value'] for entry in max_values_per_month}
+
+
 
 
 def km_flota():

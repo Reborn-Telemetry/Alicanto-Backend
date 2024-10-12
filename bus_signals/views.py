@@ -568,7 +568,7 @@ def dashboard(request):
     charging = 0
 
 # Iterar sobre todos los buses y sus datos de odómetro
-    for bus in Bus.bus.all():
+    for bus in Bus.bus.only('id'):
     # Obtener el dict de máximo odómetro por mes para el bus actual
         max_values_per_month = get_max_odometer_per_month(bus.id)
         if bus.charging == 1:
