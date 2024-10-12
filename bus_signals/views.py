@@ -511,9 +511,9 @@ def dashboard(request):
     total_flota = total_flota.count()
     
     # datos tabla de buses
-    complete_table = Bus.bus.all()
-    complete_table = complete_table.exclude(lts_update=None)
-    complete_table = complete_table.order_by('-lts_update')
+    # optimizada
+    complete_table = complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update')
+
     # km total de la flota
     km_total_flota = km_flota()
     km_total = km_total_flota[0][0]
