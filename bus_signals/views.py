@@ -516,8 +516,9 @@ def dashboard(request):
     complete_table = complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update')
 
     # km total de la flota
-    km_total_flota = km_flota()
-    km_total = km_total_flota[0][0]
+    # optimizado
+    km_total = Bus.bus.annotate(max_odometer=Max('odometer__odometer_value')).aggregate(total_km=Sum('max_odometer'))['total_km'] or 0  
+    
 
     # co2 ahorrado total flota
     co2_total= (km_total * 0.00067)
