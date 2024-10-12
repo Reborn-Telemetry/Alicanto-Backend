@@ -507,8 +507,9 @@ def dashboard(request):
     cant_fs = (data['cant_fs'])
     fs_vehicles = data['data']
     # cantidad de buses en la flota
-    total_flota = Bus.bus.exclude(id__in=no_update_list)
-    total_flota = total_flota.count()
+    #optimizada
+    total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
+    
     
     # datos tabla de buses
     # optimizada
