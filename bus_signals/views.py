@@ -529,6 +529,7 @@ def dashboard(request):
     # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
     # cantidad buses con cola de archivos
+    #optimizada
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
 
@@ -545,12 +546,23 @@ def dashboard(request):
     except EmptyPage:
         page = paginator.num_pages
         complete_table = paginator.page(page)
+
 # inicio codigo grafico fusi
+#optimizada
     current_month = timezone.now().month
-    distinct_fusi_code = FusiCode.fusi.filter(TimeStamp__month=current_month).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
-    distinct_fusi_code = distinct_fusi_code.exclude(fusi_code__in=filter_fusi_code)
-    fusi_grafico = list(distinct_fusi_code.values('fusi_code', 'total'))
+    distinct_fusi_code = (
+        FusiCode.fusi
+        .filter(TimeStamp__month=current_month)
+        .exclude(fusi_code__in=filter_fusi_code)
+        .values('fusi_code')
+        .annotate(total=Count('fusi_code'))
+        .order_by('-total')
+    )
+
+    fusi_grafico = list(distinct_fusi_code) 
 # fin codigo grafico fusi
+
+
 # inicio codigo kwh anual
     total_per_month = defaultdict(int)
     charging = 0
