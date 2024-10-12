@@ -523,10 +523,9 @@ def dashboard(request):
     co2_total = round(co2_total, 2)
 
     # menor 50 optimizada
-    low_50_soc_count = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
   
     # cantidad de buses con soc menor a 50
-    cant_low_50_soc = low_50_soc_count.count()
+    cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
     # cantidad buses con cola de archivos
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
