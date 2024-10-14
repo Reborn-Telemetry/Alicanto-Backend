@@ -607,7 +607,7 @@ def dashboard(request):
      #   linechart_data.append({'month': month, 'total': round(total * 0.00067)})
       #  linechart_data2.append({'month': month, 'total': round(total * 0.0004187)})
 
-    """# energia total cargada año
+    #energia total cargada año
     energia_anual = 0
     for i in Bus.bus.all():
         charge_data = ChargeStatus.charge_status.filter(bus_id=i.id).order_by('TimeStamp')
@@ -684,10 +684,10 @@ def dashboard(request):
         acu = round(sum(i['energia'] for i in datos_tabla), 2)
         energia_anual += acu
         energia_anual = round(energia_anual)
-        request.session['energia_anual'] = round(energia_anual)"""
+        request.session['energia_anual'] = round(energia_anual)
 
     
-       # request.session['charging'] = charging
+        request.session['charging'] = charging
 
 
 
@@ -706,7 +706,7 @@ def dashboard(request):
         #'linechart_data': linechart_data,
         #'linechart_data2': linechart_data2,
         'charging': charging,
-        #'energia_anual': energia_anual,
+        'energia_anual': energia_anual,
         'fs_vehicles': fs_vehicles,
     }
     return render(request, 'pages/dashboard.html', context)
