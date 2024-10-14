@@ -503,14 +503,18 @@ def bus_detail(request, pk):
 
 @login_required(login_url='login')
 def dashboard(request):
+    #-----------------------------------------------------------------------------
+    # API Link
     data = fs_link_api()
     cant_fs = (data['cant_fs'])
     fs_vehicles = data['data']
+    
+    #-----------------------------------------------------------------------------------------------------------
     # cantidad de buses en la flota
     #optimizada
     total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
     
-    
+    #---------------------------------------------------------------------------------------------
     # datos tabla de buses
     # optimizada
     complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update').values(
@@ -528,44 +532,54 @@ def dashboard(request):
     except EmptyPage:
         page = paginator.num_pages
         complete_table = paginator.page(page)
+    #-----------------------------------------------------------------------------------------------
 
     # km total de la flota
     # optimizado
-    km_total = Bus.bus.annotate(max_odometer=Max('odometer__odometer_value')).aggregate(total_km=Sum('max_odometer'))['total_km'] or 0  
+    km_total = Bus.bus.annotate(max_odometer=Max
+                                ('odometer__odometer_value')).aggregate(
+                                    total_km=Sum('max_odometer'))['total_km'] or 0  
     
-
+#-----------------------------------------------------------------------------------------------------
     # co2 ahorrado total flota
     # optimizada
   
     co2_total = round(km_total * 0.00067, 2)
 
+#-------------------------------------------------------------------------------------------------------
+
     # menor 50 optimizada
     # cantidad de buses con soc menor a 50
     cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
+
+#------------------------------------------------------------------------------------------------------    
     # cantidad buses con cola de archivos
     #optimizada
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
 
+
+# -------------------------------------------------------------------------------------------------------
+    # buses en Operacion
     operacion = total_flota - cant_fs
 
     
-
+#---------------------------------------------------------------------------------------------------------
 # inicio codigo grafico fusi
 #optimizada
-    current_month = timezone.now().month
-    distinct_fusi_code = (
-        FusiCode.fusi
-        .filter(TimeStamp__month=current_month)
-        .exclude(fusi_code__in=filter_fusi_code)
-        .values('fusi_code')
-        .annotate(total=Count('fusi_code'))
-        .order_by('-total')
-    )
+    #current_month = timezone.now().month
+    #distinct_fusi_code = (
+     #   FusiCode.fusi
+      #  .filter(TimeStamp__month=current_month)
+       # .exclude(fusi_code__in=filter_fusi_code)
+        #.values('fusi_code')
+        #.annotate(total=Count('fusi_code'))
+        #.order_by('-total')
+    #)
 
-    fusi_grafico = list(distinct_fusi_code) 
+    #fusi_grafico = list(distinct_fusi_code) 
 # fin codigo grafico fusi
-
+#-------------------------------------------------------------------------------------------------------
 
 # inicio codigo kwh anual
     total_per_month = defaultdict(int)
@@ -683,7 +697,7 @@ def dashboard(request):
         'paginator': paginator,
         'cant_fs': cant_fs,
         'co2_total': co2_total,
-        'fusi_grafico': fusi_grafico,
+       # 'fusi_grafico': fusi_grafico,
         'linechart_data': linechart_data,
         'linechart_data2': linechart_data2,
         'charging': charging,
