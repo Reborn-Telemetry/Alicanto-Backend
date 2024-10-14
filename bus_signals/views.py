@@ -516,6 +516,18 @@ def dashboard(request):
     complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update').values(
         'id','bus_name','lts_soc','lts_odometer','lts_isolation','lts_24_volt','lts_fusi',
         'charging','lts_update','key_state','ecu_state','bus_series')
+    # paginador tabla
+    page = request.GET.get('page', 1)
+    results = 7
+    paginator = Paginator(complete_table, results)
+    try:
+        complete_table = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        complete_table = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages
+        complete_table = paginator.page(page)
 
     # km total de la flota
     # optimizado
@@ -537,17 +549,7 @@ def dashboard(request):
 
     operacion = total_flota - cant_fs
 
-    page = request.GET.get('page', 1)
-    results = 7
-    paginator = Paginator(complete_table, results)
-    try:
-        complete_table = paginator.page(page)
-    except PageNotAnInteger:
-        page = 1
-        complete_table = paginator.page(page)
-    except EmptyPage:
-        page = paginator.num_pages
-        complete_table = paginator.page(page)
+    
 
 # inicio codigo grafico fusi
 #optimizada
