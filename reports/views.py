@@ -49,7 +49,7 @@ def historical_data(request):
         port = '5432'
         mes = request.POST['mes']
         año = request.POST['año']
-        bus = Bus.bus.all()
+        bus = Bus.bus.only('id', 'bus_name')
         bus = bus.exclude(id__in=no_update_list)
         table_data = [
             ["Mes", "Bus", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
