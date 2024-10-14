@@ -505,14 +505,16 @@ def bus_detail(request, pk):
 def dashboard(request):
     #-----------------------------------------------------------------------------
     # API Link
-    #data = fs_link_api()
-    #cant_fs = (data['cant_fs'])
-    #fs_vehicles = data['data']
+    data = fs_link_api()
+    cant_fs = (data['cant_fs'])
+    fs_vehicles = data['data']
+     # buses en Operacion
+    operacion = total_flota - cant_fs
     
     #-----------------------------------------------------------------------------------------------------------
     # cantidad de buses en la flota
     #optimizada
-    #total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
+    total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
     
     #---------------------------------------------------------------------------------------------
     # datos tabla de buses
@@ -560,8 +562,7 @@ def dashboard(request):
 
 
 # -------------------------------------------------------------------------------------------------------
-    # buses en Operacion
-   # operacion = total_flota - cant_fs
+   
 
     
 #---------------------------------------------------------------------------------------------------------
@@ -603,7 +604,7 @@ def dashboard(request):
      #   linechart_data.append({'month': month, 'total': round(total * 0.00067)})
       #  linechart_data2.append({'month': month, 'total': round(total * 0.0004187)})
 
-        """# energia total cargada año
+    """# energia total cargada año
     energia_anual = 0
     for i in Bus.bus.all():
         charge_data = ChargeStatus.charge_status.filter(bus_id=i.id).order_by('TimeStamp')
@@ -685,17 +686,17 @@ def dashboard(request):
     
        # request.session['charging'] = charging
 
-        context = {
+    context = {
        
-        #'operacion': operacion,
+        'operacion': operacion,
         #'km_total': km_total,
         #'low_50_soc_count': low_50_soc_count,
-        #'total_flota': total_flota,
+        'total_flota': total_flota,
         #'bus': complete_table,
         #'cant_low_50_soc': cant_low_50_soc,
         #'delayed': delayed,
         #'paginator': paginator,
-        #'cant_fs': cant_fs,
+        'cant_fs': cant_fs,
         #'co2_total': co2_total,
        # 'fusi_grafico': fusi_grafico,
         #'linechart_data': linechart_data,
@@ -704,7 +705,7 @@ def dashboard(request):
         #'energia_anual': energia_anual,
         #'fs_vehicles': fs_vehicles,
     }
-        return render(request, 'pages/dashboard.html', context)
+    return render(request, 'pages/dashboard.html', context)
 
 @login_required
 def monthly_bus_report_xls(request):
