@@ -521,6 +521,10 @@ def dashboard(request):
     complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update').values(
         'id','bus_name','lts_soc','lts_odometer','lts_isolation','lts_24_volt','lts_fusi',
         'charging','lts_update','key_state','ecu_state','bus_series')
+    #------------------------------------------------------------------------------------------------
+    # buses cargando
+    charging = Bus.bus.filter(charging=1).count()
+   
     # paginador tabla
     page = request.GET.get('page', 1)
     results = 7
@@ -685,6 +689,8 @@ def dashboard(request):
     
        # request.session['charging'] = charging
 
+
+
     context = {
        
         'operacion': operacion,
@@ -699,7 +705,7 @@ def dashboard(request):
        # 'fusi_grafico': fusi_grafico,
         #'linechart_data': linechart_data,
         #'linechart_data2': linechart_data2,
-        #'charging': charging,
+        'charging': charging,
         #'energia_anual': energia_anual,
         'fs_vehicles': fs_vehicles,
     }
