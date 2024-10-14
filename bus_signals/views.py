@@ -513,7 +513,7 @@ def dashboard(request):
     
     # datos tabla de buses
     # optimizada
-    complete_table = complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update')
+    complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update').values('bus_name','lts_soc','lts_odometer','lts_isolation','lts_24_volt','lts_fusi','charging','lts_update','key_state','ecu_state','bus_series')
 
     # km total de la flota
     # optimizado
