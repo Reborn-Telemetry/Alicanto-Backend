@@ -537,15 +537,15 @@ def dashboard(request):
 
     # km total de la flota
     # optimizado
-    #km_total = Bus.bus.annotate(max_odometer=Max
-     #                           ('odometer__odometer_value')).aggregate(
-      #                              total_km=Sum('max_odometer'))['total_km'] or 0  
+    km_total = Bus.bus.annotate(max_odometer=Max
+                                ('odometer__odometer_value')).aggregate(
+                                    total_km=Sum('max_odometer'))['total_km'] or 0  
     
 #-----------------------------------------------------------------------------------------------------
-    # co2 ahorrado total flota
-    # optimizada
+    #co2 ahorrado total flota
+    #optimizada
   
-   # co2_total = round(km_total * 0.00067, 2)
+    co2_total = round(km_total * 0.00067, 2)
 
 #-------------------------------------------------------------------------------------------------------
 
@@ -688,14 +688,14 @@ def dashboard(request):
     context = {
        
         'operacion': operacion,
-        #'km_total': km_total,
+        'km_total': km_total,
         'total_flota': total_flota,
         'bus': complete_table,
         'cant_low_50_soc': cant_low_50_soc,
         #'delayed': delayed,
         'paginator': paginator,
         'cant_fs': cant_fs,
-        #'co2_total': co2_total,
+        'co2_total': co2_total,
        # 'fusi_grafico': fusi_grafico,
         #'linechart_data': linechart_data,
         #'linechart_data2': linechart_data2,
