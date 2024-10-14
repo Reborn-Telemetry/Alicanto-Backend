@@ -505,63 +505,63 @@ def bus_detail(request, pk):
 def dashboard(request):
     #-----------------------------------------------------------------------------
     # API Link
-    data = fs_link_api()
-    cant_fs = (data['cant_fs'])
-    fs_vehicles = data['data']
+    #data = fs_link_api()
+    #cant_fs = (data['cant_fs'])
+    #fs_vehicles = data['data']
     
     #-----------------------------------------------------------------------------------------------------------
     # cantidad de buses en la flota
     #optimizada
-    total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
+    #total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
     
     #---------------------------------------------------------------------------------------------
     # datos tabla de buses
     # optimizada
-    complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update').values(
-        'id','bus_name','lts_soc','lts_odometer','lts_isolation','lts_24_volt','lts_fusi',
-        'charging','lts_update','key_state','ecu_state','bus_series')
+    #complete_table = Bus.bus.exclude(lts_update=None).order_by('-lts_update').values(
+     #   'id','bus_name','lts_soc','lts_odometer','lts_isolation','lts_24_volt','lts_fusi',
+     #   'charging','lts_update','key_state','ecu_state','bus_series')
     # paginador tabla
-    page = request.GET.get('page', 1)
-    results = 7
-    paginator = Paginator(complete_table, results)
-    try:
-        complete_table = paginator.page(page)
-    except PageNotAnInteger:
-        page = 1
-        complete_table = paginator.page(page)
-    except EmptyPage:
-        page = paginator.num_pages
-        complete_table = paginator.page(page)
+    #page = request.GET.get('page', 1)
+    #results = 7
+    #paginator = Paginator(complete_table, results)
+    #try:
+     #   complete_table = paginator.page(page)
+    #except PageNotAnInteger:
+     #   page = 1
+     #   complete_table = paginator.page(page)
+    #except EmptyPage:
+     #   page = paginator.num_pages
+      #  complete_table = paginator.page(page)
     #-----------------------------------------------------------------------------------------------
 
     # km total de la flota
     # optimizado
-    km_total = Bus.bus.annotate(max_odometer=Max
-                                ('odometer__odometer_value')).aggregate(
-                                    total_km=Sum('max_odometer'))['total_km'] or 0  
+    #km_total = Bus.bus.annotate(max_odometer=Max
+     #                           ('odometer__odometer_value')).aggregate(
+      #                              total_km=Sum('max_odometer'))['total_km'] or 0  
     
 #-----------------------------------------------------------------------------------------------------
     # co2 ahorrado total flota
     # optimizada
   
-    co2_total = round(km_total * 0.00067, 2)
+   # co2_total = round(km_total * 0.00067, 2)
 
 #-------------------------------------------------------------------------------------------------------
 
     # menor 50 optimizada
     # cantidad de buses con soc menor a 50
-    cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
+    #cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
 
 #------------------------------------------------------------------------------------------------------    
     # cantidad buses con cola de archivos
     #optimizada
-    bus_instance = Bus()
-    delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
+    #bus_instance = Bus()
+    #delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
 
 
 # -------------------------------------------------------------------------------------------------------
     # buses en Operacion
-    operacion = total_flota - cant_fs
+   # operacion = total_flota - cant_fs
 
     
 #---------------------------------------------------------------------------------------------------------
@@ -582,26 +582,26 @@ def dashboard(request):
 #-------------------------------------------------------------------------------------------------------
 
 # inicio codigo kwh anual
-    total_per_month = defaultdict(int)
-    charging = 0
+    #total_per_month = defaultdict(int)
+    #charging = 0
 
 # Iterar sobre todos los buses y sus datos de odómetro
-    for bus in Bus.bus.only('id'):
+    #for bus in Bus.bus.only('id'):
     # Obtener el dict de máximo odómetro por mes para el bus actual
-        max_values_per_month = get_max_odometer_per_month(bus.id)
-        if bus.charging == 1:
-            charging += 1
+     #   max_values_per_month = get_max_odometer_per_month(bus.id)
+      #  if bus.charging == 1:
+       #     charging += 1
     # Iterar sobre cada mes en el dict y sumar el valor al total correspondiente
-        for month, max_value in max_values_per_month.items():
-         total_per_month[month] += max_value
+        #for month, max_value in max_values_per_month.items():
+         #total_per_month[month] += max_value
 # Final codigo kwh anual
     
     # grafico co2 evitado 
-    linechart_data = []
-    linechart_data2 = []
-    for month, total in total_per_month.items():
-        linechart_data.append({'month': month, 'total': round(total * 0.00067)})
-        linechart_data2.append({'month': month, 'total': round(total * 0.0004187)})
+    #linechart_data = []
+    #linechart_data2 = []
+    #for month, total in total_per_month.items():
+     #   linechart_data.append({'month': month, 'total': round(total * 0.00067)})
+      #  linechart_data2.append({'month': month, 'total': round(total * 0.0004187)})
 
         """# energia total cargada año
     energia_anual = 0
@@ -683,28 +683,28 @@ def dashboard(request):
         request.session['energia_anual'] = round(energia_anual)"""
 
     
-        request.session['charging'] = charging
+       # request.session['charging'] = charging
 
-    context = {
+        context = {
        
-        'operacion': operacion,
-        'km_total': km_total,
-        'low_50_soc_count': low_50_soc_count,
-        'total_flota': total_flota,
-        'bus': complete_table,
-        'cant_low_50_soc': cant_low_50_soc,
-        'delayed': delayed,
-        'paginator': paginator,
-        'cant_fs': cant_fs,
-        'co2_total': co2_total,
+        #'operacion': operacion,
+        #'km_total': km_total,
+        #'low_50_soc_count': low_50_soc_count,
+        #'total_flota': total_flota,
+        #'bus': complete_table,
+        #'cant_low_50_soc': cant_low_50_soc,
+        #'delayed': delayed,
+        #'paginator': paginator,
+        #'cant_fs': cant_fs,
+        #'co2_total': co2_total,
        # 'fusi_grafico': fusi_grafico,
-        'linechart_data': linechart_data,
-        'linechart_data2': linechart_data2,
-        'charging': charging,
+        #'linechart_data': linechart_data,
+        #'linechart_data2': linechart_data2,
+        #'charging': charging,
         #'energia_anual': energia_anual,
-        'fs_vehicles': fs_vehicles,
+        #'fs_vehicles': fs_vehicles,
     }
-    return render(request, 'pages/dashboard.html', context)
+        return render(request, 'pages/dashboard.html', context)
 
 @login_required
 def monthly_bus_report_xls(request):
