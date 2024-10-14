@@ -551,7 +551,7 @@ def dashboard(request):
 
     # menor 50 optimizada
     # cantidad de buses con soc menor a 50
-    #cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
+    cant_low_50_soc = low_50_soc_count = Bus.bus.filter(lts_soc__lt=50).exclude(lts_soc=0.0).count()
 
 #------------------------------------------------------------------------------------------------------    
     # cantidad buses con cola de archivos
@@ -689,7 +689,7 @@ def dashboard(request):
        
         'operacion': operacion,
         #'km_total': km_total,
-        #'low_50_soc_count': low_50_soc_count,
+        'low_50_soc_count': low_50_soc_count,
         'total_flota': total_flota,
         'bus': complete_table,
         #'cant_low_50_soc': cant_low_50_soc,
