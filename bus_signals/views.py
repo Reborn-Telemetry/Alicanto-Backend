@@ -508,14 +508,13 @@ def dashboard(request):
     data = fs_link_api()
     cant_fs = (data['cant_fs'])
     fs_vehicles = data['data']
-     # buses en Operacion
-    operacion = total_flota - cant_fs
     
     #-----------------------------------------------------------------------------------------------------------
     # cantidad de buses en la flota
     #optimizada
     total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
-    
+     # buses en Operacion
+    operacion = total_flota - cant_fs
     #---------------------------------------------------------------------------------------------
     # datos tabla de buses
     # optimizada
@@ -703,7 +702,7 @@ def dashboard(request):
         #'linechart_data2': linechart_data2,
         #'charging': charging,
         #'energia_anual': energia_anual,
-        #'fs_vehicles': fs_vehicles,
+        'fs_vehicles': fs_vehicles,
     }
     return render(request, 'pages/dashboard.html', context)
 
