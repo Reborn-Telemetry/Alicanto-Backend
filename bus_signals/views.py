@@ -556,8 +556,8 @@ def dashboard(request):
 #------------------------------------------------------------------------------------------------------    
     # cantidad buses con cola de archivos
     #optimizada
-    #bus_instance = Bus()
-    #delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
+    bus_instance = Bus()
+    delayed = bus_instance.delay_data().exclude(id__in=no_update_list).count()
 
 
 # -------------------------------------------------------------------------------------------------------
@@ -692,7 +692,7 @@ def dashboard(request):
         'total_flota': total_flota,
         'bus': complete_table,
         'cant_low_50_soc': cant_low_50_soc,
-        #'delayed': delayed,
+        'delayed': delayed,
         'paginator': paginator,
         'cant_fs': cant_fs,
         'co2_total': co2_total,
