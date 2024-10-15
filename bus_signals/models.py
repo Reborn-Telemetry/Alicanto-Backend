@@ -645,3 +645,15 @@ class EcuState(models.Model):
         verbose_name = 'ECU State'
         verbose_name_plural = 'ECU States'
         
+
+class AnualEnergy(models.Model):
+   energia = models.FloatField()  # Campo para almacenar la energía anual calculada
+   fecha = models.DateTimeField(auto_now_add=True)
+
+
+   def __str__(self):
+        return f"Energía: {self.energia} - Fecha: {self.fecha}"
+   
+   class Meta:
+       ordering = ['-fecha']
+   
