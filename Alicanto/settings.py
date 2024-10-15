@@ -44,9 +44,6 @@ CORS_ALLOW_METHODS = (
     "PUT",
 )
 
-
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,11 +53,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     'bus_signals.apps.BusSignalsConfig',
     'users.apps.UsersConfig',
     'reports.apps.ReportsConfig',
-    "corsheaders",
     'django.contrib.humanize',
+    'link_apis.apps.LinkApisConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
