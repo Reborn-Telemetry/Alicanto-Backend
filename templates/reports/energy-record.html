@@ -36,93 +36,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-10">
-            <div class="card custom-card" style="max-height: 400px">
-                <h5 class="card-header custom-header">Cargas Buses Dia</h5>
-                <div class="card-body">
-                    <canvas style="max-height: 300px" id="chart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div style="margin-top: 30px" class="row">
-        <div class="col-12">
-            <div class="card custom-card">
-                <h5 class="card-header custom-header">Cargas Diarias Kwh Flota</h5>
-                <div class="card-body">
-                    <div class="col-12">
-                        <div class="table-responsive overflow-y-scroll" style="max-height: 600px">
-                            <table class="table table-sticky">
-                                <thead class="table sticky-top bar">
-                                    <tr>
-                                        <th scope="col" class="sticky-left" style="color: #686868">Bus</th>
-                                        <!-- Añade la clase sticky-col -->
-                                        {% for item in days_of_month %}
-                                        <th scope="col" style="color: #686868">{{ item }}</th>
-                                        {% endfor %}
-                                    </tr>
-                                </thead>
-                                <tbody style="border-top: 1px solid #686868" class="table-group-divider">
-                                    {% for item in lista_datos_organizados %}
-                                    <tr>
-                                        <td class="sticky-left" style="color: #686868">{{ item.bus }}</td>
-                                        <!-- Añade la clase sticky-col -->
-                                        {% for data in item.datos %} {% if data.energia_total == '0.0' %}
-                                        <td style="color: #ededed">{{ data.energia_total }}</td>
-                                        {% elif data.energia_total == 0 %}
-                                        <td style="color: #ededed">{{ data.energia_total }}</td>
-                                        {% elif data.energia_total < '0.0' %}
-                                        <td style="color: red">{{ data.energia_total }}</td>
-
-                                        {% else %}
-                                        <td class="edata">{{ data.energia_total }}</td>
-                                        {% endif %} {% endfor %}
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Obtén los datos de tu vista Django
-        const data = {{ ultimo_valor_energia | safe }};
-        const dataToShow = data.slice(0, 63);
-        // Crea los arrays de labels y values solo con los primeros 20 elementos
-        const labels = dataToShow.map(item => item.bus);
-        const values = dataToShow.map(item => item.energia);
 
-        // Configura el pie chart
-        const ctx = document.getElementById("chart").getContext("2d");
-        const myPieChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label:'Energia Cargada',
-                        data: values,
-                        fill: true,
-                        borderColor: "rgba(111, 117, 223, 0.4)",
-                        pointBackgroundColor: "rgba(111, 117, 223, 1)", // Color de los puntos con opacidad total
-                        tension: 0.3
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            },
-        });
-    });
-</script>
 <!--divisor codigo-->
 {% endblock content %}

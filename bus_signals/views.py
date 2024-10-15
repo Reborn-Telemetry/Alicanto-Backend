@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-
+import threading
 from reports.views import switch_report_xls
-from .models import Bus, FusiMessage, Odometer, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed, EcuState
+from .models import Bus, FusiMessage, Odometer, AnualEnergy, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed, EcuState
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
 from .query_utils import daily_bus_km, format_date, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
@@ -33,6 +33,7 @@ import pytz
 from collections import defaultdict
 from services.fs_link import fs_link_api
 from django.db.models.functions import ExtractMonth, ExtractYear
+from .threads.energia_anual import calcular_energia_anual, iniciar_calculo
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -502,6 +503,11 @@ def bus_detail(request, pk):
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
 
+def iniciar_calculo():
+    thread = threading.Thread(target=calcular_energia_anual, daemon=True)
+    thread.start()
+    print("Hilo de cálculo iniciado")
+
 @login_required(login_url='login')
 def dashboard(request):
     #-----------------------------------------------------------------------------
@@ -566,10 +572,16 @@ def dashboard(request):
 
 
 # -------------------------------------------------------------------------------------------------------
-   
+    iniciar_calculo()
+    energia_anual = AnualEnergy.objects.first()
+    energia_anual = energia_anual.energia
+    request.session['energia_anual'] = energia_anual
+    
+
 
     
 #---------------------------------------------------------------------------------------------------------
+    request.session['charging'] = charging
 # inicio codigo grafico fusi
 #optimizada
     #current_month = timezone.now().month
@@ -626,6 +638,7 @@ def dashboard(request):
         #'linechart_data2': linechart_data2,
         'charging': charging,
         'fs_vehicles': fs_vehicles,
+        'energia_anual':energia_anual,
     }
     return render(request, 'pages/dashboard.html', context)
 
