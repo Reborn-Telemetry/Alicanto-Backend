@@ -28,7 +28,7 @@ from django.db.models import Max, Case, When, Value
 from django.db.models.functions import ExtractMonth, ExtractDay, ExtractYear
 no_update_list = ['24', '87', '61','87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 
-#funcion reporte matriz seleccionando mes y año
+#funcion reporte matriz seleccionando mes y año pagina historicos.
 @login_required(login_url='login')
 def historical_data(request):
     if request.method == 'GET':
