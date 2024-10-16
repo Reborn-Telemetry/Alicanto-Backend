@@ -1,9 +1,13 @@
 import threading
 import pytz
+from pytz import timezone
 from datetime import datetime
-
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore
 from requests import request
 from bus_signals.models import Bus, ChargeStatus, AnualEnergy
+from apscheduler.jobstores.base import ConflictingIdError
+from apscheduler.triggers.cron import CronTrigger
 
 # Variable global para controlar si el cálculo ya está corriendo
 
@@ -69,8 +73,25 @@ def calcular_energia_anual():
     except Exception as e:
         print(f"Error en el hilo: {e}")
 
+
+
 # Llamada desde una función o vista
-def iniciar_calculo():
-    thread = threading.Thread(target=calcular_energia_anual, daemon=True)
-    thread.start()
+def iniciar_calculo_diario():
+    from bus_signals.threads.energia_anual import calcular_energia_anual
+    from django_apscheduler.jobstores import DjangoJobStore
+    from django_apscheduler.models import DjangoJobExecution
+    from apscheduler.schedulers.background import BackgroundScheduler
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_jobstore(DjangoJobStore(), "default")
+
+    # Configurar el trigger para que se ejecute todos los días a las 11 AM hora de Chile
+    scheduler.add_job(
+        func=calcular_energia_anual,
+        trigger=CronTrigger(hour=11, minute=0, timezone=timezone("America/Santiago")),  # 11:00 AM Chile
+        id="calcular_energia_anual",
+        replace_existing=True,
+    )
+
+    scheduler.start()
     
