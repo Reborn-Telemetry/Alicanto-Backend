@@ -1,4 +1,5 @@
 from django.db import models
+from bus_signals.models import Bus, Odometer
 
 # Create your models here.
 
@@ -43,6 +44,21 @@ class Prueba(models.Model):
   class Meta:
     verbose_name = 'Prueba'
     verbose_name_plural = 'Prueba'
+
+class MatrizKmFlotaHistorico(models.Model):
+   bus = models.ForeignKey(Bus, on_delete=models.CASCADE, default=0)
+   dia = models.IntegerField(null=True, blank=True)  # Cambiado a IntegerField para representar días
+   mes = models.IntegerField(null=True, blank=True)  # Cambiado a IntegerField para facilitar la consulta
+   año = models.IntegerField(null=True, blank=True)
+   km_value = models.IntegerField(blank=True, null=True)
+
+   def __str__(self):
+    return f'{self.bus.bus_name} - {self.dia} - {self.mes} - {self.año} - {self.km_value}'
+  
+   class Meta:
+    verbose_name = 'Informe Historico KM Flota'
+    verbose_name_plural = 'Informes Historico KM Flota'
+
     
  
 

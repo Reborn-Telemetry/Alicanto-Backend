@@ -33,6 +33,7 @@ import pytz
 from collections import defaultdict
 from services.fs_link import fs_link_api
 from django.db.models.functions import ExtractMonth, ExtractYear
+from bus_signals.threads.matriz_km_flota_history import get_historical_data
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -502,10 +503,6 @@ def bus_detail(request, pk):
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
 
-def iniciar_calculo():
-    thread = threading.Thread(target=calcular_energia_anual, daemon=True)
-    thread.start()
-    print("Hilo de cálculo iniciado")
 
 @login_required(login_url='login')
 def dashboard(request):
@@ -576,11 +573,11 @@ def dashboard(request):
     energia_anual = energia_anual.energia
     request.session['energia_anual'] = energia_anual
     
-
-
-    
 #---------------------------------------------------------------------------------------------------------
     request.session['charging'] = charging
+#---------------------------------------------------------------------------------------------------------
+    
+#----------------------------------------------------------------------------------------------------------
 # inicio codigo grafico fusi
 #optimizada
     #current_month = timezone.now().month

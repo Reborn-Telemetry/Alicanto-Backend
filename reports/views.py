@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from openpyxl import Workbook
 from bus_signals.query_utils import matriz_km_diario_flota, format_date, daily_bus_km, monthly_bus_km
 from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage, EcuState, Odometer
+from reports.models import MatrizKmFlotaHistorico
 from . models import Prueba, DisponibilidadFlota
 from datetime import date, timedelta, timezone
 from reportlab.lib.styles import getSampleStyleSheet
@@ -29,7 +30,71 @@ from django.db.models.functions import ExtractMonth, ExtractDay, ExtractYear
 no_update_list = ['24', '87', '61','87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 
 #funcion reporte matriz seleccionando mes y año pagina historicos.
-@login_required(login_url='login')
+def historical_data(request):
+    if request.method == 'GET':
+        context = {
+            'bus': Bus.bus.all().exclude(id__in=no_update_list),
+            'meses2': [{'mes': 'Enero', 'numero': 1}, {'mes': 'Febrero', 'numero': 2}, {'mes': 'Marzo', 'numero': 3},
+                       {'mes': 'Abril', 'numero': 4}, {'mes': 'Mayo', 'numero': 5}, {'mes': 'Junio', 'numero': 6},
+                       {'mes': 'Julio', 'numero': 7}, {'mes': 'Agosto', 'numero': 8}, {'mes': 'Septiembre', 'numero': 9},
+                       {'mes': 'Octubre', 'numero': 10}, {'mes': 'Noviembre', 'numero': 11}, {'mes': 'Diciembre', 'numero': 12}],
+        }
+        return render(request, 'reports/historicos.html', context)
+
+    if request.method == 'POST':
+        mes = int(request.POST['mes'])
+        año = int(request.POST['año'])
+        buses = Bus.bus.all().exclude(id__in=no_update_list)
+
+        # Crear el archivo Excel
+        current_datetime = datetime.now()
+        formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+        filename = f'matriz km diario flota historico mes:{mes}-{año}.xls'
+        buf = io.BytesIO()
+        workbook = xlwt.Workbook(encoding='utf-8')
+        worksheet = workbook.add_sheet('Report')
+
+        # Escribir encabezados
+        headers = ["Mes", "Bus"] + [str(day) for day in range(1, 32)]
+        for col_index, header in enumerate(headers):
+            worksheet.write(0, col_index, header)
+
+        row_index = 1  # Comenzar desde la segunda fila
+
+        for bus in buses:
+            # Obtener datos del modelo `MatrizKmFlotaHistorico` para el bus, mes y año seleccionado
+            matriz_data = (
+                MatrizKmFlotaHistorico.objects
+                .filter(bus=bus, mes=mes, año=año)
+                .values('dia', 'km_value')
+            )
+
+            # Crear una fila para cada bus
+            row = [mes, bus.bus_name]
+
+            # Inicializar una lista con 31 días en 0
+            km_values = [0] * 31
+
+            # Reemplazar los valores por los kilómetros registrados en `MatrizKmFlotaHistorico`
+            for data in matriz_data:
+                dia = data['dia'] - 1  # Ajustar el índice para el arreglo (día 1 es índice 0)
+                km_values[dia] = data['km_value']
+
+            # Agregar los valores a la fila
+            row.extend(km_values)
+
+            # Escribir la fila en la hoja de cálculo
+            for col_index, cell_data in enumerate(row):
+                worksheet.write(row_index, col_index, cell_data)
+            row_index += 1
+
+        # Guardar el archivo Excel en el buffer
+        workbook.save(buf)
+        buf.seek(0)
+
+        # Retornar el archivo Excel como respuesta
+        return FileResponse(buf, as_attachment=True, filename=filename)
+"""
 def historical_data(request):
     if request.method == 'GET':
         context = {
@@ -103,6 +168,7 @@ def historical_data(request):
 
         # Retornar el archivo Excel como respuesta
         return FileResponse(buf, as_attachment=True, filename=filename)
+        """
      
 def historic_bus_report(request):
    if request.method == 'GET':
