@@ -572,7 +572,7 @@ def dashboard(request):
 
 
 # -------------------------------------------------------------------------------------------------------
-    iniciar_calculo()
+    #iniciar_calculo()
     energia_anual = AnualEnergy.objects.first()
     energia_anual = energia_anual.energia
     request.session['energia_anual'] = energia_anual
