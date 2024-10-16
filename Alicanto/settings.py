@@ -60,7 +60,10 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'link_apis.apps.LinkApisConfig',
     'rest_framework',
+    'django_apscheduler',
 ]
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

@@ -33,7 +33,6 @@ import pytz
 from collections import defaultdict
 from services.fs_link import fs_link_api
 from django.db.models.functions import ExtractMonth, ExtractYear
-from .threads.energia_anual import calcular_energia_anual, iniciar_calculo
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -572,7 +571,7 @@ def dashboard(request):
 
 
 # -------------------------------------------------------------------------------------------------------
-    #iniciar_calculo()
+   
     energia_anual = AnualEnergy.objects.first()
     energia_anual = energia_anual.energia
     request.session['energia_anual'] = energia_anual
