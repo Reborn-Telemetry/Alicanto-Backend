@@ -3,7 +3,7 @@ from openpyxl import Workbook
 from bus_signals.query_utils import matriz_km_diario_flota, format_date, daily_bus_km, monthly_bus_km
 from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage, EcuState, Odometer
 from reports.models import MatrizKmFlotaHistorico
-from . models import Prueba, DisponibilidadFlota
+from . models import Prueba, DisponibilidadFlota, MatrizEnergiaFlotaHistorico
 from datetime import date, timedelta, timezone
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
@@ -30,6 +30,7 @@ from django.db.models.functions import ExtractMonth, ExtractDay, ExtractYear
 no_update_list = ['24', '87', '61','87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
 
 #funcion reporte matriz seleccionando mes y año pagina historicos.
+# optimizada version nueva mas rapida depende de los datos del modelo 
 def historical_data(request):
     if request.method == 'GET':
         context = {
@@ -718,6 +719,70 @@ def historical_energy_report(request):
                        {'mes': 'Julio', 'numero': 7}, {'mes': 'Agosto', 'numero': 8}, {'mes': 'Septiembre', 'numero': 9},
                        {'mes': 'Octubre', 'numero': 10}, {'mes': 'Noviembre', 'numero': 11}, {'mes': 'Diciembre', 'numero': 12}],
         }
+        return render(request, 'reports/historicos.html', context)
+
+    if request.method == 'POST':
+        mes = int(request.POST['mes'])
+        año = int(request.POST['año'])
+        bus_list = Bus.bus.exclude(id__in=no_update_list)
+
+        santiago_tz = pytz.timezone('Chile/Continental')
+        lista_datos_organizados = {bus.id: {'bus': bus.bus_name, 'datos': {}} for bus in bus_list}
+
+        # Obtener los datos desde MatrizEnergiaFlotaHistorico
+        registros = MatrizEnergiaFlotaHistorico.objects.filter(
+            bus__in=bus_list,
+            mes=mes,
+            año=año
+        ).order_by('dia')
+
+        # Organizar los datos por bus y día
+        for registro in registros:
+            bus_id = registro.bus_id
+            fecha = datetime(año, mes, registro.dia, tzinfo=santiago_tz).strftime('%Y-%m-%d')
+            if bus_id in lista_datos_organizados:
+                lista_datos_organizados[bus_id]['datos'][fecha] = registro.energia
+
+        # Generación del archivo Excel
+        buf = io.BytesIO()
+        workbook = xlwt.Workbook(encoding='utf-8')
+        worksheet = workbook.add_sheet('Reporte')
+        filename = f'energia_flota_{mes}-{año}.xls'
+
+        # Encabezado de la primera fila
+        primer_dia_mes = datetime(año, mes, 1, tzinfo=santiago_tz)
+        ultimo_dia_mes = (primer_dia_mes + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        dias_mes = [primer_dia_mes + timedelta(days=d) for d in range((ultimo_dia_mes - primer_dia_mes).days + 1)]
+
+        worksheet.write(0, 0, "Bus")
+        for col_num, dia in enumerate(dias_mes, start=1):
+            worksheet.write(0, col_num, dia.strftime('%d'))
+
+        # Datos de los buses
+        for row_num, data in enumerate(lista_datos_organizados.values(), start=1):
+            worksheet.write(row_num, 0, data['bus'])
+            for fecha, energia_total in data['datos'].items():
+                col_num = next((i + 1 for i, dia in enumerate(dias_mes) if fecha == dia.strftime('%Y-%m-%d')), None)
+                if col_num:
+                    worksheet.write(row_num, col_num, energia_total)
+
+        workbook.save(buf)
+        buf.seek(0)
+        return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+
+
+"""
+def historical_energy_report(request):
+    if request.method == 'GET':
+        context = {
+            'bus': Bus.bus.all().exclude(id__in=no_update_list),
+            'meses2': [{'mes': 'Enero', 'numero': 1}, {'mes': 'Febrero', 'numero': 2}, {'mes': 'Marzo', 'numero': 3},
+                       {'mes': 'Abril', 'numero': 4}, {'mes': 'Mayo', 'numero': 5}, {'mes': 'Junio', 'numero': 6},
+                       {'mes': 'Julio', 'numero': 7}, {'mes': 'Agosto', 'numero': 8}, {'mes': 'Septiembre', 'numero': 9},
+                       {'mes': 'Octubre', 'numero': 10}, {'mes': 'Noviembre', 'numero': 11}, {'mes': 'Diciembre', 'numero': 12}],
+        }
 
         return render(request, 'reports/historicos.html', context)
 
@@ -797,7 +862,7 @@ def historical_energy_report(request):
 
         workbook.save(buf)
         buf.seek(0)
-        return FileResponse(buf, as_attachment=True, filename=filename)
+        return FileResponse(buf, as_attachment=True, filename=filename)"""
 
 @login_required(login_url='login')
 def historic_soh(request):

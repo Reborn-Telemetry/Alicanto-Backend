@@ -33,7 +33,7 @@ import pytz
 from collections import defaultdict
 from services.fs_link import fs_link_api
 from django.db.models.functions import ExtractMonth, ExtractYear
-from bus_signals.threads.matriz_km_flota_history import get_historical_data
+from bus_signals.threads.matriz_energia_historico_flota import save_historical_energy_data
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -576,7 +576,7 @@ def dashboard(request):
 #---------------------------------------------------------------------------------------------------------
     request.session['charging'] = charging
 #---------------------------------------------------------------------------------------------------------
-    
+   
 #----------------------------------------------------------------------------------------------------------
 # inicio codigo grafico fusi
 #optimizada
