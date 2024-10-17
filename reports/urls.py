@@ -20,4 +20,13 @@ urlpatterns = [
     path("rendimiento_bus/<int:pk>/", views.bus_performance_report_excel, name="bus_performance"),
     path("ecu_state/<int:pk>/", views.switch_report_xls, name="ecu_state"),
     path("drive_report/<int:pk>/", views.drive_report, name="drive_report"),
+    path("pdf-report/", views.pdf_report, name="pdf-report"),
+    path("software_version", views.software_version, name="software_version"),
+    path("xls-report/", views.xls_report, name="xls-report"),
+    path("monthly-bus-report-xls/", views.monthly_bus_report_xls, name="monthly-bus-report-xls"),
+    path("recorrido_mensual_flota_pdf/", views.recorrido_mensual_flota, name="recorrido_mensual_flota_pdf"),
+    path("recorrido_mensual_pdf/<str:pk>/", views.recorrido_mensual_bus_pdf, name="recorrido_mensual_pdf"),
+    path("montly-km-report/", views.monthly_bus_report, name="montly-km-report"),
+    path("bus_historic_fusi_pdf_report/<str:pk>/", views.bus_historic_fusi, name="bus_historic_fusi_pdf_report"),
+    
 ]

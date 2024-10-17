@@ -19,15 +19,14 @@ urlpatterns = [
   path("update_fusi/<str:pk>/", views.update_fusi, name="update_fusi"),
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus"),
   path("reports_page/", views.reports_page, name="reports_page"),
-  path("pdf-report/", views.pdf_report, name="pdf-report"),
-  path("bus_historic_fusi_pdf_report/<str:pk>/", views.bus_historic_fusi, name="bus_historic_fusi_pdf_report"),
-  path("montly-km-report/", views.monthly_bus_report, name="montly-km-report"),
-  path("xls-report/", views.xls_report, name="xls-report"),
-  path("software_version", views.software_version, name="software_version"),
-  path("monthly-bus-report-xls/", views.monthly_bus_report_xls, name="monthly-bus-report-xls"),
+  
+
+ 
+  
+ 
   path("warnings/", views.warnings, name="warnings"),
   path("fusi_dashboard/", views.fusi_dashboard, name="fusi_dashboard"),
-  path("recorrido_mensual_pdf/<str:pk>/", views.recorrido_mensual_bus_pdf, name="recorrido_mensual_pdf"),
-  path("recorrido_mensual_flota_pdf/", views.recorrido_mensual_flota, name="recorrido_mensual_flota_pdf"),
+ 
+
 ]
 
