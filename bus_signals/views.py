@@ -4,7 +4,7 @@ from reports.views import switch_report_xls
 from .models import Bus, FusiMessage, Odometer, AnualEnergy, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed, EcuState
 from users.models import WorkOrder
 from .forms import BusForm, FusiMessageForm, FusiForm
-from .query_utils import daily_bus_km, format_date, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report
+from .query_utils import daily_bus_km, format_date, monthly_bus_km, monthly_fleet_km, get_max_odometer_per_month, km_flota, get_battery_health_report, get_monthly_kilometer_data
 import requests
 import datetime
 from django.contrib.auth import authenticate, login, logout
@@ -34,6 +34,7 @@ from collections import defaultdict
 from services.fs_link import fs_link_api
 from django.db.models.functions import ExtractMonth, ExtractYear
 from bus_signals.threads.matriz_energia_historico_flota import save_historical_energy_data
+from bus_signals.threads.max_odometer_dayly import get_max_odometer_per_day_and_month
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -242,80 +243,27 @@ def bus_list(request):
 
 @login_required(login_url='login')
 def bus_detail(request, pk):
+    now = timezone.now()
+    año = now.year
+    mes = now.month
+    results = daily_bus_km(pk, año)
+    results.sort(key=lambda x: x[0])
+    
     montly_result = monthly_bus_km(pk)
-    results = daily_bus_km(pk)
-    months_dict = {
-    1: 'Enero',
-    2: 'Febrero',
-    3: 'Marzo',
-    4: 'Abril',
-    5: 'Mayo',
-    6: 'Junio',
-    7: 'Julio',
-    8: 'Agosto',
-    9: 'Septiembre',
-    10: 'Octubre',
-    11: 'Noviembre',
-    12: 'Diciembre',
-}
 
-    result_data = []
+# Tabla recorrido buses
+    result_data = get_monthly_kilometer_data(pk, año)
+    for month, data in  result_data.items():
+        print(f"Mes: {month}")
+        print(f"Kilometro día 1: {data['kilometro1']}")
+        print(f"Kilometro último día: {data['kilometro_last_day']}")
+        print(f"Recorrido: {data['recorrido']}")
 
-# Obtener el mes actual
-    current_month = datetime.now().month
 
-# Iterar sobre el rango correcto para cada mes
-    if montly_result and len(montly_result[0]) > 0:
-    # Iterar sobre todos los meses
-        for month in range(1, 13):
-         index = (month - 1) * 2 + 1  # Calcular el índice correspondiente en los resultados
-         if index < len(montly_result[0]):
-            value1 = montly_result[0][index]
-            value2 = montly_result[0][index + 1] if index + 1 < len(montly_result[0]) else None
-            difference = value2 - value1 if value2 is not None else None
-
-            # Si el mes es el actual y solo hay un valor disponible (value1), indicar que está en curso
-            if month == current_month and value2 is None:
-                result_data.append({
-                    'month': months_dict[month],
-                    'value1': value1,
-                    'value2': 'En curso',
-                    'difference': 'Calculando'
-                })
-            elif value1 is not None and value2 is not None:
-                result_data.append({
-                    'month': months_dict[month],
-                    'value1': value1,
-                    'value2': value2,
-                    'difference': difference if difference is not None else 'Calculando'
-                })
-            else:
-                result_data.append({
-                    'month': months_dict[month],
-                    'value1': 0,
-                    'value2': 0,
-                    'difference': 0
-                })
-        else:
-            result_data.append({
-                'month': months_dict[month],
-                'value1': 0,
-                'value2': 0,
-                'difference': 0
-            })
-    else:
-    # Si no hay resultados, agregar todos los meses con ceros
-        for month in range(1, 13):
-            result_data.append({
-            'month': months_dict[month],
-            'value1': 0,
-            'value2': 0,
-            'difference': 0
-        })
             
     
 
-    #calculo de 
+    
     
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
@@ -445,39 +393,39 @@ def bus_detail(request, pk):
     monthly_totals_dict = {item['month']: item['energy'] for item in monthly_totals}
 
 # Combinar ambas listas en una nueva lista para rendimiento ----------------------------------->
-    month_name_to_number = {
-    'Enero': '01',
-    'Febrero': '02',
-    'Marzo': '03',
-    'Abril': '04',
-    'Mayo': '05',
-    'Junio': '06',
-    'Julio': '07',
-    'Agosto': '08',
-    'Septiembre': '09',
-    'Octubre': '10',
-    'Noviembre': '11',
-    'Diciembre': '12'
-}
-    combined_data = []
-    calc_rendimiento = lambda energy, diff: round(float(energy) / float(diff), 2) if diff and energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
+    #month_name_to_number = {
+    #'Enero': '01',
+    #'Febrero': '02',
+    #'Marzo': '03',
+    #'Abril': '04',
+    #'Mayo': '05',
+    #'Junio': '06',
+    #'Julio': '07',
+    #'Agosto': '08',
+    #'Septiembre': '09',
+    #'Octubre': '10',
+    #'Noviembre': '11',
+    #'Diciembre': '12'
+#}
+    #combined_data = []
+    #calc_rendimiento = lambda energy, diff: round(float(energy) / float(diff), 2) if diff and energy and isinstance(diff, (int, float)) and isinstance(energy, (int, float)) else None
 
 
-    for item in result_data:
-        month_name = item['month']
-        month_number = month_name_to_number[month_name]
-        energy = float(monthly_totals_dict.get(month_number, 0))
+    #for item in result_data:
+        #month_name = item['month']
+        #month_number = month_name_to_number[month_name]
+        #energy = float(monthly_totals_dict.get(month_number, 0))
     
-        difference = item['difference']
-        if isinstance(difference, str) or difference == 0:
-            difference = None  # O manejar de otra forma, dependiendo de la lógica de negocio
+        #difference = item['difference']
+        #if isinstance(difference, str) or difference == 0:
+         #   difference = None  # O manejar de otra forma, dependiendo de la lógica de negocio
 
-        combined_data.append({
-            'month': month_name,
-            'difference': difference,
-            'energy': energy,
-            'rendimiento': calc_rendimiento(energy, difference)
-        })
+        #combined_data.append({
+         #   'month': month_name,
+          #  'difference': difference,
+           # 'energy': energy,
+            #'rendimiento': calc_rendimiento(energy, difference)
+        #})
 
 # Ahora 'combined_data' tiene la combinación de ambas listas
 
@@ -498,7 +446,7 @@ def bus_detail(request, pk):
                'acu': acu,
                'monthly_totals': monthly_totals,
                'cells_voltage': cells_voltage,
-               'rendimiento': combined_data,
+               #'rendimiento': combined_data,
                 
                 }
     return render(request, 'bus/bus-profile.html', context_perfil)
@@ -576,7 +524,7 @@ def dashboard(request):
 #---------------------------------------------------------------------------------------------------------
     request.session['charging'] = charging
 #---------------------------------------------------------------------------------------------------------
-   
+
 #----------------------------------------------------------------------------------------------------------
 # inicio codigo grafico fusi
 #optimizada
@@ -778,3 +726,61 @@ def dic_fusi(request):
     return render(request, 'fusi/fusi-dictionary.html', context)
 
 
+def energy_record(request):
+
+    #----------buses cargando----------------------------------
+ charging = request.session.get('charging')
+ energia_anual = request.session.get('energia_anual')
+    #---------------------------------------------------------
+   
+ bus_id = 40  # Cambia por el ID del bus que deseas filtrar
+ mes = 8    # Cambia por el mes que deseas (número de mes)
+
+# Obtener los registros de ChargeStatus filtrados por bus_id y mes, y ordenados por TimeStamp
+ charge_statuses = ChargeStatus.charge_status.filter(bus_id=bus_id).annotate(
+    mes=ExtractMonth('TimeStamp')
+).filter(mes=mes).order_by('TimeStamp')
+
+# Lista para almacenar ciclos de carga
+ charge_cycles = []
+ current_cycle = []
+
+
+# Iterar sobre los registros y agrupar por ciclos continuos de valores 1
+ for status in charge_statuses:
+    if status.charge_status_value == 1:
+        current_cycle.append(status)
+    else:
+        # Si no es 1, y tenemos un ciclo en curso, lo agregamos a la lista de ciclos
+        if current_cycle:
+            first_status = current_cycle[0]
+            last_status = current_cycle[-1]
+            soc_difference = last_status.soc_level - first_status.soc_level  # Diferencia de SOC
+
+            charge_cycles.append({
+                'fecha_inicio': format_date(first_status.TimeStamp),
+                'fecha_final': format_date(last_status.TimeStamp),
+                'diferencia_carga': soc_difference,
+                'energia': soc_difference  # Si la energía es igual a la diferencia de carga
+            })
+            current_cycle = []  # Reiniciar el ciclo
+
+# Agregar el último ciclo si terminó con un 1
+ if current_cycle:
+    first_status = current_cycle[0]
+    last_status = current_cycle[-1]
+    soc_difference = first_status.soc_level - last_status.soc_level  # Diferencia de SOC
+
+    charge_cycles.append({
+        'fecha_inicio': format_date(first_status.TimeStamp),
+        'fecha_final': format_date(last_status.TimeStamp),
+        'diferencia_carga': soc_difference,
+        'energia': soc_difference  # Si la energía es igual a la diferencia de carga
+    })
+
+# La lista charge_cycles ahora contiene los diccionarios con la información de cada ciclo formateada
+ for cycle in charge_cycles:
+    print(cycle)
+ context = {'charging': charging, 'energia_anual':energia_anual}
+
+ return render(request, 'reports/energy-record.html', context)

@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from openpyxl import Workbook
 from bus_signals.query_utils import matriz_km_diario_flota, format_date, daily_bus_km, monthly_bus_km, monthly_fleet_km
 from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage, EcuState, Odometer, FusiCode
-from reports.models import MatrizKmFlotaHistorico
-from . models import Prueba, DisponibilidadFlota, MatrizEnergiaFlotaHistorico
+from . models import Prueba, DisponibilidadFlota, MatrizEnergiaFlotaHistorico, DailyMatrizKmAutoReport
 from datetime import date, timedelta, timezone
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
@@ -32,6 +31,13 @@ no_update_list = ['24', '87', '61','87', '137', '132', '134', '133', '130', '129
 
 #funcion reporte matriz seleccionando mes y año pagina historicos.
 # optimizada version nueva mas rapida depende de los datos del modelo 
+import io
+from django.http import FileResponse
+import xlwt
+from datetime import datetime
+from .models import Bus, DailyMatrizKmAutoReport
+
+# esta funcion entrega la matriz de kilometraje de mes seleccionado de toda la flota
 def historical_data(request):
     if request.method == 'GET':
         context = {
@@ -51,7 +57,7 @@ def historical_data(request):
         # Crear el archivo Excel
         current_datetime = datetime.now()
         formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-        filename = f'matriz km diario flota historico mes:{mes}-{año}.xls'
+        filename = f'matriz_km_diario_flota_historico_mes_{mes}-{año}.xls'
         buf = io.BytesIO()
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet = workbook.add_sheet('Report')
@@ -64,11 +70,11 @@ def historical_data(request):
         row_index = 1  # Comenzar desde la segunda fila
 
         for bus in buses:
-            # Obtener datos del modelo `MatrizKmFlotaHistorico` para el bus, mes y año seleccionado
+            # Obtener datos del modelo `DailyMatrizKmAutoReport` para el bus, mes y año seleccionado
             matriz_data = (
-                MatrizKmFlotaHistorico.objects
+                DailyMatrizKmAutoReport.objects
                 .filter(bus=bus, mes=mes, año=año)
-                .values('dia', 'km_value')
+                .values('dia', 'max_odometer')
             )
 
             # Crear una fila para cada bus
@@ -77,10 +83,10 @@ def historical_data(request):
             # Inicializar una lista con 31 días en 0
             km_values = [0] * 31
 
-            # Reemplazar los valores por los kilómetros registrados en `MatrizKmFlotaHistorico`
+            # Reemplazar los valores por los kilómetros registrados en `DailyMatrizKmAutoReport`
             for data in matriz_data:
                 dia = data['dia'] - 1  # Ajustar el índice para el arreglo (día 1 es índice 0)
-                km_values[dia] = data['km_value']
+                km_values[dia] = data['max_odometer']
 
             # Agregar los valores a la fila
             row.extend(km_values)
@@ -96,204 +102,68 @@ def historical_data(request):
 
         # Retornar el archivo Excel como respuesta
         return FileResponse(buf, as_attachment=True, filename=filename)
-"""
-def historical_data(request):
+
+# esta funcion entrega los kilometrajes diarios durante un mes seleccionado y año     
+def historic_bus_report(request):
     if request.method == 'GET':
-        context = {
-            'bus': Bus.bus.all().exclude(id__in=no_update_list),
-            'meses2': [{'mes': 'Enero', 'numero': 1}, {'mes': 'Febrero', 'numero': 2}, {'mes': 'Marzo', 'numero': 3},
-                       {'mes': 'Abril', 'numero': 4}, {'mes': 'Mayo', 'numero': 5}, {'mes': 'Junio', 'numero': 6},
-                       {'mes': 'Julio', 'numero': 7}, {'mes': 'Agosto', 'numero': 8}, {'mes': 'Septiembre', 'numero': 9},
-                       {'mes': 'Octubre', 'numero': 10}, {'mes': 'Noviembre', 'numero': 11}, {'mes': 'Diciembre', 'numero': 12}],
-        }
-        return render(request, 'reports/historicos.html', context)
+        # Lógica para manejar la solicitud GET
+        return render(request, 'reports/historicos.html')
 
     if request.method == 'POST':
+        # Obtener los datos enviados por el formulario
         mes = int(request.POST['mes'])
         año = int(request.POST['año'])
-        buses = Bus.bus.all().exclude(id__in=no_update_list)
+        bus_id = int(request.POST['bus'])
+
+        # Obtener el bus específico
+        try:
+            bus = Bus.bus.get(id=bus_id)
+        except Bus.DoesNotExist:
+            return render(request, 'reports/historicos.html', {'error': 'Bus no encontrado'})
+
+        # Inicializamos la tabla con el encabezado
+        table_data = [
+            ["Mes", "Bus", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", 
+             "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", 
+             "28", "29", "30", "31"]
+        ]
+
+        # Consultar los kilómetros por día para el bus seleccionado en el mes y año dados
+        km_data = (
+            DailyMatrizKmAutoReport.objects
+            .filter(bus=bus, mes=mes, año=año)
+            .values('dia', 'max_odometer')
+        )
+
+        # Inicializar una lista de 31 días con 0 km
+        km_values = [0] * 31
+
+        # Rellenar los valores de km para los días disponibles
+        for data in km_data:
+            dia = data['dia'] - 1  # Ajustar el índice para la lista (día 1 es índice 0)
+            if 0 <= dia < 31:
+                km_values[dia] = data['max_odometer']
+
+        # Agregar los datos del bus a la fila
+        row = [mes, bus.bus_name] + km_values
+        table_data.append(row)
 
         # Crear el archivo Excel
-        current_datetime = datetime.now()
-        formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-        filename = f'matriz km diario flota historico mes:{mes}-{año}.xls'
+        filename = f'km_diario_bus_id_{bus_id}_mes_{mes}_año_{año}.xls'
         buf = io.BytesIO()
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet = workbook.add_sheet('Report')
 
         # Escribir encabezados
-        headers = ["Mes", "Bus"] + [str(day) for day in range(1, 32)]
-        for col_index, header in enumerate(headers):
-            worksheet.write(0, col_index, header)
-
-        row_index = 1  # Comenzar desde la segunda fila
-
-        for bus in buses:
-            # Obtener datos del odómetro para cada día del mes y año seleccionado
-            odometer_data = (
-                Odometer.odometer
-                .filter(
-                    bus_id=bus.id,
-                    TimeStamp__year=año,
-                    TimeStamp__month=mes
-                )
-                .annotate(
-                    mes=ExtractMonth('TimeStamp'),
-                    dia=ExtractDay('TimeStamp'),
-                    max_odometer=Max('odometer_value')
-                )
-                .values('dia', 'max_odometer')
-            )
-
-            # Crear una fila para cada bus
-            row = [mes, bus.bus_name]
-
-            # Inicializar una lista con 31 días en 0
-            odometer_values = [0] * 31
-
-            # Reemplazar los valores por los máximos odómetros obtenidos
-            for data in odometer_data:
-                dia = data['dia'] - 1  # Ajustar el índice para el arreglo (día 1 es índice 0)
-                odometer_values[dia] = data['max_odometer']
-
-            # Agregar los valores a la fila
-            row.extend(odometer_values)
-
-            # Escribir la fila en la hoja de cálculo
-            for col_index, cell_data in enumerate(row):
+        for row_index, row_data in enumerate(table_data):
+            for col_index, cell_data in enumerate(row_data):
                 worksheet.write(row_index, col_index, cell_data)
-            row_index += 1
 
         # Guardar el archivo Excel en el buffer
         workbook.save(buf)
         buf.seek(0)
 
         # Retornar el archivo Excel como respuesta
-        return FileResponse(buf, as_attachment=True, filename=filename)
-        """
-     
-def historic_bus_report(request):
-   if request.method == 'GET':
-        # Lógica para manejar la solicitud GET
-        return render(request, 'reports/historicos.html')
-   if request.method == 'POST':
-        current_datetime = datetime.now()
-        dbname = 'alicanto-db-dev'
-        user = 'postgres'
-        password = 'postgres'
-        host = 'alicanto-db-v1.cyydo36bjzsy.us-west-1.rds.amazonaws.com'
-        port = '5432'
-        mes = request.POST['mes']
-        año = request.POST['año']
-        bus = request.POST['bus']
-        for i in Bus.bus.all():
-            if bus == i.id:
-                name = i.bus_name
-                break
-        table_data = [
-            ["Mes", "Bus", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
-             "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27",
-             "28", "29", "30", "31"]
-        ]
-        filename = f'km diario bus id:{bus}-mes:{mes}-año:{año}.xls'
-        buf = io.BytesIO()
-        workbook = xlwt.Workbook(encoding='utf-8')
-        worksheet = workbook.add_sheet('Report')
-        for col_index, header in enumerate(table_data[0]):
-            worksheet.write(0, col_index, header)
-
-        row_index = 1  # Comenzar desde la segunda fila
-        connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-        cursor = connection.cursor()
-        query = """SELECT
-        CASE mes
-        WHEN 1 THEN 'Enero'
-        WHEN 2 THEN 'Febrero'
-        WHEN 3 THEN 'Marzo'
-        WHEN 4 THEN 'Abril'
-        WHEN 5 THEN 'Mayo'
-        WHEN 6 THEN 'Junio'
-        WHEN 7 THEN 'Julio'
-        WHEN 8 THEN 'Agosto'
-        WHEN 9 THEN 'Septiembre'
-        WHEN 10 THEN 'Octubre'
-        WHEN 11 THEN 'Noviembre'
-        WHEN 12 THEN 'Diciembre'
-        END AS mes,
-        bus_signals_bus.bus_name AS bus,
-        MAX(CASE WHEN dia = 1 THEN max_odometer END) AS "1",
-        MAX(CASE WHEN dia = 2 THEN max_odometer END) AS "2",
-        MAX(CASE WHEN dia = 3 THEN max_odometer END) AS "3",
-        MAX(CASE WHEN dia = 4 THEN max_odometer END) AS "4",
-        MAX(CASE WHEN dia = 5 THEN max_odometer END) AS "5",
-        MAX(CASE WHEN dia = 6 THEN max_odometer END) AS "6",
-        MAX(CASE WHEN dia = 7 THEN max_odometer END) AS "7",
-        MAX(CASE WHEN dia = 8 THEN max_odometer END) AS "8",
-        MAX(CASE WHEN dia = 9 THEN max_odometer END) AS "9",
-        MAX(CASE WHEN dia = 10 THEN max_odometer END) AS "10",
-        MAX(CASE WHEN dia = 11 THEN max_odometer END) AS "11",
-        MAX(CASE WHEN dia = 12 THEN max_odometer END) AS "12",
-        MAX(CASE WHEN dia = 13 THEN max_odometer END) AS "13",
-        MAX(CASE WHEN dia = 14 THEN max_odometer END) AS "14",
-        MAX(CASE WHEN dia = 15 THEN max_odometer END) AS "15",
-        MAX(CASE WHEN dia = 16 THEN max_odometer END) AS "16",
-        MAX(CASE WHEN dia = 17 THEN max_odometer END) AS "17",
-        MAX(CASE WHEN dia = 18 THEN max_odometer END) AS "18",
-        MAX(CASE WHEN dia = 19 THEN max_odometer END) AS "19",
-        MAX(CASE WHEN dia = 20 THEN max_odometer END) AS "20",
-        MAX(CASE WHEN dia = 21 THEN max_odometer END) AS "21",
-        MAX(CASE WHEN dia = 22 THEN max_odometer END) AS "22",
-        MAX(CASE WHEN dia = 23 THEN max_odometer END) AS "23",
-        MAX(CASE WHEN dia = 24 THEN max_odometer END) AS "24",
-        MAX(CASE WHEN dia = 25 THEN max_odometer END) AS "25",
-        MAX(CASE WHEN dia = 26 THEN max_odometer END) AS "26",
-        MAX(CASE WHEN dia = 27 THEN max_odometer END) AS "27",
-        MAX(CASE WHEN dia = 28 THEN max_odometer END) AS "28",
-        MAX(CASE WHEN dia = 29 THEN max_odometer END) AS "29",
-        MAX(CASE WHEN dia = 30 THEN max_odometer END) AS "30",
-        MAX(CASE WHEN dia = 31 THEN max_odometer END) AS "31"
-        FROM (
-        SELECT
-        EXTRACT(MONTH FROM "TimeStamp") AS mes,
-        EXTRACT(DAY FROM "TimeStamp") AS dia,
-        EXTRACT(YEAR FROM "TimeStamp") AS año,
-        MAX(odometer_value) AS max_odometer,
-        bus_id
-        FROM
-        bus_signals_odometer
-
-        GROUP BY
-        EXTRACT(MONTH FROM "TimeStamp"),
-        EXTRACT(DAY FROM "TimeStamp"),
-        EXTRACT(YEAR FROM "TimeStamp"),
-        bus_id
-               ) AS max_odometers
-        LEFT JOIN bus_signals_bus ON max_odometers.bus_id = bus_signals_bus.id
-        WHERE
-        bus_id = %s
-        AND mes = %s
-        AND año = %s
-        GROUP BY
-        mes, bus, año;"""
-        cursor.execute(query, (bus, mes, año))
-        results = cursor.fetchall()
-        if results and len(results[0]) >= 32:
-            row = [results[0][0], results[0][1]]  # Agrega el mes y el bus al principio
-            row.extend([value if value is not None else 0 for value in results[0][2:]])  # Agrega los valores de los días
-            table_data.append(row)
-        else:
-            row = [mes, name, 0]  # Agrega el mes, el bus y un valor predeterminado
-            table_data.append(row)
-        cursor.close()
-        connection.close()
-
-        for row_data in table_data:
-            for col_index, cell_data in enumerate(row_data):
-                worksheet.write(row_index, col_index, cell_data)
-            row_index += 1
-        workbook.save(buf)
-        buf.seek(0)
-
         return FileResponse(buf, as_attachment=True, filename=filename)
         
 

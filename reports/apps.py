@@ -6,9 +6,9 @@ class ReportsConfig(AppConfig):
     name = 'reports'
 
     def ready(self):
-        from bus_signals.threads.matriz_km_flota_history import start
-        start()
 
-        # Importar e iniciar el scheduler
         from bus_signals.threads.matriz_energia_historico_flota import begin
         begin()
+
+        from bus_signals.threads.max_odometer_dayly import daily_max_auto_update
+        daily_max_auto_update()
