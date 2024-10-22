@@ -39,6 +39,7 @@ class Bus(models.Model):
     lts_isolation = models.IntegerField('LTS Isolation', default=0, blank=True, null=True, db_index=True)
     lts_24_volt = models.FloatField('LTS 24 Volt', default=0, blank=True, null=True, db_index=True)
     lts_fusi = models.IntegerField(blank=True, null=True, db_index=True)
+    lts_charge = models.IntegerField(blank=True, null=True, db_index=True)
     charging = models.IntegerField('Charging', default=0, blank=True, null=True, db_index=True)
     lts_update = models.DateTimeField('LTS Update', auto_now=False, blank=True, null=True, db_index=True)
     mark = models.CharField('Mark', max_length=20, blank=True, null=True, default='1.0.0', db_index=True)
@@ -72,6 +73,14 @@ class Bus(models.Model):
         verbose_name = 'Bus'
         verbose_name_plural = 'Buses'
         ordering = ['bus_name']
+
+
+class BitacoraCarga(models.Model):
+    TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)
+    cycle_value = models.IntegerField('Clycle Value', null=True, blank=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True, blank=True)
+    año = models.IntegerField()
+    mes = models.IntegerField()
 
 class Odometer(models.Model):
     TimeStamp = models.DateTimeField('TimeStamp', blank=True, null=True)

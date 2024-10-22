@@ -2,6 +2,8 @@ import psycopg2
 from django.db.models import Max
 from django.db.models.functions import ExtractMonth
 from bus_signals.models import Odometer, BatteryHealth
+from collections import defaultdict
+from reports.models import DailyMatrizKmAutoReport
 
 dbname = 'alicanto-db-dev'
 user = 'postgres'
@@ -12,66 +14,23 @@ port = '5432'
 def format_date(date):
         return date.strftime('%d-%m-%Y %H:%M:%S')
 
-def daily_bus_km(id_bus):
-    connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-    cursor = connection.cursor()
-    query = """WITH all_days AS (
-    SELECT generate_series(1, 31) AS dia
-)
-SELECT
-    all_days.dia,
-    MAX(CASE WHEN mes = 1 THEN max_odometer END) AS enero,
-    MAX(CASE WHEN mes = 2 THEN max_odometer END) AS febrero,
-    MAX(CASE WHEN mes = 3 THEN max_odometer END) AS marzo,
-    MAX(CASE WHEN mes = 4 THEN max_odometer END) AS abril,
-    MAX(CASE WHEN mes = 5 THEN max_odometer END) AS mayo,
-    MAX(CASE WHEN mes = 6 THEN max_odometer END) AS junio,
-    MAX(CASE WHEN mes = 7 THEN max_odometer END) AS julio,
-    MAX(CASE WHEN mes = 8 THEN max_odometer END) AS agosto,
-    MAX(CASE WHEN mes = 9 THEN max_odometer END) AS septiembre,
-    MAX(CASE WHEN mes = 10 THEN max_odometer END) AS octubre,
-    MAX(CASE WHEN mes = 11 THEN max_odometer END) AS noviembre,
-    MAX(CASE WHEN mes = 12 THEN max_odometer END) AS diciembre
-FROM all_days
-LEFT JOIN (
-    SELECT
-        EXTRACT(DAY FROM "TimeStamp") AS dia,
-        bus_id,
-        odometer_value as max_odometer,
-        EXTRACT(MONTH FROM "TimeStamp") AS mes
-    FROM (
-        WITH ranked_data AS (
-            SELECT
-                bus_id,
-                odometer_value,
-                "TimeStamp",
-                ROW_NUMBER() OVER (PARTITION BY bus_id, DATE_TRUNC('day', "TimeStamp") ORDER BY odometer_value DESC) AS rnk
-            FROM
-                bus_signals_odometer
-        )
-        SELECT
-            bus_id,
-            odometer_value,
-            "TimeStamp"
-        FROM
-            ranked_data
-        WHERE
-            rnk = 1
-        ORDER BY
-            bus_id, "TimeStamp" DESC
-    ) A
-    WHERE bus_id = %s
+def daily_bus_km(bus_id, year):
+    # Inicializar un diccionario para almacenar los resultados por día y mes
+    result = defaultdict(lambda: [None] * 12)  # Un array de 12 meses (None para cada mes)
 
-) A ON all_days.dia = A.dia
-GROUP BY all_days.dia;
+    # Obtener los datos del modelo para el bus y el año específico
+    km_data = DailyMatrizKmAutoReport.objects.filter(bus_id=bus_id, año=year).values('dia', 'mes', 'max_odometer')
 
-"""
-    cursor.execute(query, (id_bus,))
-    results = cursor.fetchall()
-# Cerrar el cursor y la conexión
-    cursor.close()
-    connection.close()
-    return results
+    # Recorrer los resultados y llenar el diccionario
+    for data in km_data:
+        dia = data['dia'] - 1  # Los días van de 1 a 31, ajustamos el índice
+        mes = data['mes'] - 1  # Los meses van de 1 a 12, ajustamos el índice
+        result[dia][mes] = data['max_odometer']  # Llenar el odómetro en el mes correspondiente
+
+    # Convertir el diccionario en una lista de listas (un formato más manejable para el template)
+    result_list = [[dia + 1] + values for dia, values in result.items()]  # El día es el primer valor de la fila
+
+    return result_list
 
 
 def monthly_bus_km(id_bus):
@@ -163,6 +122,8 @@ ORDER BY C.bus_name"""
      cursor.close()
      connection.close()
      return results
+     
+    
 
     
 
@@ -482,4 +443,52 @@ def get_battery_health_report(bus_id):
         health_report['values'] = healt_values
 
     return health_report
-   
+
+def get_monthly_kilometer_data(bus_id, year):
+    # Diccionario con los nombres de los meses
+    months_dict = {
+        1: 'Enero',
+        2: 'Febrero',
+        3: 'Marzo',
+        4: 'Abril',
+        5: 'Mayo',
+        6: 'Junio',
+        7: 'Julio',
+        8: 'Agosto',
+        9: 'Septiembre',
+        10: 'Octubre',
+        11: 'Noviembre',
+        12: 'Diciembre',
+    }
+    
+    # Crear un diccionario para almacenar los resultados
+    monthly_data = {}
+    
+    # Iteramos sobre los 12 meses
+    for month in range(1, 13):
+        # Obtener el valor del odómetro el primer día del mes
+        first_day_data = DailyMatrizKmAutoReport.objects.filter(bus_id=bus_id, mes=month, año=year, dia=1).first()
+        
+        # Obtener el valor del odómetro el último día del mes
+        last_day_data = DailyMatrizKmAutoReport.objects.filter(bus_id=bus_id, mes=month, año=year).order_by('-dia').first()
+        
+        if first_day_data and last_day_data:
+            kilometro1 = first_day_data.max_odometer
+            kilometro_last_day = last_day_data.max_odometer
+            recorrido = kilometro_last_day - kilometro1
+            
+            # Guardamos los valores en el diccionario con el nombre del mes
+            monthly_data[months_dict[month]] = {
+                'kilometro1': kilometro1,
+                'kilometro_last_day': kilometro_last_day,
+                'recorrido': recorrido
+            }
+        else:
+            # Si no hay datos para este mes, asignamos None o algún valor indicador
+            monthly_data[months_dict[month]] = {
+                'kilometro1': None,
+                'kilometro_last_day': None,
+                'recorrido': None
+            }
+    
+    return monthly_data

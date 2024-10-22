@@ -19,7 +19,7 @@ urlpatterns = [
   path("update_fusi/<str:pk>/", views.update_fusi, name="update_fusi"),
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus"),
   path("reports_page/", views.reports_page, name="reports_page"),
-  
+  path('energy_record/', views.energy_record, name='energy-record'),
 
  
   
