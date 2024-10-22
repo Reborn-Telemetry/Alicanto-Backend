@@ -253,18 +253,6 @@ def bus_detail(request, pk):
 
 # Tabla recorrido buses
     result_data = get_monthly_kilometer_data(pk, año)
-    for month, data in  result_data.items():
-        print(f"Mes: {month}")
-        print(f"Kilometro día 1: {data['kilometro1']}")
-        print(f"Kilometro último día: {data['kilometro_last_day']}")
-        print(f"Recorrido: {data['recorrido']}")
-
-
-            
-    
-
-    
-    
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
 
