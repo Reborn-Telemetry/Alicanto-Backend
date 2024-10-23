@@ -23,25 +23,27 @@ scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), "default")
 
 
-def save_historical_energy_data(mes, año):
+def save_historical_energy_data(dia, mes, año):
     bus_list = Bus.bus.exclude(id__in=no_update_list)
 
     # Obtener la zona horaria de Santiago
     santiago_tz = pytz.timezone('Chile/Continental')
 
-    # Calcular el primer y último día del mes
-    primer_dia_mes = datetime(año, mes, 1, tzinfo=santiago_tz)
-    if mes == 12:
-        ultimo_dia_mes = datetime(año + 1, 1, 1, tzinfo=santiago_tz) - timedelta(days=1)
-    else:
-        ultimo_dia_mes = datetime(año, mes + 1, 1, tzinfo=santiago_tz) - timedelta(days=1)
+    # Calcular el primer y último momento del día específico
+    inicio_dia = datetime(año, mes, dia, 0, 0, 0, tzinfo=santiago_tz)
+    fin_dia = datetime(año, mes, dia, 23, 59, 59, tzinfo=santiago_tz)
 
-    # Filtrar ChargeStatus por el mes y año
+    # Filtrar ChargeStatus por el día específico
     charge_data = ChargeStatus.charge_status.filter(
         bus_id__in=bus_list.values_list('id', flat=True),
-        TimeStamp__gte=primer_dia_mes,
-        TimeStamp__lte=ultimo_dia_mes
+        TimeStamp__gte=inicio_dia,
+        TimeStamp__lte=fin_dia
     ).order_by('TimeStamp')
+
+    # Verificar si la consulta no encontró resultados
+    if not charge_data.exists():
+        print(f"No se encontraron datos de carga para el día {dia}/{mes}/{año}.")
+        return f"No se encontraron datos de carga para el día {dia}/{mes}/{año}."
 
     lista_datos_organizados = {bus.id: {'bus': bus, 'datos': {}} for bus in bus_list}
 
@@ -65,6 +67,10 @@ def save_historical_energy_data(mes, año):
             carga = soc_final - soc_inicial
             diferencia = fecha_termino - fecha_inicio
             diferencia_en_horas = diferencia.total_seconds() / 3600
+
+            # Cálculo diferenciado de la energía según la serie del bus
+            energia = (carga * 140) / 100 if data['bus'].bus_series == 'Queltehue' else (carga * 280) / 100
+
             datos_tabla.append({
                 'rango': i,
                 'fecha_inicio': fecha_inicio,
@@ -73,13 +79,13 @@ def save_historical_energy_data(mes, año):
                 'soc_inicial': soc_inicial,
                 'soc_final': soc_final,
                 'carga': carga,
-                'energia': (carga * 140) / 100,
+                'energia': energia,
                 'bus': data['bus']
             })
-            
+            print(datos_tabla)
 
         # Guardar en MatrizEnergiaFlotaHistorico
-        tabla_energia = {fecha.strftime('%Y-%m-%d'): 0 for fecha in (primer_dia_mes + timedelta(days=d) for d in range((ultimo_dia_mes - primer_dia_mes).days + 1))}
+        tabla_energia = {inicio_dia.strftime('%Y-%m-%d'): 0}
         for dato in datos_tabla:
             fecha = dato['fecha_inicio'].strftime('%Y-%m-%d')
             if fecha in tabla_energia:
@@ -90,23 +96,25 @@ def save_historical_energy_data(mes, año):
                 fecha_obj = datetime.strptime(fecha, '%Y-%m-%d')
                 MatrizEnergiaFlotaHistorico.objects.create(
                     bus=data['bus'],
-                    dia=fecha_obj.day,
+                    dia=dia,
                     mes=mes,
                     año=año,
                     energia=round(energia_total, 2)
                 )
-                
 
     return "Datos de energía histórica guardados correctamente."
 
 
-@scheduler.scheduled_job(CronTrigger(day='last', hour=23, minute=50, timezone='America/Santiago'))
+@scheduler.scheduled_job(CronTrigger(hour=23, minute=55, timezone='America/Santiago'))
 def scheduled_get_historical_data():
-    # Aquí puedes pasar el mes y el año que necesites
-    now = timezone.now()
+    # Obtener la fecha y hora actual en la zona horaria de Chile
+    now = timezone.now().astimezone(timezone.pytz.timezone('America/Santiago'))
+    dia = now.day
     mes = now.month
     año = now.year
-    save_historical_energy_data(mes, año)
+    
+    # Llama a la función para guardar los datos históricos de energía, pasando el día, mes y año
+    save_historical_energy_data(dia, mes, año)
 
 def begin():
     scheduler.start()

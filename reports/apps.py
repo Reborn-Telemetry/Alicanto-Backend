@@ -7,6 +7,9 @@ class ReportsConfig(AppConfig):
 
     def ready(self):
 
+        from bus_signals.threads.energia_anual import iniciar_calculo_diario
+        iniciar_calculo_diario()
+
         from bus_signals.threads.matriz_energia_historico_flota import begin
         begin()
 
