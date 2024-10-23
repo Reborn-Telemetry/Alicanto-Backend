@@ -35,5 +35,7 @@ admin.site.register(models.BtmsStatus)
 admin.site.register(models.FusiMessage)
 admin.site.register(models.ModemInfo)
 
+admin.site.register(models.AnualEnergy)
+
 
 
