@@ -1,26 +1,13 @@
 from datetime import datetime
-from datetime import datetime, timedelta
-
 from django.db import transaction
 import pytz
-from django.http import JsonResponse
-from django.shortcuts import render
-from bus_signals.models import Bus, Odometer, ChargeStatus
-from django.db.models.functions import ExtractMonth, ExtractDay, ExtractYear
-from django.db.models import Max
+from bus_signals.models import Bus, ChargeStatus
 from reports.models import MatrizEnergiaFlotaHistorico
-
-from django_apscheduler.jobstores import DjangoJobStore
-from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.utils import timezone
 
 
 no_update_list = ['24', '87', '61', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135']
-
-
-scheduler = BackgroundScheduler()
-scheduler.add_jobstore(DjangoJobStore(), "default")
 
 
 def save_historical_energy_data(dia, mes, año):
@@ -105,7 +92,6 @@ def save_historical_energy_data(dia, mes, año):
     return "Datos de energía histórica guardados correctamente."
 
 
-@scheduler.scheduled_job(CronTrigger(hour=23, minute=55, timezone='America/Santiago'))
 def scheduled_get_historical_data():
     # Obtener la fecha y hora actual en la zona horaria de Chile
     now = timezone.now().astimezone(timezone.pytz.timezone('America/Santiago'))
@@ -116,5 +102,12 @@ def scheduled_get_historical_data():
     # Llama a la función para guardar los datos históricos de energía, pasando el día, mes y año
     save_historical_energy_data(dia, mes, año)
 
-def begin():
-    scheduler.start()
+
+def iniciar_calculo_historico_diario(scheduler):
+    # Configurar el trigger para que se ejecute todos los días a las 23:57 horas
+    scheduler.add_job(
+        scheduled_get_historical_data,
+        trigger=CronTrigger(hour=23, minute=57, timezone='America/Santiago'),
+        id="scheduled_get_historical_data",
+        replace_existing=True,
+    )
