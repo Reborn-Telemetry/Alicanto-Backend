@@ -1,9 +1,10 @@
 import psycopg2
-from django.db.models import Max
+from django.db.models import Max, Min
 from django.db.models.functions import ExtractMonth
 from bus_signals.models import Odometer, BatteryHealth
 from collections import defaultdict
 from reports.models import DailyMatrizKmAutoReport
+
 
 dbname = 'alicanto-db-dev'
 user = 'postgres'
@@ -128,88 +129,33 @@ ORDER BY C.bus_name"""
     
 
 def monthly_fleet_km():
-    connection = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-    cursor = connection.cursor()
-    query = """SELECT C.bus_name, ENE_MIN, B.ENE_MAX, FEB_MIN, B.FEB_MAX, MAR_MIN, B.MAR_MAX, ABR_MIN, B.ABR_MAX, MAY_MIN, B.MAY_MAX, JUN_MIN, B.JUN_MAX, AGO_MIN, B.AGO_MAX, SEPT_MIN, B.SEPT_MAX, OCT_MIN, B.OCT_MAX, NOV_MIN, B.NOV_MAX, DIC_MIN, B.DIC_MAX
-FROM
-(SELECT
-    bus_id,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 1 THEN odometer_value END) AS ENE_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 2 THEN odometer_value END) AS FEB_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 3 THEN odometer_value END) AS MAR_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 4 THEN odometer_value END) AS ABR_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 5 THEN odometer_value END) AS MAY_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 6 THEN odometer_value END) AS JUN_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 7 THEN odometer_value END) AS JUL_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 8 THEN odometer_value END) AS AGO_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 9 THEN odometer_value END) AS SEPT_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 10 THEN odometer_value END) AS OCT_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 11 THEN odometer_value END) AS NOV_MIN,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 12 THEN odometer_value END) AS DIC_MIN
-FROM
-    (WITH ranked_data AS (
-        SELECT
-            bus_id,
-            odometer_value,
-            "TimeStamp" as fecha,
-            ROW_NUMBER() OVER (PARTITION BY bus_id, DATE_TRUNC('month', "TimeStamp") ORDER BY odometer_value ASC) AS rnk_low
-        FROM
-            bus_signals_odometer
-        )
-        SELECT
-            bus_id,
-            odometer_value,
-            fecha
-        FROM
-            ranked_data
-        WHERE
-            rnk_low = 1
-    ) A
-GROUP BY
-    bus_id) A
-LEFT JOIN (
-SELECT
-    bus_id,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 1 THEN odometer_value END) AS ENE_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 2 THEN odometer_value END) AS FEB_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 3 THEN odometer_value END) AS MAR_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 4 THEN odometer_value END) AS ABR_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 5 THEN odometer_value END) AS MAY_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 6 THEN odometer_value END) AS JUN_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 7 THEN odometer_value END) AS JUL_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 8 THEN odometer_value END) AS AGO_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 9 THEN odometer_value END) AS SEPT_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 10 THEN odometer_value END) AS OCT_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 11 THEN odometer_value END) AS NOV_MAX,
-    MAX(CASE WHEN EXTRACT(MONTH FROM fecha) = 12 THEN odometer_value END) AS DIC_MAX
-FROM
-    (WITH ranked_data AS (
-        SELECT
-            bus_id,
-            odometer_value,
-            "TimeStamp" as fecha,
-            ROW_NUMBER() OVER (PARTITION BY bus_id, DATE_TRUNC('month', "TimeStamp") ORDER BY odometer_value DESC) AS rnk_high
-        FROM
-            bus_signals_odometer
-        )
-        SELECT
-            bus_id,
-            odometer_value,
-            fecha
-        FROM
-            ranked_data
-        WHERE
-            rnk_high = 1
-    ) A
-GROUP BY
-    bus_id) B on A.bus_id=B.bus_id
-left join bus_signals_bus C on A.bus_id=C.id    
-    ORDER BY C.bus_name;"""
-    cursor.execute(query)
-    results = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return results
+    # Filtrar los datos agrupados por bus, mes y año, y obtener el valor mínimo y máximo del odómetro para cada mes
+    buses_kilometraje = DailyMatrizKmAutoReport.objects.values('bus__bus_name', 'mes', 'año') \
+        .annotate(
+            odometro_inicial=Min('max_odometer'),
+            odometro_final=Max('max_odometer')
+        ).order_by('bus__bus_name', 'año', 'mes')
+
+    # Crear el formato deseado
+    resultado = {}
+    
+    for entry in buses_kilometraje:
+        bus_name = entry['bus__bus_name']
+        if bus_name not in resultado:
+            resultado[bus_name] = []
+
+        # Agregar los valores del odómetro para el mes y año específicos
+        resultado[bus_name].append((entry['mes'], entry['odometro_inicial'], entry['odometro_final']))
+
+    # Convertir el diccionario en una lista con el formato que necesitas
+    formatted_result = []
+    
+    for bus, km_data in resultado.items():
+        # Aplanar los resultados en la forma (bus_name, kilometros_por_mes...)
+        formatted_entry = [bus] + [val for km in km_data for val in (km[1], km[2])]
+        formatted_result.append(formatted_entry)
+
+    return formatted_result
 
 
 def dinamic_query(dia, mes, id_bus):
@@ -492,3 +438,36 @@ def get_monthly_kilometer_data(bus_id, year):
             }
     
     return monthly_data
+
+
+
+
+
+def recorrido_mensual_año(año):
+    buses_kilometraje = DailyMatrizKmAutoReport.objects.values('bus__bus_name', 'mes', 'año') \
+        .annotate(
+            odometro_inicial=Min('max_odometer'),
+            odometro_final=Max('max_odometer')
+        ).order_by('bus__bus_name', 'año', 'mes')
+
+    # Crear el formato deseado
+    resultado = {}
+    
+    for entry in buses_kilometraje:
+        bus_name = entry['bus__bus_name']
+        if bus_name not in resultado:
+            resultado[bus_name] = []
+
+        # Agregar los valores del odómetro para el mes y año específicos
+        resultado[bus_name].append((entry['mes'], entry['odometro_inicial'], entry['odometro_final']))
+
+    # Convertir el diccionario en una lista con el formato que necesitas
+    formatted_result = []
+    
+    for bus, km_data in resultado.items():
+        # Aplanar los resultados en la forma (bus_name, kilometros_por_mes...)
+        formatted_entry = [bus] + [val for km in km_data for val in (km[1], km[2])]
+        formatted_result.append(formatted_entry)
+
+    return formatted_result
+
