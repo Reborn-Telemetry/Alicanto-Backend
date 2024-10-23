@@ -1,16 +1,8 @@
-import threading
-import pytz
 from pytz import timezone
 from datetime import datetime
-from requests import request
-from bus_signals.models import Bus, ChargeStatus, AnualEnergy
-from apscheduler.jobstores.base import ConflictingIdError
-from apscheduler.triggers.cron import CronTrigger
 from reports.models import MatrizEnergiaFlotaHistorico
-from django.db.models import Q, Count, Sum, Max, F, Avg
-from django_apscheduler.jobstores import DjangoJobStore
-from django_apscheduler.models import DjangoJobExecution
-from apscheduler.schedulers.background import BackgroundScheduler
+from django.db.models import Sum
+from apscheduler.triggers.cron import CronTrigger
 
 
 def calcular_energia_anual(year):
@@ -26,20 +18,20 @@ def calcular_energia_anual(year):
 
 # Esta es la función que se ejecutará diariamente
 def calcular_energia_anual_diaria():
-    year = datetime.now().year  # Obtener el año actual
-    calcular_energia_anual(year)  # Llamar a la función con el año actual
+    # Obtener el año actual
+    year = datetime.now().year
+    # Llamar a la función con el año actual
+    total_energy = calcular_energia_anual(year)
+    
+    # Puedes imprimir o hacer cualquier cosa con el resultado si lo necesitas
+    print(f"Energía total calculada para el año {year}: {total_energy}")
 
 
-def iniciar_calculo_diario():
-    scheduler = BackgroundScheduler()
-    scheduler.add_jobstore(DjangoJobStore(), "default")
-
+def iniciar_calculo_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 11 AM hora de Chile
     scheduler.add_job(
-        'bus_signals.threads.energia_anual:calcular_energia_anual_diaria',
-        trigger=CronTrigger(hour=10, minute=0, timezone=timezone("America/Santiago")),  # 11:00 AM Chile
+        calcular_energia_anual_diaria,  # La función que se ejecutará diariamente
+        trigger=CronTrigger(hour=15, minute=0, timezone=timezone("America/Santiago")),
         id="calcular_energia_anual_diaria",
         replace_existing=True,
     )
-
-    scheduler.start()
