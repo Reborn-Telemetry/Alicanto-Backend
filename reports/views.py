@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from openpyxl import Workbook
-from bus_signals.query_utils import matriz_km_diario_flota, format_date, daily_bus_km, monthly_bus_km, monthly_fleet_km
+from bus_signals.query_utils import matriz_km_diario_flota, format_date, daily_bus_km, monthly_bus_km, monthly_fleet_km, recorrido_mensual_año
 from bus_signals.models import Bus, BatteryHealth, ChargeStatus, CellsVoltage, EcuState, Odometer, FusiCode
 from . models import Prueba, DisponibilidadFlota, MatrizEnergiaFlotaHistorico, DailyMatrizKmAutoReport
 from datetime import date, timedelta, timezone
@@ -1248,6 +1248,315 @@ def drive_report(request, pk):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
     
+
+
+
+@login_required
+def software_version(request):
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte versiones software :{formatted_datetime}.xls'
+    buf = io.BytesIO()
+
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Report')
+
+    table_data = [[
+        'Bus', 'Mark', 'Jarvis', 'Vision', 'Fecha de actualización'
+    ]]
+    buses = Bus.bus.all()
+
+    for i in buses:
+        formatted_datetime = i.lts_update.strftime("%d/%m/%Y %H:%M") if i.lts_update else "sin actualizacion"
+        row = [
+            i.bus_name, i.mark, i.jarvis, i.vision, formatted_datetime
+               ]
+        table_data.append(row)
+    
+    style = xlwt.easyxf('font: bold on; align: horiz center')
+    for row_num, row_data in enumerate(table_data):
+        for col_num, cell_value in enumerate(row_data):
+            worksheet.write(row_num, col_num, cell_value, style)
+
+    workbook.save(buf)
+    buf.seek(0)
+
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+
+
+
+
+
+
+
+@login_required(login_url='login')
+def recorrido_mensual_bus_pdf(request, pk):
+    bus = Bus.bus.get(id=pk)
+    result = monthly_bus_km(pk)
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte_recorrido_mensual bus {bus.bus_name}_{formatted_datetime}.pdf'
+    buf = BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+
+    # Crear la tabla con los datos de los meses y el recorrido
+    table_data = [['Mes', 'Kilometraje Inicial', 'Kilometraje Final', 'Recorrido']]
+    meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    
+    idx_mes = 0  # Índice para recorrer los meses
+    for item in result:
+        # Ignorar el primer valor de la tupla
+        item = item[1:]
+        for i in range(len(item)):
+            if i % 2 == 0:  # Índices impares para kilómetros iniciales
+                mes = meses[idx_mes]
+                km_inicial = item[i]
+                km_final = item[i + 1] if i + 1 < len(item) else None
+                recorrido = km_final - km_inicial if km_final is not None else ''
+                table_data.append([mes, km_inicial, km_final, recorrido])
+                idx_mes += 1  # Avanzar al siguiente mes
+
+    # Estilo de la tabla
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, colors.black)
+    ])
+
+    # Crear la tabla y aplicar el estilo
+    table = Table(table_data)
+    table.setStyle(style)
+    elements.append(table)
+
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    # Construir el documento y guardar en el buffer
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+@login_required(login_url='login')
+def bus_historic_fusi(request, pk):
+    bus = Bus.bus.get(id=pk)
+    fusi_bus = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code'))
+    fusi_bus_complete = FusiCode.fusi.filter(bus_id=pk)
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte historico fusi_{bus.bus_name}_{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter)
+    elements = []
+    table_data_2 = [['Fecha', 'Codigo Fusi', 'Kilometraje Ocurrencia']]
+    table_data = [
+        ["Codigo Fusi", "Ocurrencias"]
+    ]
+    for item in fusi_bus:
+        table_data.append([item['fusi_code'], item['total']])
+    
+    for item2 in fusi_bus_complete:
+        table_data_2.append([item2.TimeStamp.strftime("%d-%m-%Y %H:%M"), int(item2.fusi_code), item2.failure_odometer ])
+
+    # Estilo de la tabla
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
+    ])
+
+    # Crear la tabla y aplicar el estilo
+    table = Table(table_data)
+    table2 = Table(table_data_2)
+    table2.setStyle(style)
+    table.setStyle(style)
+    spacer = Spacer(0, 20)
+    elements.append(table)
+    elements.append(spacer)
+    elements.append(table2)
+    
+    image_path = 'static/img/REM.png'
+    image = Image(image_path, width=80, height=80)
+    elements.insert(0, image)
+
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+
+#------------------------- funciones ok ---------------------------#
+@login_required
+def recorrido_mensual_flota_xls(request):
+    now = datetime.now()
+    year = now.year
+    result = recorrido_mensual_año(year)  # Asegúrate de que esta función esté correctamente definida
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte_recorrido_mensual_flota_{formatted_datetime}.xls'
+    
+    # Crear un buffer para almacenar el archivo Excel
+    buf = BytesIO()
+
+    # Crear un libro de trabajo (workbook) y una hoja de trabajo (worksheet)
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('Recorrido Mensual Flota')
+
+    # Estilo para la cabecera
+    header_style = xlwt.easyxf('font: bold 1')
+
+    # Encabezados de la tabla
+    headers = ['Bus', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+
+    # Escribir los encabezados en la primera fila
+    for col_num, header in enumerate(headers):
+        worksheet.write(0, col_num, header, header_style)
+
+    # Escribir los datos en las filas siguientes
+    for row_num, item in enumerate(result, start=1):
+        # Escribir el nombre del bus en la primera columna
+        worksheet.write(row_num, 0, item[0])
+
+        # Iterar sobre los valores de cada mes, calculando el recorrido (final - inicial) y escribir en las columnas correspondientes
+        for col_num in range(1, len(item[1:]), 2):
+            km_inicial = item[col_num]  # Valor del odómetro inicial
+            km_final = item[col_num + 1] if col_num + 1 < len(item) else None  # Valor del odómetro final
+
+            if km_inicial is not None and km_final is not None:
+                recorrido = km_final - km_inicial  # Restar el valor final menos el inicial
+            else:
+                recorrido = 'N/A'  # Si no hay datos, usar 'N/A'
+
+            # Escribir el recorrido en la columna correspondiente
+            worksheet.write(row_num, col_num // 2 + 1, recorrido)
+
+    # Guardar el archivo Excel en el buffer
+    workbook.save(buf)
+    buf.seek(0)
+
+    # Retornar el archivo Excel como respuesta
+    return FileResponse(buf, as_attachment=True, filename=filename)
+@login_required
+def recorrido_mensual_flota(request):
+    now = datetime.now()
+    year = now.year
+    result = recorrido_mensual_año(year)  # Asegúrate de que esta función esté correctamente definida
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte_recorrido_mensual_flota_{formatted_datetime}.pdf'
+    buf = BytesIO()
+
+    doc = SimpleDocTemplate(buf, pagesize=landscape(letter))  # Use landscape mode to fit all months
+    elements = []
+    
+    # Table headers: Bus name and each month twice for initial and final odometer readings
+    table_data = [
+        ['Bus', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    ]
+    
+    # Iterate over the result data
+    for item in result:
+        row = [item[0]]  # Start with the bus name, which should be the first item in the list
+        for i in range(1, len(item), 2):  # Iterate over the months (2 steps: initial and final values)
+            km_inicial = item[i]
+            km_final = item[i + 1] if i + 1 < len(item) else None
+            recorrido = km_final - km_inicial if km_final is not None and km_inicial is not None else 'N/A'
+            row.append(recorrido)  # Append the calculated difference
+
+        table_data.append(row)  # Add the row to the table data
+    
+    # Create and style the table
+    table = Table(table_data)
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+        ('LINEBELOW', (0, 1), (-1, -1), 1, colors.black)
+    ])
+    table.setStyle(style)
+    
+    elements.append(table)
+    
+    # Build the PDF
+    doc.build(elements)
+    
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
+@login_required
+def monthly_bus_report(request):
+    report_data = monthly_fleet_km()
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
+    filename = f'reporte km mensual :{formatted_datetime}.pdf'
+    buf = io.BytesIO()
+
+    doc = SimpleDocTemplate(buf, pagesize=landscape(letter))
+    elements = []
+
+    # Define las cabeceras de la tabla
+    table_data = [[
+        'Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
+        'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
+        'Sep I', 'Sep F', 'Oct I', 'Oct F', 'Nov I', 'Nov F', 'Dic I', 'Dic F'
+    ]]
+
+    # Agregar los datos de la consulta
+    for entry in report_data:
+        row = []
+        for value in entry:
+            row.append(str(value) if value is not None else '0')
+        table_data.append(row)
+
+    # Estilo de la tabla
+    cell_width = 17
+    font_size = 8  # Aumentar el tamaño de fuente si es necesario
+    style = TableStyle([
+        # Estilo para las cabeceras (fondo gris claro y texto negro)
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),  # Color de fondo de las celdas
+        ('BOX', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTSIZE', (0, 0), (-1, -1), font_size),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)  # Líneas de la tabla
+    ])
+
+    table = Table(table_data, colWidths=[cell_width * 1.5] * len(table_data[0]))
+    table.setStyle(style)
+    elements.append(table)
+
+    # Agregar una imagen opcional en el encabezado
+    image_path = 'static/img/REM.png'
+    image_width = 150
+    image_height = 150
+    image = Image(image_path, width=image_width, height=image_height)
+    elements.insert(0, image)
+
+    # Generar el PDF
+    doc.build(elements)
+
+    buf.seek(0)
+    return FileResponse(buf, as_attachment=True, filename=filename)
+
 @login_required
 def pdf_report(request):
     current_datetime = datetime.now()
@@ -1287,39 +1596,6 @@ def pdf_report(request):
     doc.build(elements)
 
     buf.seek(0)
-    return FileResponse(buf, as_attachment=True, filename=filename)
-
-
-@login_required
-def software_version(request):
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-    filename = f'reporte versiones software :{formatted_datetime}.xls'
-    buf = io.BytesIO()
-
-    workbook = xlwt.Workbook(encoding='utf-8')
-    worksheet = workbook.add_sheet('Report')
-
-    table_data = [[
-        'Bus', 'Mark', 'Jarvis', 'Vision', 'Fecha de actualización'
-    ]]
-    buses = Bus.bus.all()
-
-    for i in buses:
-        formatted_datetime = i.lts_update.strftime("%d/%m/%Y %H:%M") if i.lts_update else "sin actualizacion"
-        row = [
-            i.bus_name, i.mark, i.jarvis, i.vision, formatted_datetime
-               ]
-        table_data.append(row)
-    
-    style = xlwt.easyxf('font: bold on; align: horiz center')
-    for row_num, row_data in enumerate(table_data):
-        for col_num, cell_value in enumerate(row_data):
-            worksheet.write(row_num, col_num, cell_value, style)
-
-    workbook.save(buf)
-    buf.seek(0)
-
     return FileResponse(buf, as_attachment=True, filename=filename)
 
 @login_required
@@ -1383,222 +1659,4 @@ def monthly_bus_report_xls(request):
     workbook.save(buf)
     buf.seek(0)
 
-    return FileResponse(buf, as_attachment=True, filename=filename)
-
-@login_required
-def recorrido_mensual_flota(request):
-    buses = Bus.bus.all()
-    buses = buses.exclude(id__in=no_update_list)
-    elements = []
-    
-    for bus in buses:
-        result = monthly_bus_km(bus.id)
-        current_datetime = datetime.now()
-        formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-        filename = f'reporte_recorrido_mensual_flota_{formatted_datetime}.pdf'
-        buf = BytesIO()
-        doc = SimpleDocTemplate(buf, pagesize=letter)
-        table_data = [['Bus', 'Mes', 'Kilometraje Inicial', 'Kilometraje Final', 'Recorrido']]
-        meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-        
-        idx_mes = 0
-        for item in result:
-            # Ignorar el primer valor de la tupla
-            item = item[1:]
-            for i in range(len(item)):
-                if i % 2 == 0:  # Índices impares para kilómetros iniciales
-                    mes = meses[idx_mes]
-                    km_inicial = item[i]
-                    km_final = item[i + 1] if i + 1 < len(item) else None
-                    recorrido = km_final - km_inicial if km_final is not None else ''
-                    # Aquí se agrega el nombre del bus en lugar del ID
-                    table_data.append([bus.bus_name, mes, km_inicial, km_final, recorrido])
-                    idx_mes += 1  # Avanzar al siguiente mes
-        
-        # Estilo de la tabla
-        style = TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
-            ('LINEBELOW', (0, 1), (-1, -1), 1, colors.black)
-        ])
-        
-        # Crear la tabla y aplicar el estilo
-        spacer = Spacer(0, 20)
-        table = Table(table_data)
-        table.setStyle(style)
-        elements.append(table)
-        elements.append(spacer)
-        
-        
-       
-    # Construir el documento y guardar en el buffer
-    image_path = 'static/img/REM.png'
-    image = Image(image_path, width=80, height=80)
-    elements.insert(0, image)
-
-    doc.build(elements)
-    
-    buf.seek(0)
-    return FileResponse(buf, as_attachment=True, filename=filename)
-
-@login_required(login_url='login')
-def recorrido_mensual_bus_pdf(request, pk):
-    bus = Bus.bus.get(id=pk)
-    result = monthly_bus_km(pk)
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-    filename = f'reporte_recorrido_mensual bus {bus.bus_name}_{formatted_datetime}.pdf'
-    buf = BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=letter)
-    elements = []
-
-    # Crear la tabla con los datos de los meses y el recorrido
-    table_data = [['Mes', 'Kilometraje Inicial', 'Kilometraje Final', 'Recorrido']]
-    meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-    
-    idx_mes = 0  # Índice para recorrer los meses
-    for item in result:
-        # Ignorar el primer valor de la tupla
-        item = item[1:]
-        for i in range(len(item)):
-            if i % 2 == 0:  # Índices impares para kilómetros iniciales
-                mes = meses[idx_mes]
-                km_inicial = item[i]
-                km_final = item[i + 1] if i + 1 < len(item) else None
-                recorrido = km_final - km_inicial if km_final is not None else ''
-                table_data.append([mes, km_inicial, km_final, recorrido])
-                idx_mes += 1  # Avanzar al siguiente mes
-
-    # Estilo de la tabla
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
-        ('LINEBELOW', (0, 1), (-1, -1), 1, colors.black)
-    ])
-
-    # Crear la tabla y aplicar el estilo
-    table = Table(table_data)
-    table.setStyle(style)
-    elements.append(table)
-
-    image_path = 'static/img/REM.png'
-    image = Image(image_path, width=80, height=80)
-    elements.insert(0, image)
-
-    # Construir el documento y guardar en el buffer
-    doc.build(elements)
-
-    buf.seek(0)
-    return FileResponse(buf, as_attachment=True, filename=filename)
-
-@login_required
-def monthly_bus_report(request):
-    report_data = monthly_fleet_km()
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-    filename = f'reporte km mensual :{formatted_datetime}.pdf'
-    buf = io.BytesIO()
-
-    doc = SimpleDocTemplate(buf, pagesize=landscape(letter))
-    elements = []
-
-    table_data = [[
-        
-            'Bus', 'Ene I', 'Ene F', 'Feb I', 'Feb F', 'Mar I', 'Mar F', 'Abr I', 'Abr F',
-            'May I', 'May F', 'Jun I', 'Jun F', 'Jul I', 'Jul F', 'Ago I', 'Ago F',
-            'Sep I', 'Sep F', 'Oct I', 'Oct F', 'Nov I', 'Nov F', 'Dic I', 'Dic F'
-        ]
-    ]
-
-    for entry in report_data:
-        row = []
-        for value in entry:
-            row.append(str(value) if value is not None else '0')
-        table_data.append(row)
-
-    cell_width = 17
-    font_size = 5
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), 'white'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
-        ('BOX', (0, 0), (-1, -1), 1, 'black'),
-        ('FONTSIZE', (0, 0), (-1, -1), font_size),
-    ])
-
-    table = Table(table_data, colWidths=[cell_width * 1.5] * len(table_data[0]))
-    table.setStyle(style)
-    elements.append(table)
-
-    image_path = 'static/img/REM.png'
-    image_width = 150
-    image_height = 150
-    image = Image(image_path, width=image_width, height=image_height)
-    elements.insert(0, image)
-
-    doc.build(elements)
-
-    buf.seek(0)
-    return FileResponse(buf, as_attachment=True, filename=filename)
-
-@login_required(login_url='login')
-def bus_historic_fusi(request, pk):
-    bus = Bus.bus.get(id=pk)
-    fusi_bus = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code'))
-    fusi_bus_complete = FusiCode.fusi.filter(bus_id=pk)
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%d-%m-%Y")
-    filename = f'reporte historico fusi_{bus.bus_name}_{formatted_datetime}.pdf'
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=letter)
-    elements = []
-    table_data_2 = [['Fecha', 'Codigo Fusi', 'Kilometraje Ocurrencia']]
-    table_data = [
-        ["Codigo Fusi", "Ocurrencias"]
-    ]
-    for item in fusi_bus:
-        table_data.append([item['fusi_code'], item['total']])
-    
-    for item2 in fusi_bus_complete:
-        table_data_2.append([item2.TimeStamp.strftime("%d-%m-%Y %H:%M"), int(item2.fusi_code), item2.failure_odometer ])
-
-    # Estilo de la tabla
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), 'grey'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), 'lightgrey'),
-        ('LINEBELOW', (0, 1), (-1, -1), 1, 'black')
-    ])
-
-    # Crear la tabla y aplicar el estilo
-    table = Table(table_data)
-    table2 = Table(table_data_2)
-    table2.setStyle(style)
-    table.setStyle(style)
-    spacer = Spacer(0, 20)
-    elements.append(table)
-    elements.append(spacer)
-    elements.append(table2)
-    
-    image_path = 'static/img/REM.png'
-    image = Image(image_path, width=80, height=80)
-    elements.insert(0, image)
-
-    doc.build(elements)
-
-    buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
