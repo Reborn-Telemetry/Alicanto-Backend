@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import threading
+from bus_signals.threads.energia_anual import calcular_energia_anual, calcular_energia_anual_diaria
 from reports.views import switch_report_xls
 from .models import Bus, FusiMessage, Odometer, AnualEnergy, FusiCode, BatteryHealth, Isolation, ChargeStatus, CellsVoltage, Speed, EcuState
 from users.models import WorkOrder
@@ -512,6 +513,7 @@ def dashboard(request):
 #---------------------------------------------------------------------------------------------------------
     request.session['charging'] = charging
 #---------------------------------------------------------------------------------------------------------
+   
 #----------------------------------------------------------------------------------------------------------
 # inicio codigo grafico fusi
 #optimizada
