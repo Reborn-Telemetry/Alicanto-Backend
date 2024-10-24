@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+import os
 
 class ReportsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -6,8 +7,9 @@ class ReportsConfig(AppConfig):
     scheduler = None  # Variable de clase para controlar el scheduler
 
     def ready(self):
-        # Iniciar el scheduler directamente cuando la aplicación esté lista
-        self.start_scheduler()
+        # Verificar que estamos en el proceso principal (no en un proceso worker)
+        if os.environ.get('RUN_MAIN') == 'true':  # Solo iniciar el scheduler en el proceso principal
+            self.start_scheduler()
 
     def start_scheduler(self):
         # Evitar inicializar el scheduler más de una vez
@@ -37,10 +39,10 @@ class ReportsConfig(AppConfig):
         from apscheduler.triggers.cron import CronTrigger
         from pytz import timezone
 
-        # Configurar el trigger para que se ejecute todos los días a las 13:50 PM hora de Chile
+        # Configurar el trigger para que se ejecute todos los días a las 14:30 PM hora de Chile
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
-            trigger=CronTrigger(hour=14, minute=30, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=15, minute=10, timezone=timezone("America/Santiago")),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
             misfire_grace_time=300,
