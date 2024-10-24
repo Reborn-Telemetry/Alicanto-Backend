@@ -1,11 +1,8 @@
-from pytz import timezone
 from datetime import datetime
 from reports.models import MatrizEnergiaFlotaHistorico
-from bus_signals.models import AnualEnergy  # Asegúrate de importar tu modelo AnualEnergy
+from bus_signals.models import AnualEnergy
 from django.db.models import Sum
-from apscheduler.triggers.cron import CronTrigger
 import logging
-
 
 def calcular_energia_anual(year):
     # Filtrar los registros por el año específico y sumar los valores de energía
@@ -17,8 +14,6 @@ def calcular_energia_anual(year):
     
     return total_energy
 
-
-# Esta es la función que se ejecutará diariamente
 def calcular_energia_anual_diaria():
     # Obtener el año actual
     year = datetime.now().year
@@ -30,13 +25,3 @@ def calcular_energia_anual_diaria():
 
     # Log para verificar la ejecución
     logging.info(f"Energía total calculada para el año {year}: {total_energy}")
-
-
-def iniciar_calculo_diario(scheduler):
-    # Configurar el trigger para que se ejecute todos los días a las 12:30 PM hora de Chile
-    scheduler.add_job(
-        calcular_energia_anual_diaria,  # La función que se ejecutará diariamente
-        trigger=CronTrigger(hour=12, minute=55, timezone=timezone("America/Santiago")),
-        id="calcular_energia_anual_diaria",
-        replace_existing=True,
-    )
