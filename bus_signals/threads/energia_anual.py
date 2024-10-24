@@ -3,6 +3,7 @@ from datetime import datetime
 from reports.models import MatrizEnergiaFlotaHistorico
 from django.db.models import Sum
 from apscheduler.triggers.cron import CronTrigger
+import logging
 
 
 def calcular_energia_anual(year):
@@ -23,15 +24,15 @@ def calcular_energia_anual_diaria():
     # Llamar a la función con el año actual
     total_energy = calcular_energia_anual(year)
     
-    # Puedes imprimir o hacer cualquier cosa con el resultado si lo necesitas
-    print(f"Energía total calculada para el año {year}: {total_energy}")
+    # Log para verificar la ejecución
+    logging.info(f"Energía total calculada para el año {year}: {total_energy}")
 
 
 def iniciar_calculo_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 11 AM hora de Chile
     scheduler.add_job(
         calcular_energia_anual_diaria,  # La función que se ejecutará diariamente
-        trigger=CronTrigger(hour=15, minute=0, timezone=timezone("America/Santiago")),
+        trigger=CronTrigger(hour=12, minute=0, timezone=timezone("America/Santiago")),
         id="calcular_energia_anual_diaria",
         replace_existing=True,
     )
