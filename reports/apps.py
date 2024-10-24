@@ -1,8 +1,5 @@
 from django.apps import AppConfig
 from django.db.models.signals import post_migrate
-from apscheduler.schedulers.background import BackgroundScheduler
-from django_apscheduler.jobstores import DjangoJobStore
-from django_apscheduler.models import DjangoJob
 
 class ReportsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -11,11 +8,17 @@ class ReportsConfig(AppConfig):
 
     def ready(self):
         # Usar post_migrate para asegurar que las migraciones y las apps estén listas antes de iniciar el scheduler
-        post_migrate.connect(self.start_scheduler, sender=self)
+        # Descomenta esto si lo necesitas
+        # post_migrate.connect(self.start_scheduler, sender=self)
+        pass
 
     def start_scheduler(self, **kwargs):
         # Evitar inicializar el scheduler más de una vez
         if not self.scheduler:
+            from apscheduler.schedulers.background import BackgroundScheduler
+            from django_apscheduler.jobstores import DjangoJobStore
+            from django_apscheduler.models import DjangoJob  # Mueve la importación aquí
+
             self.scheduler = BackgroundScheduler()
             self.scheduler.add_jobstore(DjangoJobStore(), "default")
 
@@ -40,7 +43,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para que se ejecute todos los días a las 12:55 PM hora de Chile
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
-            trigger=CronTrigger(hour=12, minute=55, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=13, minute=50, timezone=timezone("America/Santiago")),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
         )
