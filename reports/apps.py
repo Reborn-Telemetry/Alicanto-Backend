@@ -51,7 +51,7 @@ class ReportsConfig(AppConfig):
         logging.info("Programando el trabajo diario de cálculo de energía anual.")
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
-            trigger=CronTrigger(hour=15, minute=20, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=15, minute=50, timezone=timezone("America/Santiago")),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
             misfire_grace_time=300,
