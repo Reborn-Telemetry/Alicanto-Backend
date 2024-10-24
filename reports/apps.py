@@ -9,8 +9,8 @@ class ReportsConfig(AppConfig):
     def ready(self):
         # Usar post_migrate para asegurar que las migraciones y las apps estén listas antes de iniciar el scheduler
         # Descomenta esto si lo necesitas
-        # post_migrate.connect(self.start_scheduler, sender=self)
-        pass
+        post_migrate.connect(self.start_scheduler, sender=self)
+        
 
     def start_scheduler(self, **kwargs):
         # Evitar inicializar el scheduler más de una vez
