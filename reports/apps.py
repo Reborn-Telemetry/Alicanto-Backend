@@ -10,7 +10,7 @@ class ReportsConfig(AppConfig):
     scheduler = None  # Variable de clase para controlar el scheduler
 
     def ready(self):
-        # Conectar la señal post_migrate para iniciar el scheduler después de las migraciones
+        # Usar post_migrate para asegurar que las migraciones y las apps estén listas antes de iniciar el scheduler
         post_migrate.connect(self.start_scheduler, sender=self)
 
     def start_scheduler(self, **kwargs):
@@ -40,7 +40,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para que se ejecute todos los días a las 12:55 PM hora de Chile
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
-            trigger=CronTrigger(hour=13, minute=30, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=12, minute=55, timezone=timezone("America/Santiago")),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
         )
