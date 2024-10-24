@@ -40,10 +40,11 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para que se ejecute todos los días a las 13:50 PM hora de Chile
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
-            trigger=CronTrigger(hour=14, minute=15, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=14, minute=30, timezone=timezone("America/Santiago")),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
             misfire_grace_time=300,
+            max_instances=1,
         )
 
     def _iniciar_calculo_historico_diario(self):
@@ -58,6 +59,7 @@ class ReportsConfig(AppConfig):
             id="scheduled_get_historical_data",
             replace_existing=True,
             misfire_grace_time=300,
+            max_instances=1,
         )
 
     def _iniciar_calculo_odometro_diario(self):
@@ -72,4 +74,5 @@ class ReportsConfig(AppConfig):
             id="daily_max_auto_update",
             replace_existing=True,
             misfire_grace_time=300,
+            max_instances=1,
         )
