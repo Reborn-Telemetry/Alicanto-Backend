@@ -9,8 +9,9 @@ class ReportsConfig(AppConfig):
 
     def ready(self):
         # Verificar que estamos en el proceso principal (no en un proceso worker)
-        if os.environ.get('RUN_MAIN') == 'true':  # Solo iniciar el scheduler en el proceso principal
-            logging.info("Iniciando el scheduler en el proceso principal...")
+        if os.environ.get('RUN_MAIN') == 'true':
+            print("RUN_MAIN is true, starting scheduler...")
+            logging.info("RUN_MAIN is true, starting scheduler...")
             self.start_scheduler()
 
     def start_scheduler(self):
@@ -46,7 +47,7 @@ class ReportsConfig(AppConfig):
         from apscheduler.triggers.cron import CronTrigger
         from pytz import timezone
 
-        # Configurar el trigger para que se ejecute todos los días a las 14:30 PM hora de Chile
+        # Configurar el trigger para que se ejecute todos los días a las 15:20 PM hora de Chile
         logging.info("Programando el trabajo diario de cálculo de energía anual.")
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
