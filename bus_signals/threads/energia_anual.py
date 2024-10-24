@@ -36,7 +36,7 @@ def iniciar_calculo_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 12:30 PM hora de Chile
     scheduler.add_job(
         calcular_energia_anual_diaria,  # La función que se ejecutará diariamente
-        trigger=CronTrigger(hour=12, minute=40, timezone=timezone("America/Santiago")),
+        trigger=CronTrigger(hour=12, minute=55, timezone=timezone("America/Santiago")),
         id="calcular_energia_anual_diaria",
         replace_existing=True,
     )
