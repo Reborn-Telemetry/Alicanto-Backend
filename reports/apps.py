@@ -43,6 +43,7 @@ class ReportsConfig(AppConfig):
             trigger=CronTrigger(hour=14, minute=15, timezone=timezone("America/Santiago")),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
+            misfire_grace_time=300,
         )
 
     def _iniciar_calculo_historico_diario(self):
@@ -56,6 +57,7 @@ class ReportsConfig(AppConfig):
             trigger=CronTrigger(hour=23, minute=57, timezone=timezone("America/Santiago")),
             id="scheduled_get_historical_data",
             replace_existing=True,
+            misfire_grace_time=300,
         )
 
     def _iniciar_calculo_odometro_diario(self):
@@ -69,4 +71,5 @@ class ReportsConfig(AppConfig):
             trigger=CronTrigger(hour=23, minute=30, timezone=timezone("America/Santiago")),
             id="daily_max_auto_update",
             replace_existing=True,
+            misfire_grace_time=300,
         )
