@@ -7,7 +7,7 @@ from apscheduler.triggers.cron import CronTrigger
 from django.utils import timezone
 
 
-no_update_list = ['24', '87', '61', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135']
+no_update_list = ['87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135']
 
 
 def save_historical_energy_data(dia, mes, año):
