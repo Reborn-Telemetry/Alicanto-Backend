@@ -1,20 +1,18 @@
 from datetime import datetime
 from django.db import transaction
 import pytz
+from django.utils import timezone
 from bus_signals.models import Bus, ChargeStatus
 from reports.models import MatrizEnergiaFlotaHistorico
 from apscheduler.triggers.cron import CronTrigger
-from django.utils import timezone
-
 
 no_update_list = ['87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135']
-
 
 def save_historical_energy_data(dia, mes, año):
     bus_list = Bus.bus.exclude(id__in=no_update_list)
 
     # Obtener la zona horaria de Santiago
-    santiago_tz = pytz.timezone('Chile/Continental')
+    santiago_tz = pytz.timezone('America/Santiago')
 
     # Calcular el primer y último momento del día específico
     inicio_dia = datetime(año, mes, dia, 0, 0, 0, tzinfo=santiago_tz)
@@ -94,7 +92,7 @@ def save_historical_energy_data(dia, mes, año):
 
 def scheduled_get_historical_data():
     # Obtener la fecha y hora actual en la zona horaria de Chile
-    now = timezone.now().astimezone(timezone.pytz.timezone('America/Santiago'))
+    now = timezone.now().astimezone(pytz.timezone('America/Santiago'))
     dia = now.day
     mes = now.month
     año = now.year
@@ -107,7 +105,7 @@ def iniciar_calculo_historico_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 23:57 horas
     scheduler.add_job(
         scheduled_get_historical_data,
-        trigger=CronTrigger(hour=10, minute=40, timezone=pytz.timezone('America/Santiago')),
+        trigger=CronTrigger(hour=11, minute=5, timezone=pytz.timezone('America/Santiago')),
         id="scheduled_get_historical_data",
         replace_existing=True,
     )

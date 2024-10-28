@@ -57,7 +57,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para los datos históricos
         self.scheduler.add_job(
             scheduled_get_historical_data,
-            trigger=CronTrigger(hour=10, minute=40, timezone=pytz.timezone('America/santiago')),
+            trigger=CronTrigger(hour=11, minute=5, timezone=pytz.timezone('America/santiago')),
             id="scheduled_get_historical_data",
             replace_existing=True,
             misfire_grace_time=300,
