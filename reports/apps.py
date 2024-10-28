@@ -57,7 +57,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para los datos históricos
         self.scheduler.add_job(
             scheduled_get_historical_data,
-            trigger=CronTrigger(hour=23, minute=57, timezone=pytz.timezone('America/santiago')),
+            trigger=CronTrigger(hour=10, minute=40, timezone=pytz.timezone('America/santiago')),
             id="scheduled_get_historical_data",
             replace_existing=True,
             misfire_grace_time=300,
@@ -72,7 +72,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para la actualización del odómetro diario
         self.scheduler.add_job(
             daily_max_auto_update,
-            trigger=CronTrigger(hour=10, minute=1, timezone=pytz.timezone('America/santiago')),
+            trigger=CronTrigger(hour=23, minute=55, timezone=pytz.timezone('America/santiago')),
             id="daily_max_auto_update",
             replace_existing=True,
             misfire_grace_time=300,
