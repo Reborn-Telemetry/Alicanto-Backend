@@ -49,7 +49,7 @@ def iniciar_calculo_odometro_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 23:30 horas
     scheduler.add_job(
         daily_max_auto_update,
-        trigger=CronTrigger(hour=10, minute=1, timezone=pytz.timezone('America/santiago')),
+        trigger=CronTrigger(hour=23, minute=55, timezone=pytz.timezone('America/santiago')),
         id="daily_max_auto_update",
         replace_existing=True,
     )
