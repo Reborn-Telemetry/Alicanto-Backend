@@ -5,6 +5,7 @@ from reports.models import DailyMatrizKmAutoReport
 from django.db import transaction
 from apscheduler.triggers.cron import CronTrigger
 from django.utils import timezone
+import pytz
 
 
 def get_max_odometer_per_day_and_month(day, month, year):
@@ -36,7 +37,7 @@ def get_max_odometer_per_day_and_month(day, month, year):
 
 def daily_max_auto_update():
     # Obtener la fecha y hora actuales
-    now = timezone.now().astimezone(timezone('America/Santiago'))
+    now = timezone.now().astimezone(pytz.timezone('America/Santiago'))
     mes = now.month
     año = now.year
     dia = now.day
@@ -48,7 +49,7 @@ def iniciar_calculo_odometro_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 23:30 horas
     scheduler.add_job(
         daily_max_auto_update,
-        trigger=CronTrigger(hour=23, minute=30, timezone='America/Santiago'),
+        trigger=CronTrigger(hour=10, minute=1, timezone=pytz.timezone('America/santiago')),
         id="daily_max_auto_update",
         replace_existing=True,
     )
