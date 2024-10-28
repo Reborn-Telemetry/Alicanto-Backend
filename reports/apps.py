@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 import os
+import pytz
 
 class ReportsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -41,7 +42,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para que se ejecute todos los días a las 14:30 PM hora de Chile
         self.scheduler.add_job(
             calcular_energia_anual_diaria,
-            trigger=CronTrigger(hour=16, minute=10, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=16, minute=10, timezone=pytz.timezone('America/santiago')),
             id="calcular_energia_anual_diaria",
             replace_existing=True,
             misfire_grace_time=300,
@@ -56,7 +57,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para los datos históricos
         self.scheduler.add_job(
             scheduled_get_historical_data,
-            trigger=CronTrigger(hour=23, minute=57, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=23, minute=57, timezone=pytz.timezone('America/santiago')),
             id="scheduled_get_historical_data",
             replace_existing=True,
             misfire_grace_time=300,
@@ -71,7 +72,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para la actualización del odómetro diario
         self.scheduler.add_job(
             daily_max_auto_update,
-            trigger=CronTrigger(hour=23, minute=30, timezone=timezone("America/Santiago")),
+            trigger=CronTrigger(hour=10, minute=1, timezone=pytz.timezone('America/santiago')),
             id="daily_max_auto_update",
             replace_existing=True,
             misfire_grace_time=300,
