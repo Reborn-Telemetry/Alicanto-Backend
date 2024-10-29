@@ -105,7 +105,7 @@ def iniciar_calculo_historico_diario(scheduler):
     # Configurar el trigger para que se ejecute todos los días a las 23:57 horas
     scheduler.add_job(
         scheduled_get_historical_data,
-        trigger=CronTrigger(hour=11, minute=5, timezone=pytz.timezone('America/Santiago')),
+        trigger=CronTrigger(hour=23, minute=51, timezone=pytz.timezone('America/Santiago')),
         id="scheduled_get_historical_data",
         replace_existing=True,
     )
