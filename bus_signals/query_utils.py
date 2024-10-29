@@ -390,6 +390,9 @@ def get_battery_health_report(bus_id):
 
     return health_report
 
+from django.utils.timezone import make_aware
+from datetime import datetime, timedelta
+
 def get_monthly_kilometer_data(bus_id, year):
     months_dict = {
         1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo',
@@ -400,25 +403,24 @@ def get_monthly_kilometer_data(bus_id, year):
     monthly_data = {}
     
     for month in range(1, 13):
-        # Obtener el registro con el valor mínimo de 'dia' para el mes
-        first_day_data = (
-            DailyMatrizKmAutoReport.objects
-            .filter(bus_id=bus_id, mes=month, año=year)
-            .order_by('dia')
-            .first()
+        # Calcula el primer y último día del mes
+        start_date = make_aware(datetime(year, month, 1))
+        end_date = make_aware(datetime(year, month, 1) + timedelta(days=32)).replace(day=1) - timedelta(seconds=1)
+
+        # Filtra los registros del modelo Odometer dentro del rango de fechas
+        odometer_data = Odometer.odometer.filter(
+            bus_id=bus_id,
+            TimeStamp__range=(start_date, end_date)
         )
         
-        # Obtener el registro con el valor máximo de 'dia' para el mes
-        last_day_data = (
-            DailyMatrizKmAutoReport.objects
-            .filter(bus_id=bus_id, mes=month, año=year)
-            .order_by('-dia')
-            .first()
-        )
-        
-        if first_day_data and last_day_data:
-            kilometro1 = first_day_data.max_odometer
-            kilometro_last_day = last_day_data.max_odometer
+        if odometer_data.exists():
+            # Obtener el registro con el valor mínimo de `odometer_value` en el mes
+            min_odometer = odometer_data.order_by('odometer_value', 'TimeStamp').first()
+            # Obtener el registro con el valor máximo de `odometer_value` dentro del último día del mes
+            max_odometer = odometer_data.order_by('-odometer_value', '-TimeStamp').first()
+            
+            kilometro1 = min_odometer.odometer_value
+            kilometro_last_day = max_odometer.odometer_value
             recorrido = kilometro_last_day - kilometro1
             
             monthly_data[months_dict[month]] = {
@@ -427,6 +429,7 @@ def get_monthly_kilometer_data(bus_id, year):
                 'recorrido': recorrido
             }
         else:
+            # Si no hay datos para este mes, asignamos None
             monthly_data[months_dict[month]] = {
                 'kilometro1': None,
                 'kilometro_last_day': None,
@@ -434,6 +437,8 @@ def get_monthly_kilometer_data(bus_id, year):
             }
     
     return monthly_data
+
+
 
 
 
