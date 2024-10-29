@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from bus_signals.models import Bus
+<<<<<<< HEAD
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import logging
 import openai
+=======
+
+>>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
 # Create your views here.
 from django.urls import path, include
 from django.contrib.auth.models import User
@@ -18,6 +22,7 @@ class BusSerializer(serializers.ModelSerializer):
 
 class BusViewSet(viewsets.ModelViewSet):
     queryset = Bus.bus.all()
+<<<<<<< HEAD
     serializer_class = BusSerializer
 
 """@csrf_exempt
@@ -46,3 +51,6 @@ def ask_ai(request):
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
 """
+=======
+    serializer_class = BusSerializer
+>>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
