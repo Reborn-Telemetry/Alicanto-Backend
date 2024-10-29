@@ -20,8 +20,7 @@ class BusViewSet(viewsets.ModelViewSet):
     queryset = Bus.bus.all()
     serializer_class = BusSerializer
 
-
-@csrf_exempt
+"""@csrf_exempt
 def ask_ai(request):
     if request.method == "POST":
         question = request.POST.get("question")
@@ -46,3 +45,4 @@ def ask_ai(request):
         return JsonResponse({"answer": answer})
 
     return JsonResponse({"error": "Método no permitido"}, status=405)
+"""
