@@ -42,12 +42,7 @@ filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506
                      16911.0, 20519.0, 20499.0, 20505.0, 20502.0, 21777.0, 21780.0, 20500.0, 
                      20508.0, 20510.0, 20504.0, 20520.0, 20515.0, 20501.0 ]
 
-<<<<<<< HEAD
 no_update_list = ['83', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
-=======
-no_update_list = [ '27','34', '60', '24', '87', '116', '21', '61', '82', '83',
-                   '81', '87', '137', '132', '134', '133', '130', '129', '128', '131', '136', '135' ]
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
 
 @login_required(login_url='login')
 def no_access(request):
@@ -258,10 +253,6 @@ def bus_detail(request, pk):
 
 # Tabla recorrido buses
     result_data = get_monthly_kilometer_data(pk, año)
-<<<<<<< HEAD
-    print(result_data)
-=======
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
     ot = WorkOrder.objects.filter(bus=pk)
     bus = Bus.bus.get(pk=pk)
 

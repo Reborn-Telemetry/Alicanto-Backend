@@ -391,7 +391,6 @@ def get_battery_health_report(bus_id):
     return health_report
 
 def get_monthly_kilometer_data(bus_id, year):
-<<<<<<< HEAD
     months_dict = {
         1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo',
         6: 'Junio', 7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 
@@ -416,7 +415,6 @@ def get_monthly_kilometer_data(bus_id, year):
             .order_by('-dia')
             .first()
         )
-=======
     # Diccionario con los nombres de los meses
     months_dict = {
         1: 'Enero',
@@ -443,27 +441,27 @@ def get_monthly_kilometer_data(bus_id, year):
         
         # Obtener el valor del odómetro el último día del mes
         last_day_data = DailyMatrizKmAutoReport.objects.filter(bus_id=bus_id, mes=month, año=year).order_by('-dia').first()
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
+
         
         if first_day_data and last_day_data:
             kilometro1 = first_day_data.max_odometer
             kilometro_last_day = last_day_data.max_odometer
             recorrido = kilometro_last_day - kilometro1
             
-<<<<<<< HEAD
-=======
+
+
             # Guardamos los valores en el diccionario con el nombre del mes
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
+
             monthly_data[months_dict[month]] = {
                 'kilometro1': kilometro1,
                 'kilometro_last_day': kilometro_last_day,
                 'recorrido': recorrido
             }
         else:
-<<<<<<< HEAD
-=======
+
+
             # Si no hay datos para este mes, asignamos None o algún valor indicador
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
+
             monthly_data[months_dict[month]] = {
                 'kilometro1': None,
                 'kilometro_last_day': None,
@@ -476,10 +474,10 @@ def get_monthly_kilometer_data(bus_id, year):
 
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
+
+
+
 def recorrido_mensual_año(año):
     buses_kilometraje = DailyMatrizKmAutoReport.objects.values('bus__bus_name', 'mes', 'año') \
         .annotate(
