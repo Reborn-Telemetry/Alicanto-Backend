@@ -335,9 +335,6 @@ def last_soh_report(request):
     worksheet = workbook.add_sheet('Report')
 
 
-
-
-
 @login_required(login_url='login')
 def daily_bus_km_report_pdf(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -395,8 +392,6 @@ def daily_bus_km_report_pdf(request, pk):
 
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
-
-
 
 
 """
@@ -962,7 +957,6 @@ def switch_report_xls(request, pk):
     
     return print("Generando reporte de switches...")
     
-    
 def drive_report(request, pk):
     selected_bus = pk
     bus = Bus.bus.get(id=selected_bus)
@@ -1006,18 +1000,6 @@ def drive_report(request, pk):
     buf.seek(0)
     return FileResponse(buf, as_attachment=True, filename=filename)
     
-
-
-
-
-
-
-
-
-
-
-
-
 
 @login_required(login_url='login')
 def recorrido_mensual_bus_pdf(request, pk):

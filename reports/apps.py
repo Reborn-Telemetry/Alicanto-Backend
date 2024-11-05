@@ -31,6 +31,9 @@ class ReportsConfig(AppConfig):
             if not DjangoJob.objects.filter(id="daily_max_auto_update").exists():
                 self._iniciar_calculo_odometro_diario()
 
+            if not DjangoJob.objects.filter(id="daily_recorrido_update").exists():
+                self._iniciar_calculo_recorrido_diario()
+
             # Iniciar el scheduler
             self.scheduler.start()
 
@@ -57,9 +60,7 @@ class ReportsConfig(AppConfig):
         # Configurar el trigger para los datos históricos
         self.scheduler.add_job(
             scheduled_get_historical_data,
-
             trigger=CronTrigger(hour=23, minute=51, timezone=pytz.timezone('America/santiago')),
-
             id="scheduled_get_historical_data",
             replace_existing=True,
             misfire_grace_time=300,
@@ -76,6 +77,21 @@ class ReportsConfig(AppConfig):
             daily_max_auto_update,
             trigger=CronTrigger(hour=23, minute=55, timezone=pytz.timezone('America/santiago')),
             id="daily_max_auto_update",
+            replace_existing=True,
+            misfire_grace_time=300,
+            max_instances=1,
+        )
+
+    def _iniciar_calculo_recorrido_diario(self):
+        from bus_signals.threads.recorridos import daily_recorrido_update  # Importar la nueva función
+        from apscheduler.triggers.cron import CronTrigger
+        from pytz import timezone
+
+        # Configurar el trigger para la actualización diaria del recorrido
+        self.scheduler.add_job(
+            daily_recorrido_update,
+            trigger=CronTrigger(hour=23, minute=58, timezone=pytz.timezone('America/Santiago')),
+            id="daily_recorrido_update",
             replace_existing=True,
             misfire_grace_time=300,
             max_instances=1,

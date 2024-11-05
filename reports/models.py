@@ -75,3 +75,26 @@ class DailyMatrizKmAutoReport(models.Model):
    class Meta:
     verbose_name = 'Informe Historico Energia Flota Diario'
     verbose_name_plural = 'Informes Historico Energia Flota Diario'
+
+
+class Recorrido(models.Model):
+  bus = models.ForeignKey(Bus, on_delete=models.CASCADE, default=0)
+  dia = models.IntegerField(null=True, blank=True)  # Cambiado a IntegerField para representar días
+  mes = models.IntegerField(null=True, blank=True)  # Cambiado a IntegerField para facilitar la consulta
+  año = models.IntegerField(null=True, blank=True)
+  max_odometer = models.IntegerField(null=True, blank=True)
+  min_odometer = models.IntegerField(null=True, blank=True)
+  recorrido = models.IntegerField(null=True, blank=True)  # Campo p
+
+  def save(self, *args, **kwargs):
+        # Calcula el recorrido solo si max y min odometer tienen valores
+        if self.max_odometer is not None and self.min_odometer is not None:
+            self.recorrido = self.max_odometer - self.min_odometer
+        super().save(*args, **kwargs)
+
+  def __str__(self):
+     return f'{self.bus} - {self.dia} - {self.mes} - {self.año} - {self.max_odometer} - {self.min_odometer}'
+  
+  class Meta:
+    verbose_name = 'Recorrido'
+    verbose_name_plural = 'Recorridos'
