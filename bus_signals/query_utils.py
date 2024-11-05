@@ -3,7 +3,8 @@ from django.db.models import Max, Min
 from django.db.models.functions import ExtractMonth
 from bus_signals.models import Odometer, BatteryHealth
 from collections import defaultdict
-from reports.models import DailyMatrizKmAutoReport
+from reports.models import DailyMatrizKmAutoReport, Recorrido
+from django.db import models
 
 
 dbname = 'alicanto-db-dev'
@@ -403,31 +404,32 @@ def get_monthly_kilometer_data(bus_id, year):
     monthly_data = {}
     
     for month in range(1, 13):
-        # Calcula el primer y último día del mes
-        start_date = make_aware(datetime(year, month, 1))
-        end_date = make_aware(datetime(year, month, 1) + timedelta(days=32)).replace(day=1) - timedelta(seconds=1)
-
-        # Filtra los registros del modelo Odometer dentro del rango de fechas
-        odometer_data = Odometer.odometer.filter(
+        # Filtra los registros del modelo Recorrido para el bus y mes específico
+        recorrido_data = Recorrido.objects.filter(
             bus_id=bus_id,
-            TimeStamp__range=(start_date, end_date)
+            mes=month,
+            año=year
         )
         
-        if odometer_data.exists():
-            # Obtener el registro con el valor mínimo de `odometer_value` en el mes
-            min_odometer = odometer_data.order_by('odometer_value', 'TimeStamp').first()
-            # Obtener el registro con el valor máximo de `odometer_value` dentro del último día del mes
-            max_odometer = odometer_data.order_by('-odometer_value', '-TimeStamp').first()
+        if recorrido_data.exists():
+            # Obtener el registro con el valor mínimo de `min_odometer` y el máximo de `max_odometer` en el mes
+            min_odometer = recorrido_data.aggregate(min_value=models.Min('min_odometer'))['min_value']
+            max_odometer = recorrido_data.aggregate(max_value=models.Max('max_odometer'))['max_value']
             
-            kilometro1 = min_odometer.odometer_value
-            kilometro_last_day = max_odometer.odometer_value
-            recorrido = kilometro_last_day - kilometro1
-            
-            monthly_data[months_dict[month]] = {
-                'kilometro1': kilometro1,
-                'kilometro_last_day': kilometro_last_day,
-                'recorrido': recorrido
-            }
+            if min_odometer is not None and max_odometer is not None:
+                recorrido = max_odometer - min_odometer
+                monthly_data[months_dict[month]] = {
+                    'kilometro1': min_odometer,
+                    'kilometro_last_day': max_odometer,
+                    'recorrido': recorrido
+                }
+            else:
+                # Si falta alguno de los valores, el recorrido será None
+                monthly_data[months_dict[month]] = {
+                    'kilometro1': None,
+                    'kilometro_last_day': None,
+                    'recorrido': None
+                }
         else:
             # Si no hay datos para este mes, asignamos None
             monthly_data[months_dict[month]] = {
