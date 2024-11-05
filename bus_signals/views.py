@@ -264,8 +264,14 @@ def bus_detail(request, pk):
     except ObjectDoesNotExist:
      print('No se encontraron registros en BatteryHealth para el bus_id especificado.')
 
+    fusi_codes = FusiCode.fusi.filter(
+    bus_id=pk,
+    TimeStamp__year=año,
+    TimeStamp__month=mes
+    ).order_by('-TimeStamp')[:600]
+
     messages = FusiMessage.fusi.all()
-    fusi_codes = FusiCode.fusi.filter(bus_id=pk).order_by('-TimeStamp')[:600]
+
     for code in fusi_codes:
         for fusi_message in messages:
             if code.fusi_code == fusi_message.fusi_code:
