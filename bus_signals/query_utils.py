@@ -155,6 +155,7 @@ def monthly_fleet_km():
         # Aplanar los resultados en la forma (bus_name, kilometros_por_mes...)
         formatted_entry = [bus] + [val for km in km_data for val in (km[1], km[2])]
         formatted_result.append(formatted_entry)
+    
 
     return formatted_result
 

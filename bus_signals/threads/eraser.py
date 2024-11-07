@@ -26,11 +26,20 @@ def eliminar_duplicados_diarios():
     Ejecuta la eliminación de duplicados diariamente en los modelos `Recorrido`, 
     `DailyMatrizKmAutoReport` y `MatrizEnergiaFlotaHistorico`.
     """
-    # Elimina duplicados en Recorrido basados en bus, dia, mes y año
-    remove_duplicates(Recorrido, unique_fields=['bus', 'dia', 'mes', 'año'])
+    # Elimina duplicados en Recorrido basados en bus, dia, mes, año, max_odometer, y min_odometer
+    remove_duplicates(
+        Recorrido, 
+        unique_fields=['bus', 'dia', 'mes', 'año', 'max_odometer', 'min_odometer']
+    )
 
-    # Elimina duplicados en DailyMatrizKmAutoReport basados en bus, dia, mes y año
-    remove_duplicates(DailyMatrizKmAutoReport, unique_fields=['bus', 'dia', 'mes', 'año'])
+    # Elimina duplicados en DailyMatrizKmAutoReport basados en bus, dia, mes, año, y max_odometer
+    remove_duplicates(
+        DailyMatrizKmAutoReport, 
+        unique_fields=['bus', 'dia', 'mes', 'año', 'max_odometer']
+    )
 
-    # Elimina duplicados en MatrizEnergiaFlotaHistorico basados en bus, dia, mes y año
-    remove_duplicates(MatrizEnergiaFlotaHistorico, unique_fields=['bus', 'dia', 'mes', 'año'])
+    # Elimina duplicados en MatrizEnergiaFlotaHistorico basados en bus, dia, mes, año, y energia
+    remove_duplicates(
+        MatrizEnergiaFlotaHistorico, 
+        unique_fields=['bus', 'dia', 'mes', 'año', 'energia']
+    )

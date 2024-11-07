@@ -11,26 +11,45 @@ def calcular_recorridos_por_dia(dia, mes, año):
     start_date = datetime(año, mes, dia, 0, 0, 0)
     end_date = datetime(año, mes, dia, 23, 59, 59)
     
-    # Agrupamos por bus y anotamos los valores mínimo y máximo de `odometer_value` para el rango de tiempo
+    # Agrupamos por bus y seleccionamos el primer y último valor del odómetro del día
     odometer_values = (
         Odometer.odometer
         .filter(TimeStamp__range=(start_date, end_date))
         .values('bus')
-        .annotate(min_odometer=Min('odometer_value'), max_odometer=Max('odometer_value'))
+        .annotate(
+            min_odometer=Min('odometer_value'),
+            max_odometer=Max('odometer_value')
+        )
     )
 
     # Insertamos o actualizamos los registros en `Recorrido` sin calcular `recorrido` explícitamente
     for entry in odometer_values:
-        Recorrido.objects.update_or_create(
-            bus_id=entry['bus'],
-            dia=dia,
-            mes=mes,
-            año=año,
-            defaults={
-                'min_odometer': entry['min_odometer'],
-                'max_odometer': entry['max_odometer'],
-            }
+        # Obtenemos el registro de inicio (primer TimeStamp del día) y el registro de final (último TimeStamp del día)
+        min_entry = (
+            Odometer.odometer
+            .filter(bus_id=entry['bus'], TimeStamp__range=(start_date, end_date))
+            .order_by('TimeStamp')
+            .first()
         )
+        max_entry = (
+            Odometer.odometer
+            .filter(bus_id=entry['bus'], TimeStamp__range=(start_date, end_date))
+            .order_by('-TimeStamp')
+            .first()
+        )
+        
+        # Verificamos que existen ambos registros antes de proceder
+        if min_entry and max_entry:
+            Recorrido.objects.update_or_create(
+                bus_id=entry['bus'],
+                dia=dia,
+                mes=mes,
+                año=año,
+                defaults={
+                    'min_odometer': min_entry.odometer_value,
+                    'max_odometer': max_entry.odometer_value,
+                }
+            )
     
     return odometer_values
 
