@@ -461,29 +461,39 @@ def get_monthly_kilometer_data(bus_id, year):
 
 
 def recorrido_mensual_año(año):
-    buses_kilometraje = DailyMatrizKmAutoReport.objects.values('bus__bus_name', 'mes', 'año') \
+    # Agrupar los datos por bus, mes y año, y obtener el valor mínimo y máximo del odómetro para cada mes
+    buses_kilometraje = Recorrido.objects.filter(año=año).values('bus__bus_name', 'mes') \
         .annotate(
-            odometro_inicial=Min('max_odometer'),
+            odometro_inicial=Min('min_odometer'),
             odometro_final=Max('max_odometer')
-        ).order_by('bus__bus_name', 'año', 'mes')
+        ).order_by('bus__bus_name', 'mes')
 
     # Crear el formato deseado
     resultado = {}
-    
+
     for entry in buses_kilometraje:
         bus_name = entry['bus__bus_name']
         if bus_name not in resultado:
-            resultado[bus_name] = []
+            resultado[bus_name] = {}
 
-        # Agregar los valores del odómetro para el mes y año específicos
-        resultado[bus_name].append((entry['mes'], entry['odometro_inicial'], entry['odometro_final']))
+        # Guardar los valores del odómetro para el mes específico
+        resultado[bus_name][entry['mes']] = (entry['odometro_inicial'], entry['odometro_final'])
 
     # Convertir el diccionario en una lista con el formato que necesitas
     formatted_result = []
     
     for bus, km_data in resultado.items():
         # Aplanar los resultados en la forma (bus_name, kilometros_por_mes...)
-        formatted_entry = [bus] + [val for km in km_data for val in (km[1], km[2])]
+        formatted_entry = [bus]
+        
+        # Asegurarse de incluir todos los meses de 1 a 12, rellenando con 0 si no hay datos
+        for month in range(1, 13):
+            if month in km_data:
+                odometro_inicial, odometro_final = km_data[month]
+            else:
+                odometro_inicial, odometro_final = 0, 0
+            formatted_entry.extend([odometro_inicial, odometro_final])
+        
         formatted_result.append(formatted_entry)
 
     return formatted_result
