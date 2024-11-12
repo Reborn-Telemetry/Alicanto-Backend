@@ -1,4 +1,5 @@
 import requests
+
 def fs_link_api():
     headers = {'User-Agent': 'Alicanto/1.0',
                'Connection': 'keep-alive'}
@@ -11,10 +12,15 @@ def fs_link_api():
         # Intenta decodificar el JSON
         try:
             data = response.json()
+            if data is None:  # Verifica que 'data' no sea None
+                print("Error: La respuesta JSON es 'None'.")
+                return None
+
         except requests.exceptions.JSONDecodeError:
             print("Error: La respuesta no es un JSON válido.")
             return None
         
+        # Verificar si 'data' contiene las claves esperadas
         api_data = {
             'data': data.get('data', []),  # Protege contra claves faltantes
             'cant_fs': len(data.get('data', []))  # Usa lista vacía si 'data' no está presente
