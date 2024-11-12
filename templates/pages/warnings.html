@@ -17,9 +17,9 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th style="width: 200px">Bus</th>
-                                            <th>Velocidad</th>
-                                            <th>Fecha</th>
+                                            <th style="width: 100px; color: #686868">Bus</th>
+                                            <th style="color: #686868">Velocidad</th>
+                                            <th style="color: #686868">Fecha</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-7">
             <div class="card">
                 <h5 class="card-header">10 Buses mayor fusi</h5>
                 <div class="card-body">
@@ -67,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="card">
                 <div class="row g-0">
                     <div class="col-md-4">
@@ -82,14 +82,14 @@
                 </div>
             </div>
             <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 30px">
+            <div class="card" style="margin-top: 54px">
                 <div class="row g-0">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="icon-card">
                             <i class="bx bxs-battery-low icon-alert"></i>
                         </div>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">SOC Bajo</h5>
                             <p class="card-text">
@@ -100,7 +100,49 @@
                     </div>
                 </div>
             </div>
+            <!--divisor tarjeta-->
+            <div class="card" style="margin-top: 54px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card">
+                            <i class="bx bx-history icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Subida Pendiente</h5>
+                            <p class="card-text">
+                                {{delay}} Buses
+                                <i class="bx bx-chevron-right indicator"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--divisor tarjeta-->
+            <div class="card" style="margin-top: 54px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card">
+                            <i class="bx bx-x-circle icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses FS</h5>
+                            <p class="card-text">
+                                {{cant_fs}} Buses
+
+                                <i class="bx bx-chevron-right indicator"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-3"></div>
     </div>
 </div>
 <!--divisor de codigo-->
