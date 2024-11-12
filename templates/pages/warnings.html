@@ -13,25 +13,27 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-5">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Bus</th>
-                                        <th>Velocidad</th>
-                                        <th>Fecha</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-group-divider">
-                                    {% for i in speed_records %}
-                                    <tr>
-                                        <td>{{ i.bus }}</td>
-                                        <td>{{ i.speed_value }}</td>
-                                        <td>{{ i.TimeStamp|date:"d-m-Y H:m:s" }}</td>
-                                    </tr>
+                            <div class="table-responsive overflow-y-scroll" style="max-height: 423px">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bus</th>
+                                            <th>Velocidad</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        {% for i in speed_records %}
+                                        <tr>
+                                            <td>{{ i.bus }}</td>
+                                            <td>{{ i.speed_value }}</td>
+                                            <td>{{ i.TimeStamp|date:"d-m-Y H:m:s" }}</td>
+                                        </tr>
 
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
