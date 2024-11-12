@@ -52,6 +52,8 @@ def no_access(request):
 
 @login_required(login_url='login')
 def warnings(request):
+    km_total = request.session.get('km_total', 0)
+    cant_low_50_soc = request.session.get('cant_low_50_soc', 0)
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list)
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50).exclude(id__in=no_update_list)
@@ -138,6 +140,8 @@ def warnings(request):
         'paginator_fusi': paginator_fusi,
         'low_50':low_50,
         'speed_records': speed_records,
+        'km_total' : km_total,
+        'cant_low_50_soc': cant_low_50_soc  
     }
     return render(request, 'pages/warnings.html', context)
 
@@ -515,6 +519,8 @@ def dashboard(request):
     energia_anual = AnualEnergy.objects.first()
     energia_anual = energia_anual.energia
     request.session['energia_anual'] = energia_anual
+    request.session['km_total'] = km_total
+    request.session['cant_low_50_soc'] = cant_low_50_soc 
     
 #---------------------------------------------------------------------------------------------------------
     request.session['charging'] = charging

@@ -4,20 +4,20 @@
 <link rel="stylesheet" href="{% static 'styles/warnings.css' %}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easychart/dist/easychart.min.css" />
-<div class="container">
-    <!--inicio primera tarjeta-->
+
+<div class="container-fluid" style="margin-top: 50px; margin-bottom: 30px">
     <div class="row">
-        <div class="col-12">
+        <div class="col-3">
             <div class="card">
-                <h5 class="card-header">speed</h5>
+                <h5 class="card-header">Tabla Exceso de Velocidad</h5>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-5">
-                            <div class="table-responsive overflow-y-scroll" style="max-height: 423px">
+                        <div class="col-12">
+                            <div class="table-responsive overflow-y-scroll" style="max-height: 500px">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Bus</th>
+                                            <th style="width: 200px">Bus</th>
                                             <th>Velocidad</th>
                                             <th>Fecha</th>
                                         </tr>
@@ -38,6 +38,76 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <h5 class="card-header">10 Buses mayor fusi</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="table-responsive overflow-y-scroll" style="height: 500px">
+                                <table class="table">
+                                    <tr>
+                                        <th>Bus</th>
+                                        <th>Cantidad Codigo Fusi</th>
+                                    </tr>
+                                    {% for i in top_buses %}
+                                    <tr>
+                                        <td>{{i.bus__bus_name}}</td>
+                                        <td>{{i.num_registros}} codigos</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <canvas id="grafico4"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-tachometer icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Km Flota</h5>
+                            <p class="card-text">{{km_total}} Km</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--divisor tarjeta-->
+            <div class="card" style="margin-top: 30px">
+                <div class="row g-0">
+                    <div class="col-md-3">
+                        <div class="icon-card">
+                            <i class="bx bxs-battery-low icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <h5 class="card-title">SOC Bajo</h5>
+                            <p class="card-text">
+                                {{cant_low_50_soc}} Buses
+                                <i class="bx bx-chevron-right indicator"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--divisor de codigo-->
+<div class="container">
+    <!--inicio primera tarjeta-->
+    <div class="row">
+        <div class="col-12">
             <div class="card">
                 <h5 class="card-header">Buses bajo 50% Carga</h5>
                 <div class="card-body">
