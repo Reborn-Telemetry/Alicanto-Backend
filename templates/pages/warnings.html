@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-7">
+        <div class="col-9">
             <div class="card">
                 <h5 class="card-header">10 Buses mayor fusi</h5>
                 <div class="card-body">
@@ -67,64 +67,69 @@
                 </div>
             </div>
         </div>
-        <div class="col-2">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-tachometer icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Km Flota</h5>
-                            <p class="card-text">{{km_total}} Km</p>
+        <div class="row" style="margin-top: 25px">
+            <div class="col-3">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card"><i class="bx bx-tachometer icon-alert"></i></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Km Flota</h5>
+                                <p class="card-text">{{km_total}} Km</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 26px">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card">
-                            <i class="bx bxs-battery-low icon-alert"></i>
+            <div class="col-3">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bxs-battery-low icon-alert"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">SOC Bajo</h5>
-                            <p class="card-text">{{cant_low_50_soc}} Buses</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 26px">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card">
-                            <i class="bx bx-history icon-alert"></i>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Subida Pendiente</h5>
-                            <p class="card-text">{{delay}} Buses</p>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">SOC Bajo</h5>
+                                <p class="card-text">{{cant_low_50_soc}} Buses</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 25px">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card">
-                            <i class="bx bx-x-circle icon-alert"></i>
+            <div class="col-3">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bx-history icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Subida Pendiente</h5>
+                                <p class="card-text">{{delay}} Buses</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Buses FS</h5>
-                            <p class="card-text">{{cant_fs}} Buses</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="icon-card">
+                                <i class="bx bx-x-circle icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Buses FS</h5>
+                                <p class="card-text">{{cant_fs}} Buses</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -197,18 +202,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">hola</div>
-    </div>
-    <!--divisor ------------------------- de ------------------------- codigo-->
-    <div class="container">
-        <!--inicio primera tarjeta-->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <h5 class="card-header">Buses bajo 50% Carga</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
+        <div class="col-9" style="margin-top: 25px">
+            <div class="card">
+                <h5 class="card-header">Buses bajo 50% Carga</h5>
+                <div class="card-body" style="height: 440px">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="table-responsive overflow-y-scroll" style="height: 370px">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -240,283 +240,277 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-9">
-                                <canvas id="grafico2"></canvas>
-                            </div>
+                        </div>
+                        <div class="col-8">
+                            <canvas id="grafico2"></canvas>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!--aqui buses bajo 24 volts-->
-        <div style="margin-top: 30px" class="row">
-            <div class="col-12">
-                <div class="card">
-                    <h5 class="card-header">Buses bajo 24 volts</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <table class="table">
-                                    <tr>
-                                        <th>Bus</th>
-                                        <th>Voltaje</th>
-                                        <th>actualizacion</th>
-                                    </tr>
-                                    {% for i in low_battery %}
-                                    <tr>
-                                        <td>{{i.bus_name}}</td>
-                                        <td>
-                                            {% if i.lts_24_volt < 20 %}
-                                            <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </table>
-                            </div>
-                            <div class="col-9">
-                                <canvas style="max-height: 260px" id="grafico3"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="margin-top: 30px" class="row">
-            <div class="col-12">
-                <div class="card">
-                    <h5 class="card-header">Informe Fusi {{mes_actual}}</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <table class="table">
-                                    <tr>
-                                        <th>Codigo Fusi</th>
-                                        <th>Repeticiones</th>
-                                    </tr>
-                                    {% for fusi in distinct_fusi_code %}
-                                    <tr>
-                                        <td>{{fusi.fusi_code}}</td>
-                                        <td>{{fusi.total}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </table>
-                                {% if distinct_fusi_code.has_other_pages %}
-                                <nav class="navpag" aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        {% if distinct_fusi_code.has_previous %}
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link"
-                                                href="?page_fusi={{distinct_fusi_code.previous_page_number}}"
-                                                >Anterior</a
-                                            >
-                                        </li>
-                                        {% endif %} {% for page in paginator_fusi.page_range %}
-                                        <li class="page-item">
-                                            <a class="page-link" href="?page_fusi={{ page }}">{{ page }}</a>
-                                        </li>
-                                        {% endfor %} {% if distinct_fusi_code.has_next %}
-
-                                        <li class="page-item">
-                                            <a
-                                                class="page-link"
-                                                href="?page_fusi={{ distinct_fusi_code.next_page_number }}"
-                                                >Siguiente</a
-                                            >
-                                        </li>
-                                        {% endif %}
-                                    </ul>
-                                </nav>
-                                {% endif %}
-                            </div>
-                            <div class="col-9">
-                                <canvas id="grafico"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--divisor nuevo codigo-->
-        <div style="margin-top: 30px" class="row">
-            <!--aqui segunda tabla-->
-            <div class="col-3">
-                <div class="card">
-                    <h5 class="card-header">Buses con pendientes de subida</h5>
-                    <div class="card-body">
-                        <div class="col-12">
-                            <div class="table-responsive overflow-y-scroll" style="max-height: 420px">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Bus</th>
-                                            <th>actualizacion</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-group-divider">
-                                        {% for i in delayed %}
-                                        <tr>
-                                            <td>{{i.bus_name}}</td>
-                                            <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
-                                        </tr>
-
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!--paginador va aqui-->
-                        <nav class="navpag" aria-label="Page navigation example">
-                            <ul class="pagination">
-                                {% if delayed.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page2={{delayed.previous_page_number}}">Anterior</a>
-                                </li>
-                                {% endif %} {% for page in paginator_delayed.page_range %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page2={{page}}">{{page}}</a>
-                                </li>
-                                {% endfor %} {% if delayed.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page2={{delayed.next_page_number}}">Siguiente</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            <div class="col-9">
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script>
-                    // Obtener los datos pasados desde Django
-                    var datos = {{ fusi_grafico | safe }};
-
-                    // Preparar los datos para Chart.js
-                    var labels = datos.map(item => item.fusi_code);
-                    var valores = datos.map(item => item.total);
-
-                    // Crear el gráfico con Chart.js
-                    var ctx = document.getElementById('grafico').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Cantidad de Códigos FUSI',
-                                data: valores,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
-                                borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                </script>
-                <script>
-                    // Obtener los datos pasados desde Django
-                    var datos = {{ low_50 | safe }};
-
-                    // Preparar los datos para Chart.js
-                    var labels = datos.map(item => item.bus_name);
-                    var valores = datos.map(item => item.lts_soc);
-
-                    // Crear el gráfico con Chart.js
-                    var ctx = document.getElementById('grafico2').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Nivel baterias',
-                                data: valores,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
-                                borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                </script>
-                <script>
-                    // Obtener los datos pasados desde Django
-                    var datos = {{ low_24_grafico | safe }};
-
-                    // Preparar los datos para Chart.js
-                    var labels = datos.map(item => item.bus_name);
-                    var valores = datos.map(item => item.lts_24_volt);
-
-                    // Crear el gráfico con Chart.js
-                    var ctx = document.getElementById('grafico3').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Nivel baterias',
-                                data: valores,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
-                                borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                </script>
-                <script>
-                    // Obtener los datos pasados desde Django
-                    var datos = {{ top_grafico | safe }};
-
-                    // Preparar los datos para Chart.js
-                    var labels = datos.map(item => item.bus__bus_name);
-                    var valores = datos.map(item => item.num_registros);
-
-                    // Crear el gráfico con Chart.js
-                    var ctx = document.getElementById('grafico4').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Nivel baterias',
-                                data: valores,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
-                                borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                </script>
-
-                {% endblock content %}
             </div>
         </div>
     </div>
+    <div class="row" style="margin-top: 25px">
+        <div class="col-9">
+            <div class="card">
+                <h5 class="card-header">Buses bajo 24 volts</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <table class="table">
+                                <tr>
+                                    <th>Bus</th>
+                                    <th>Voltaje</th>
+                                    <th>actualizacion</th>
+                                </tr>
+                                {% for i in low_battery %}
+                                <tr>
+                                    <td>{{i.bus_name}}</td>
+                                    <td>
+                                        {% if i.lts_24_volt < 20 %}
+                                        <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <div class="col-9">
+                            <canvas style="height: 283px" id="grafico3"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <h5 class="card-header">Buses Con Cola De Archivos</h5>
+                <div class="card-body">
+                    <div class="col-12">
+                        <div class="table-responsive overflow-y-scroll" style="height: 343px">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Bus</th>
+                                        <th>actualizacion</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-group-divider">
+                                    {% for i in delayed %}
+                                    <tr>
+                                        <td>{{i.bus_name}}</td>
+                                        <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
+                                    </tr>
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--paginador va aqui-->
+                    <nav class="navpag" aria-label="Page navigation example">
+                        <ul class="pagination">
+                            {% if delayed.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page2={{delayed.previous_page_number}}">Anterior</a>
+                            </li>
+                            {% endif %} {% for page in paginator_delayed.page_range %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page2={{page}}">{{page}}</a>
+                            </li>
+                            {% endfor %} {% if delayed.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page2={{delayed.next_page_number}}">Siguiente</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 25px">
+        <div class="col-12">
+            <div class="card">
+                <h5 class="card-header">Informe Fusi {{mes_actual}}</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <table class="table">
+                                <tr>
+                                    <th>Codigo Fusi</th>
+                                    <th>Repeticiones</th>
+                                </tr>
+                                {% for fusi in distinct_fusi_code %}
+                                <tr>
+                                    <td>{{fusi.fusi_code}}</td>
+                                    <td>{{fusi.total}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            {% if distinct_fusi_code.has_other_pages %}
+                            <nav class="navpag" aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    {% if distinct_fusi_code.has_previous %}
+                                    <li class="page-item">
+                                        <a
+                                            class="page-link"
+                                            href="?page_fusi={{distinct_fusi_code.previous_page_number}}"
+                                            >Anterior</a
+                                        >
+                                    </li>
+                                    {% endif %} {% for page in paginator_fusi.page_range %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page_fusi={{ page }}">{{ page }}</a>
+                                    </li>
+                                    {% endfor %} {% if distinct_fusi_code.has_next %}
+
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page_fusi={{ distinct_fusi_code.next_page_number }}"
+                                            >Siguiente</a
+                                        >
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                            {% endif %}
+                        </div>
+                        <div class="col-8">
+                            <canvas id="grafico"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--divisor ------------------------- de ------------------------- codigo-->
+
+    <!--divisor nuevo codigo-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Obtener los datos pasados desde Django
+        var datos = {{ fusi_grafico | safe }};
+
+        // Preparar los datos para Chart.js
+        var labels = datos.map(item => item.fusi_code);
+        var valores = datos.map(item => item.total);
+
+        // Crear el gráfico con Chart.js
+        var ctx = document.getElementById('grafico').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Cantidad de Códigos FUSI',
+                    data: valores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
+                    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        // Obtener los datos pasados desde Django
+        var datos = {{ low_50 | safe }};
+
+        // Preparar los datos para Chart.js
+        var labels = datos.map(item => item.bus_name);
+        var valores = datos.map(item => item.lts_soc);
+
+        // Crear el gráfico con Chart.js
+        var ctx = document.getElementById('grafico2').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nivel baterias',
+                    data: valores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
+                    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        // Obtener los datos pasados desde Django
+        var datos = {{ low_24_grafico | safe }};
+
+        // Preparar los datos para Chart.js
+        var labels = datos.map(item => item.bus_name);
+        var valores = datos.map(item => item.lts_24_volt);
+
+        // Crear el gráfico con Chart.js
+        var ctx = document.getElementById('grafico3').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nivel baterias',
+                    data: valores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
+                    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        // Obtener los datos pasados desde Django
+        var datos = {{ top_grafico | safe }};
+
+        // Preparar los datos para Chart.js
+        var labels = datos.map(item => item.bus__bus_name);
+        var valores = datos.map(item => item.num_registros);
+
+        // Crear el gráfico con Chart.js
+        var ctx = document.getElementById('grafico4').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nivel baterias',
+                    data: valores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de fondo de las barras
+                    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    {% endblock content %}
 </div>

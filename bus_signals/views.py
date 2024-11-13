@@ -106,7 +106,7 @@ def warnings(request):
     # fin paginador buses sin conexion
     # inicio paginador delayed
     page2 = request.GET.get('page2')
-    results2 = 10
+    results2 = 7
     paginator_delayed = Paginator(delayed, results2)
 
     try:
