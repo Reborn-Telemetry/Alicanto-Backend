@@ -1,4 +1,61 @@
-{% extends "main.html" %} {% block header %}FusiDashboard{% endblock header %} {% block content %}
+{% extends "main.html" %} {% load humanize %}{% load static %} {% block page %}
+<h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Fusi Dashboard.</h1>
+{% endblock page %} {% block content %}
+<link rel="stylesheet" href="{% static 'styles/fusi_dashboard.css' %}" />
+<div class="container-fluid">
+    <div class="row">
+        <!--primera tarjeta -->
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-error icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Cantidad Total Registros</h5>
+                            <p class="card-text">{{total_fusi}} Codigos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor-->
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-info-circle icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Cantidad Fusi {{nombre_mes}}</h5>
+                            <p class="card-text">{{cant_fusi_month}} Codigos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor-->
+        <div class="col-3">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Bus {{baddest_bus_name}}</h5>
+                            <p class="card-text">{{total_baddest_bus_reg}} Codigos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--divisor-->
+    </div>
+</div>
+<!--Divisor de codigo-->
 <div class="container text-center">
     <div class="row">
         <h2>Codigos Fusi Activos</h2>
@@ -27,9 +84,7 @@
             <ul class="pagination">
                 {% if active_fusi.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{active_fusi.previous_page_number}}"
-                        >Anterior</a
-                    >
+                    <a class="page-link" href="?page={{active_fusi.previous_page_number}}">Anterior</a>
                 </li>
                 {% endif %} {% for page in paginator.page_range %}
                 <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>

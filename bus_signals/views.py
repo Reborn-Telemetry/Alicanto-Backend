@@ -194,6 +194,35 @@ def reports_page(request):
 
 @login_required
 def fusi_dashboard(request):
+    fecha_actual = timezone.now()
+    mes_actual = fecha_actual.month
+    #---------------------------------------------------------------
+    meses_es = {
+    1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio",
+    7: "Julio", 8: "Agosto", 9: "Septiembre", 10: "Octubre", 11: "Noviembre", 
+    12: "Diciembre"
+}
+    #---------------------------------------------------------------
+    total_fusi = FusiCode.fusi.count()
+    #---------------------------------------------------------------
+    nombre_mes = meses_es[mes_actual]
+    #---------------------------------------------------------------
+    cant_fusi_month = FusiCode.fusi.filter(
+        TimeStamp__year = fecha_actual.year,
+        TimeStamp__month = fecha_actual.month
+        ).count()
+    #-----------------------------------------------------------------------------
+    baddest_bus = FusiCode.fusi.values('bus__bus_name') \
+                                        .annotate(total_registros=Count('id')) \
+                                        .order_by('-total_registros') \
+                                        .first()
+    baddest_bus_name = baddest_bus['bus__bus_name'] if baddest_bus else None
+    total_badddest_bus_reg = baddest_bus['total_registros'] if baddest_bus else 0
+    #-----------------------------------------------------------------------------
+    
+    #--------------------------------------------------------------------------
+
+
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     open_fusi = open_fusi.exclude(fusi_code__in=filter_fusi_code)
     page = request.GET.get('page')
@@ -208,7 +237,15 @@ def fusi_dashboard(request):
         page = paginator.num_pages
         open_fusi = paginator.page(page)
 
-    context = {'active_fusi': open_fusi, 'paginator': paginator}
+    context = {
+        'active_fusi': open_fusi,
+        'paginator': paginator,
+        'total_fusi': total_fusi,
+        'cant_fusi_month':  cant_fusi_month,
+        'nombre_mes': nombre_mes,
+        'baddest_bus_name': baddest_bus_name,
+        'total_baddest_bus_reg': total_badddest_bus_reg,
+        }
     return render(request, 'fusi/fusi-dashboard.html', context)
 
 
