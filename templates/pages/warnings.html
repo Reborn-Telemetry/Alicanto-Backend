@@ -232,18 +232,14 @@
                                                 {% else %} {{ i.lts_soc }} {% endif %}
                                             </td>
 
-
                                             <td>
-                                                
-
-                                                    {% if i.lts_soc > 60 %}
+                                                {% if i.lts_soc > 60 %}
                                                     <i class="bx bxs-zap rotate-y">
                                                 {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
                                                 <i class="bx bxs-zap rotate-y" style="color:#f5d442">
                                                 {% elif i.lts_soc <= 40 %}
                                                 <i class="bx bxs-zap rotate-y" style="color:#e01d1d">
                                                 {% else %} {{ i.lts_soc }} {% endif %}
-
                                             </td>
 
 

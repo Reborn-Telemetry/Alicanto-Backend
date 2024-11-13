@@ -23,6 +23,38 @@ main {
     overflow-y: hidden;
 }
 
+/* Estilo base de la barra lateral */
+.sidebar {
+    width: 5.5rem;
+    transition: width 0.3s ease; /* Transición suave al cambiar el ancho */
+    overflow: hidden; /* Oculta cualquier texto que no quepa */
+    background-color: #101034;
+}
+
+/* Expandir barra lateral al pasar el mouse */
+.sidebar:hover {
+    width: 15rem; /* Ancho de la barra expandida */
+}
+
+/* Estilos para los textos que se muestran en el hover */
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.sidebar .nav-link .link-text {
+    display: none; /* Oculto por defecto */
+    margin-left: 10px; /* Espacio entre el icono y el texto */
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.sidebar:hover .nav-link .link-text {
+    display: inline; /* Muestra el texto cuando la barra está expandida */
+}
+
 .b-example-divider {
     flex-shrink: 0;
     width: 1.5rem;

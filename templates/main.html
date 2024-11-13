@@ -1,248 +1,223 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-            crossorigin="anonymous"
-        />
-        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous"
+    />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        /* Estilos de la barra lateral */
+        .sidebar {
+            width: 5.5rem;
+            transition: width 0.3s ease;
+            overflow: hidden;
+            background-color: #101034;
+            height: 100vh;
+            position: fixed; /* Fija la barra lateral en toda la altura */
+            z-index: 1000; /* Asegura que esté encima de otros elementos */
+        }
 
-        <style>
-            .toast-container {
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                z-index: 9999;
-            }
-        </style>
+        /* Expansión de la barra lateral al hacer hover */
+        .sidebar:hover {
+            width: 15rem;
+        }
 
-        <title>{% block title %}Alicanto Telemetria{% endblock title %}</title>
-    </head>
-    <body>
-        {% if messages %}
-        <div class="toast-container" aria-live="polite" aria-atomic="true">
-            {% for message in messages %}
-            <div
-                class="toast align-items-center text-white bg-dark"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                id="toast{{ forloop.counter }}"
-            >
+        /* Estilos para los enlaces en la barra lateral */
+        .sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+
+        /* Estilo de los textos junto a los iconos, ocultos por defecto */
+        .sidebar .nav-link .link-text {
+            display: none;
+            margin-left: 10px;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        /* Muestra el texto cuando la barra está expandida */
+        .sidebar:hover .nav-link .link-text {
+            display: inline;
+        }
+
+        /* Ajusta el contenido principal para que esté a la derecha de la barra lateral */
+        .content {
+            margin-left: 5.5rem; /* Compensa el ancho de la barra lateral */
+            transition: margin-left 0.3s ease;
+            padding: 1rem;
+        }
+
+        /* Ajusta el margen izquierdo cuando la barra lateral se expande */
+        .sidebar:hover + .content {
+            margin-left: 15rem;
+        }
+
+        /* Estilo para la zona de notificaciones */
+        .toast-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+        }
+    </style>
+
+    <title>{% block title %}Alicanto Telemetria{% endblock title %}</title>
+</head>
+<body>
+    {% if messages %}
+    <div class="toast-container" aria-live="polite" aria-atomic="true">
+        {% for message in messages %}
+        <div
+            class="toast align-items-center text-white bg-dark"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+            id="toast{{ forloop.counter }}"
+        >
+            <div class="d-flex">
+                <div class="toast-body">{{ message }}</div>
+                <button
+                    type="button"
+                    class="btn-close me-2 m-auto"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"
+                ></button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Barra lateral -->
+    <div class="sidebar d-flex flex-column flex-shrink-0 justify-content-center align-items-center">
+        <a
+            href="/"
+            class="d-block p-3 link-dark text-decoration-none"
+            title="Icon-only"
+            data-bs-toggle="tooltip"
+            data-bs-placement="right"
+        >
+            <img alt="logoReborn" src="{% static "img/reblogo2.png" %}" style="width:70px">
+        </a>
+        <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+            <li>
+                <a href="{% url 'dashboard' %}" class="nav-link py-4" title="Dashboard">
+                    <i class="bx bx-home-alt-2 bi"></i>
+                    <span class="link-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'reports_page' %}" class="nav-link py-4" title="Reportes">
+                    <i class="bx bx-pie-chart-alt-2 bi"></i>
+                    <span class="link-text">Reportes</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'warnings' %}" class="nav-link py-4" title="Alertas">
+                    <i class="bx bx-error-circle bi"></i>
+                    <span class="link-text">Alertas</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'bus_list' %}" class="nav-link py-4" title="Flota">
+                    <i class="bx bx-bus bi"></i>
+                    <span class="link-text">Flota</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'dic_fusi' %}" class="nav-link py-4" title="Diccionario Fusi">
+                    <i class="bx bx-book bi"></i>
+                    <span class="link-text">Diccionario Fusi</span>
+                </a>
+            </li>
+            <li>
+                <a href="" class="nav-link py-4" title="Programacion Buses">
+                    <i class="bx bx-time bi"></i>
+                    <span class="link-text">Programacion Buses</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'work_order_form' %}" class="nav-link py-4" title="Crear Parte">
+                    <i class="bx bx-edit-alt bi"></i>
+                    <span class="link-text">Crear Parte</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'disponibilidad-flota' %}" class="nav-link py-4" title="Informe Disponibilidad">
+                    <i class="bx bx-calendar-check bi"></i>
+                    <span class="link-text">Informe Disponibilidad</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'profile' %}" class="nav-link py-4" title="Staff">
+                    <i class="bx bx-user-pin bi"></i>
+                    <span class="link-text">Staff</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'energy-record' %}" class="nav-link py-4" title="Gestion energia">
+                    <i class="bx bx-bolt-circle bi"></i>
+                    <span class="link-text">Gestion energia</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+        <nav
+            class="navbar sticky-top"
+            style="
+                background-color: #ededed;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                margin-bottom: 20px;
+            "
+        >
+            <div class="container-fluid">
+                <a class="navbar-brand">{% block page %}{% endblock page %}</a>
                 <div class="d-flex">
-                    <div class="toast-body">{{ message }}</div>
-                    <button
-                        type="button"
-                        class="btn-close me-2 m-auto"
-                        data-bs-dismiss="toast"
-                        aria-label="Close"
-                    ></button>
+                    <div class="dropstart">
+                        <a
+                            href="#"
+                            class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle"
+                            id="dropdownUser3"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i class="bx bx-user user"></i>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        <div class="container-fluid">
-            <div class="row flex-nowrap">
-                <div
-                    class="d-flex flex-column flex-shrink-0 back justify-content-center align-items-center"
-                    style="width: 5.5rem"
-                >
-                    <a
-                        href="/"
-                        class="d-block p-3 link-dark text-decoration-none"
-                        title="Icon-only"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="right"
-                    >
-                        <img alt="logoReborn" src="{% static "img/reblogo2.png" %}" style="width:70px">
-                    </a>
-                    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-                        <li>
-                            <a
-                                href="{% url 'dashboard' %}"
-                                class="nav-link py-4"
-                                title="Dashboard"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-home-alt-2 bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'reports_page' %}"
-                                class="nav-link py-4"
-                                title="Reportes"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-pie-chart-alt-2 bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'warnings' %}"
-                                class="nav-link py-4"
-                                title="Alertas"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-error-circle bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'bus_list' %}"
-                                class="nav-link py-4"
-                                title="Flota"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-bus bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'dic_fusi' %}"
-                                class="nav-link py-4"
-                                title="Diccionario Fusi"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-book bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href=""
-                                class="nav-link py-4"
-                                title="Programacion Buses"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-time bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'work_order_form' %}"
-                                class="nav-link py-4"
-                                title="Crear Parte"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-edit-alt bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'disponibilidad-flota' %}"
-                                class="nav-link py-4"
-                                title="Informe Disponibilidad"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-calendar-check bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'profile' %}"
-                                class="nav-link py-4"
-                                title="Staff"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-user-pin bi"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'energy-record' %}"
-                                class="nav-link py-4"
-                                title="Gestion energia"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="right"
-                            >
-                                <i class="bx bx-bolt-circle bi"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!--barra-->
+        </nav>
 
-                <div class="col-11">
-                    <nav
-                        class="navbar sticky-top"
-                        style="
-                            background-color: #ededed;
-                            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-                            margin-bottom: 20px;
-                        "
-                    >
-                        <div class="container-fluid">
-                            <a class="navbar-brand">{% block page %}{% endblock page %}</a>
-                            <div class="d-flex">
-                                <div class="dropstart">
-                                    <a
-                                        href="#"
-                                        class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle"
-                                        id="dropdownUser3"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                    >
-                                        <i class="bx bx-user user"></i>
-                                    </a>
-                                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
-                                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                                        <li><hr class="dropdown-divider" /></li>
-                                        <li>
-                                            <a class="dropdown-item" href="{% url 'logout_user' %}">Cerrar Sesion</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+        {% block content %}{% endblock content %}
+    </div>
 
-                    {% block content %}{% endblock content %}
-                </div>
-            </div>
-        </div>
-
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"
-        ></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const toasts = document.querySelectorAll(".toast");
-                toasts.forEach((toast) => {
-                    const toastInstance = new bootstrap.Toast(toast);
-                    toastInstance.show();
-                });
-            });
-        </script>
-    </body>
-</html>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+    ></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@pop
