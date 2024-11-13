@@ -212,16 +212,16 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Bus</th>
-                                            <th>Carga</th>
-                                            <th>Actualizacion</th>
+                                            <th class="table-text-color">Bus</th>
+                                            <th class="table-text-color">Carga</th>
+                                            <th class="table-text-color">Actualizacion</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
                                         {% for i in low_50_soc_count %}
                                         <tr>
-                                            <td>{{ i.bus_name }}</td>
-                                            <td>
+                                            <td class="table-text-color">{{ i.bus_name }}</td>
+                                            <td class="table-text-color">
                                                 {% if i.lts_soc > 60 %}
                                                 <span class="badge rounded-pill text-bg-success"
                                                     >{{ i.lts_soc }} %</span
@@ -234,7 +234,7 @@
                                                 <span class="badge rounded-pill text-bg-danger">{{ i.lts_soc }} %</span>
                                                 {% else %} {{ i.lts_soc }} {% endif %}
                                             </td>
-                                            <td>{{ i.lts_update|date:"d-m-Y H:m" }}</td>
+                                            <td class="table-text-color">{{ i.lts_update|date:"d-m-Y H:m" }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -258,19 +258,19 @@
                         <div class="col-3">
                             <table class="table">
                                 <tr>
-                                    <th>Bus</th>
-                                    <th>Voltaje</th>
-                                    <th>actualizacion</th>
+                                    <th class="table-text-color">Bus</th>
+                                    <th class="table-text-color">Voltaje</th>
+                                    <th class="table-text-color">actualizacion</th>
                                 </tr>
                                 {% for i in low_battery %}
                                 <tr>
-                                    <td>{{i.bus_name}}</td>
-                                    <td>
+                                    <td class="table-text-color">{{i.bus_name}}</td>
+                                    <td class="table-text-color">
                                         {% if i.lts_24_volt < 20 %}
                                         <span class="badge text-bg-danger">{{i.lts_24_volt}} [v]</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
+                                    <td class="table-text-color">{{i.lts_update|date:"d-m-Y H:m"}}</td>
                                 </tr>
                                 {% endfor %}
                             </table>
@@ -291,15 +291,15 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Bus</th>
-                                        <th>actualizacion</th>
+                                        <th class="table-text-color">Bus</th>
+                                        <th class="table-text-color">actualizacion</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
                                     {% for i in delayed %}
                                     <tr>
-                                        <td>{{i.bus_name}}</td>
-                                        <td>{{i.lts_update|date:"d-m-Y H:m"}}</td>
+                                        <td class="table-text-color">{{i.bus_name}}</td>
+                                        <td class="table-text-color">{{i.lts_update|date:"d-m-Y H:m"}}</td>
                                     </tr>
 
                                     {% endfor %}
@@ -338,13 +338,13 @@
                         <div class="col-4">
                             <table class="table">
                                 <tr>
-                                    <th>Codigo Fusi</th>
-                                    <th>Repeticiones</th>
+                                    <th class="table-text-color">Codigo Fusi</th>
+                                    <th class="table-text-color">Repeticiones</th>
                                 </tr>
                                 {% for fusi in distinct_fusi_code %}
                                 <tr>
-                                    <td>{{fusi.fusi_code}}</td>
-                                    <td>{{fusi.total}}</td>
+                                    <td class="table-text-color">{{fusi.fusi_code}}</td>
+                                    <td class="table-text-color">{{fusi.total}}</td>
                                 </tr>
                                 {% endfor %}
                             </table>
