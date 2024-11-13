@@ -1,3 +1,4 @@
+import calendar
 from django.shortcuts import render, redirect
 import threading
 from bus_signals.threads.energia_anual import calcular_energia_anual, calcular_energia_anual_diaria
@@ -37,6 +38,7 @@ from services.fs_link import fs_link_api
 from django.db.models.functions import ExtractMonth, ExtractYear
 from bus_signals.threads.matriz_energia_historico_flota import save_historical_energy_data
 from bus_signals.threads.max_odometer_dayly import get_max_odometer_per_day_and_month
+import locale
 
 
 filter_fusi_code = [ 21004.0, 20507.0, 20503.0, 20511.0, 20509.0, 20498.0, 20506.0, 20525.0,
@@ -52,6 +54,13 @@ def no_access(request):
 
 @login_required(login_url='login')
 def warnings(request):
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+    fecha_actual = timezone.now()
+    mes_actual = fecha_actual.month
+    nombre_mes = calendar.month_name[mes_actual].capitalize()
+    
+
+    cant_fusi_month = FusiCode.fusi.filter(TimeStamp__year = fecha_actual.year,TimeStamp__month = fecha_actual.month).count()
     km_total = request.session.get('km_total', 0)
     cant_low_50_soc = request.session.get('cant_low_50_soc', 0)
     delay = request.session.get('delay', 0)
@@ -133,7 +142,7 @@ def warnings(request):
         'top_grafico': top_grafico,
         'low_24_grafico': low_24_grafico,
         'fusi_grafico': fusi_grafico,
-        'mes_actual': mes_actual,
+        'mes_actual': nombre_mes,
         'low_battery': low_battery,
         'no_update': no_update,
         'delayed': delayed,
@@ -152,6 +161,7 @@ def warnings(request):
         'low_24_cant': low_24_cant,
         'total_flota': total_flota,
         'operacion': operacion,
+        'cant_fusi_month': cant_fusi_month
     }
     return render(request, 'pages/warnings.html', context)
 
