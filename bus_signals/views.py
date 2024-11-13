@@ -54,10 +54,14 @@ def no_access(request):
 
 @login_required(login_url='login')
 def warnings(request):
-    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+    meses_es = {
+    1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril",
+    5: "Mayo", 6: "Junio", 7: "Julio", 8: "Agosto",
+    9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"
+}
     fecha_actual = timezone.now()
     mes_actual = fecha_actual.month
-    nombre_mes = calendar.month_name[mes_actual].capitalize()
+    nombre_mes = meses_es[mes_actual]
     
 
     cant_fusi_month = FusiCode.fusi.filter(TimeStamp__year = fecha_actual.year,TimeStamp__month = fecha_actual.month).count()
