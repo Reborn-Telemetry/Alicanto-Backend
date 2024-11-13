@@ -199,7 +199,13 @@
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                <i class="bx bx-user user"></i>
+                                <div class="d-flex align-items-center">
+                                    <i
+                                        class="bx bx-user user"
+                                        style="font-size: 20px; color: #0f8bfd; margin-right: 10px"
+                                    ></i>
+                                    <span style="font-size: 20px; color: #0f8bfd">{{ user.username }}</span>
+                                </div>
                             </a>
                             <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
