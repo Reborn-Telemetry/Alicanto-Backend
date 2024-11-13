@@ -56,6 +56,8 @@ def warnings(request):
     cant_low_50_soc = request.session.get('cant_low_50_soc', 0)
     delay = request.session.get('delay', 0)
     cant_fs = request.session.get('cant_fs, 0')
+    total_flota = request.session.get('total_flota', 0)
+    operacion = request.session.get('operacion', 0)
     bus_instance = Bus()
     delayed = bus_instance.delay_data().exclude(id__in=no_update_list)
     low_50_soc_records = Bus.bus.filter(lts_soc__lt=50).exclude(id__in=no_update_list)
@@ -66,6 +68,7 @@ def warnings(request):
     no_update = no_update.exclude(id__in=no_update_list)
     low_battery = Bus.bus.filter(lts_24_volt__lt=20)
     low_battery = low_battery.exclude(lts_24_volt=0.0)
+    low_24_cant = low_battery.count()
     low_24_grafico = list(low_battery.values('bus_name', 'lts_24_volt'))
      # fusicodes monthly
     current_month = timezone.now().month
@@ -145,7 +148,10 @@ def warnings(request):
         'km_total' : km_total,
         'cant_low_50_soc': cant_low_50_soc, 
         'delay' : delay,
-        'cant_fs': cant_fs
+        'cant_fs': cant_fs,
+        'low_24_cant': low_24_cant,
+        'total_flota': total_flota,
+        'operacion': operacion,
     }
     return render(request, 'pages/warnings.html', context)
 
@@ -468,7 +474,7 @@ def dashboard(request):
     #optimizada
     total_flota = total_flota = Bus.bus.filter(~Q(id__in=no_update_list)).aggregate(total=Count('id'))['total']
      # buses en Operacion
-    #operacion = total_flota - cant_fs
+    operacion = total_flota - cant_fs
     #---------------------------------------------------------------------------------------------
     # datos tabla de buses
     # optimizada
@@ -530,6 +536,8 @@ def dashboard(request):
 #---------------------------------------------------------------------------------------------------------
     request.session['charging'] = charging
     request.session['cant_fs']= cant_fs
+    request.session['total_flota'] = total_flota
+    request.session['operacion'] = operacion
 #---------------------------------------------------------------------------------------------------------
  
     
@@ -576,20 +584,20 @@ def dashboard(request):
 
     context = {
        
-        #'operacion': operacion,
+        'operacion': operacion,
         'km_total': km_total,
         'total_flota': total_flota,
         'bus': complete_table,
         'cant_low_50_soc': cant_low_50_soc,
         'delayed': delayed,
         'paginator': paginator,
-        #'cant_fs': cant_fs,
+        'cant_fs': cant_fs,
         'co2_total': co2_total,
        # 'fusi_grafico': fusi_grafico,
         #'linechart_data': linechart_data,
         #'linechart_data2': linechart_data2,
         'charging': charging,
-        #'fs_vehicles': fs_vehicles,
+        'fs_vehicles': fs_vehicles,
         'energia_anual':energia_anual,
     }
     return render(request, 'pages/dashboard.html', context)

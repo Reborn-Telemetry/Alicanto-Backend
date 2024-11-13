@@ -54,3 +54,7 @@
     font-weight: 500;
     color: #0f8bfd;
 }
+
+table .table-text-color {
+    color: #686868 !important;
+}

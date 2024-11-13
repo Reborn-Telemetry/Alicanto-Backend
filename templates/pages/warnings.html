@@ -25,9 +25,9 @@
                                     <tbody class="table-group-divider">
                                         {% for i in speed_records %}
                                         <tr>
-                                            <td>{{ i.bus }}</td>
-                                            <td>{{ i.speed_value }}</td>
-                                            <td>{{ i.TimeStamp|date:"d-m-Y H:m:s" }}</td>
+                                            <td class="table-text-color">{{ i.bus }}</td>
+                                            <td class="table-text-color">{{ i.speed_value }}</td>
+                                            <td class="table-text-color">{{ i.TimeStamp|date:"d-m-Y H:m:s" }}</td>
                                         </tr>
 
                                         {% endfor %}
@@ -48,13 +48,13 @@
                             <div class="table-responsive overflow-y-scroll" style="height: 500px">
                                 <table class="table">
                                     <tr>
-                                        <th>Bus</th>
-                                        <th>Cantidad Codigo Fusi</th>
+                                        <th class="table-text-color">Bus</th>
+                                        <th class="table-text-color">Cantidad Fusi</th>
                                     </tr>
                                     {% for i in top_buses %}
                                     <tr>
-                                        <td>{{i.bus__bus_name}}</td>
-                                        <td>{{i.num_registros}} codigos</td>
+                                        <td class="table-text-color">{{i.bus__bus_name}}</td>
+                                        <td class="table-text-color">{{i.num_registros}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
@@ -82,7 +82,7 @@
                 </div>
             </div>
             <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 54px">
+            <div class="card" style="margin-top: 26px">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <div class="icon-card">
@@ -92,16 +92,13 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">SOC Bajo</h5>
-                            <p class="card-text">
-                                {{cant_low_50_soc}} Buses
-                                <i class="bx bx-chevron-right indicator"></i>
-                            </p>
+                            <p class="card-text">{{cant_low_50_soc}} Buses</p>
                         </div>
                     </div>
                 </div>
             </div>
             <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 54px">
+            <div class="card" style="margin-top: 26px">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <div class="icon-card">
@@ -111,16 +108,13 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Subida Pendiente</h5>
-                            <p class="card-text">
-                                {{delay}} Buses
-                                <i class="bx bx-chevron-right indicator"></i>
-                            </p>
+                            <p class="card-text">{{delay}} Buses</p>
                         </div>
                     </div>
                 </div>
             </div>
             <!--divisor tarjeta-->
-            <div class="card" style="margin-top: 54px">
+            <div class="card" style="margin-top: 25px">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <div class="icon-card">
@@ -130,11 +124,7 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">Buses FS</h5>
-                            <p class="card-text">
-                                {{cant_fs}} Buses
-
-                                <i class="bx bx-chevron-right indicator"></i>
-                            </p>
+                            <p class="card-text">{{cant_fs}} Buses</p>
                         </div>
                     </div>
                 </div>
@@ -142,10 +132,58 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-3"></div>
+        <div class="col-3">
+            <div class="card" style="margin-top: 25px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card">
+                            <i class="bx bx-x-circle icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Bateria 24 V</h5>
+                            <p class="card-text">{{low_24_cant}} Buses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--divisor tarjeta-->
+            <div class="card" style="margin-top: 25px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card">
+                            <i class="bx bx-x-circle icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Flota</h5>
+                            <p class="card-text">{{total_flota}} Buses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--divisor tarjeta-->
+            <div class="card" style="margin-top: 25px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="icon-card">
+                            <i class="bx bx-x-circle icon-alert"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Buses Operativos</h5>
+                            <p class="card-text">{{operacion}} Buses</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<!--divisor de codigo-->
+<!--divisor ------------------------- de ------------------------- codigo-->
 <div class="container">
     <!--inicio primera tarjeta-->
     <div class="row">
@@ -329,33 +367,6 @@
             </div>
         </div>
         <div class="col-9">
-            <div class="card">
-                <h5 class="card-header">10 Buses mayor fusi</h5>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="table-responsive overflow-y-scroll" style="max-height: 423px">
-                                <table class="table">
-                                    <tr>
-                                        <th>Bus</th>
-                                        <th>Cantidad Codigo Fusi</th>
-                                    </tr>
-                                    {% for i in top_buses %}
-                                    <tr>
-                                        <td>{{i.bus__bus_name}}</td>
-                                        <td>{{i.num_registros}} codigos</td>
-                                    </tr>
-                                    {% endfor %}
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <canvas id="grafico4"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
                 // Obtener los datos pasados desde Django
