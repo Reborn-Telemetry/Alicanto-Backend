@@ -58,3 +58,17 @@
 table .table-text-color {
     color: #686868 !important;
 }
+
+@keyframes rotateY {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+.rotate-y {
+    animation: rotateY 2s linear infinite;
+    font-size: 1.6rem;
+}

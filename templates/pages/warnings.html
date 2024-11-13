@@ -214,6 +214,7 @@
                                         <tr>
                                             <th class="table-text-color">Bus</th>
                                             <th class="table-text-color">Carga</th>
+                                            <th class="table-text-color"></th>
                                             <th class="table-text-color">Actualizacion</th>
                                         </tr>
                                     </thead>
@@ -223,17 +224,30 @@
                                             <td class="table-text-color">{{ i.bus_name }}</td>
                                             <td class="table-text-color">
                                                 {% if i.lts_soc > 60 %}
-                                                <span class="badge rounded-pill text-bg-success"
-                                                    >{{ i.lts_soc }} %</span
-                                                >
+                                               {{ i.lts_soc }} %
                                                 {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
-                                                <span class="badge rounded-pill text-bg-warning"
-                                                    >{{ i.lts_soc }} %</span
-                                                >
+                                                {{ i.lts_soc }} %
                                                 {% elif i.lts_soc <= 40 %}
-                                                <span class="badge rounded-pill text-bg-danger">{{ i.lts_soc }} %</span>
+                                               {{ i.lts_soc }} %
                                                 {% else %} {{ i.lts_soc }} {% endif %}
                                             </td>
+
+
+                                            <td>
+                                                
+
+                                                    {% if i.lts_soc > 60 %}
+                                                    <i class="bx bxs-zap rotate-y">
+                                                {% elif i.lts_soc <= 60 and i.lts_soc > 40 %}
+                                                <i class="bx bxs-zap rotate-y" style="color:#f5d442">
+                                                {% elif i.lts_soc <= 40 %}
+                                                <i class="bx bxs-zap rotate-y" style="color:#e01d1d">
+                                                {% else %} {{ i.lts_soc }} {% endif %}
+
+                                            </td>
+
+
+
                                             <td class="table-text-color">{{ i.lts_update|date:"d-m-Y H:m" }}</td>
                                         </tr>
                                         {% endfor %}
