@@ -17,7 +17,7 @@
                </div>
                <div class="col-md-8">
                   <div class="card-body">
-                     <h5 class="card-title">Cantidad Total Registros</h5>
+                     <h5 class="card-title">Total Registros</h5>
                      <p class="card-text">{{total_fusi}} Codigos</p>
                   </div>
                </div>
@@ -33,7 +33,7 @@
                </div>
                <div class="col-md-8">
                   <div class="card-body">
-                     <h5 class="card-title">Cantidad Fusi {{nombre_mes}}</h5>
+                     <h5 class="card-title">Fusi {{nombre_mes}}</h5>
                      <p class="card-text">{{cant_fusi_month}} Codigos</p>
                   </div>
                </div>
@@ -80,18 +80,18 @@
             <h5 class="card-header">Fusi Mensual Año</h5>
             <div class="card-body">
                <div class="col-12 text-center">
-                  <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                  <div class="table-responsive overflow-y-scroll" style="height: 475px">
                      <table class="table table-sticky">
                         <thead class="table sticky-top bar">
                            <tr>
-                              <th>Mes</th>
-                              <th>Cant. Registros</th>
+                              <th class='table-text-color'>Mes</th>
+                              <th class='table-text-color'>Cant. Registros</th>
                            </tr>
                         </thead>
                         <tbody class="table-group-divider">
                            {% for i in fusi_months %}
                            <tr>
-                              <td>
+                              <td class='text-style'>
                                  {% if i.month == 1 %}Enero
                                  {% elif i.month == 2 %}Febrero 
                                  {% elif i.month == 3 %}Marzo
@@ -106,7 +106,7 @@
                                  {% elif i.month == 12 %}Diciembre 
                                  {% endif %}
                               </td>
-                              <td>{{ i.total_registros }}</td>
+                              <td class='text-style'>{{ i.total_registros }}</td>
                            </tr>
                            {% endfor %}
                         </tbody>
@@ -118,54 +118,123 @@
       </div>
       <div class="col-9">
         <div class="card">
-            <h5 class="card-header">Listado Codigos Fusi Flota</h5>
-            <div class="card-body"></div>
+            <h5 class="card-header">Listado Codigos Fusi Flota Mes {{nombre_mes}}</h5>
+            <div class="card-body">
+               <div class="col-12">
+                  <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                     <table class="table">
+                        <thead class="table sticky">
+                           <tr class="table sticky-top bar">
+                              <th class='table-text-color'>Fecha</th>
+                              <th class='table-text-color'>Codigo</th>
+                              <th class='table-text-color'>Km Falla</th>
+                              <th class='table-text-color' style='width:100px'>Bus</th>
+                              <th class='table-text-color'>Descripcion</th>
+                           </tr>
+                           <tbody>
+                              {% for x in active_fusi %}
+                              <tr>
+                                 <td class='text-style'>{{x.TimeStamp|date:"d-m-Y H:m:s"}}</td>
+                                 <td class='text-style'>{{x.fusi_code}}</td>
+                                 <td class='text-style'>{{x.failure_odometer}} Km.</td>
+                                 <td class='text-style' style='font-weight:500'>{{x.bus.bus_name}}</td>
+                                 <td class='text-style'>  
+                                    {% for mesa in message %}
+                                    {% if mesa.fusi_code == x.fusi_code %}
+                                    {{mesa.fusi_description|truncatechars:20 }} 
+                                    {% endif %} 
+                                    {% endfor %}
+                                 </td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </thead>
+                     </table>
+                  </div>
+                  {% if active_fusi.has_other_pages %}
+                  <nav aria-label="Page navigation example" style='margin-top:20px'>
+                      <ul class="pagination" id="pagination">
+                          {% if active_fusi.has_previous %}
+                          <li class="page-item">
+                              <a class="page-link" href="?page={{ active_fusi.previous_page_number }}">Anterior</a>
+                          </li>
+                          {% endif %}
+                      
+                          {% for page in paginator.page_range %}
+                          <li class="page-item {% if active_fusi.number == page %}active{% endif %}">
+                              <a class="page-link" href="?page={{ page }}" data-page="{{ page }}">{{ page }}</a>
+                          </li>
+                          {% endfor %}
+                      
+                          {% if active_fusi.has_next %}
+                          <li class="page-item">
+                              <a class="page-link" href="?page={{ active_fusi.next_page_number }}">Siguiente</a>
+                          </li>
+                          {% endif %}
+                      </ul>
+                  </nav>
+                  {% endif %}
+               </div>
+            </div>
         </div>
        </div>
    </div>
 </div>
 
 <!--Divisor de codigo-->
-<div class="container text-center">
-   <div class="row">
-      <h2>Codigos Fusi Activos</h2>
-      <table class="table">
-         <tr>
-            <th>Fecha</th>
-            <th>Codigo</th>
-            <th>Comentario</th>
-            <th>Km Falla</th>
-            <th>Bus</th>
-            <th></th>
-         </tr>
-         {% for x in active_fusi %}
-         <tr>
-            <td>{{x.TimeStamp}}</td>
-            <td>{{x.fusi_code}}</td>
-            <td>{{x.fusi_comment}}</td>
-            <td>{{x.failure_odometer}}</td>
-            <td>{{x.bus.bus_name}}</td>
-            <td><a href="{% url 'update-fusi-code' x.id  %}">Editar Codigo Fusi</a></td>
-         </tr>
-         {% endfor %}
-      </table>
-      {% if active_fusi.has_other_pages %}
-      <nav aria-label="Page navigation example">
-         <ul class="pagination">
-            {% if active_fusi.has_previous %}
-            <li class="page-item">
-               <a class="page-link" href="?page={{active_fusi.previous_page_number}}">Anterior</a>
-            </li>
-            {% endif %} {% for page in paginator.page_range %}
-            <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
-            {% endfor %} {% if active_fusi.has_next %}
-            <li class="page-item">
-               <a class="page-link" href="?page={{active_fusi.next_page_number}}">Siguiente</a>
-            </li>
-            {% endif %}
-         </ul>
-      </nav>
-      {% endif %}
-   </div>
-</div>
-{% endblock %}
+
+
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+      const pagination = document.getElementById("pagination");
+      const currentPage = {{ active_fusi.number }};
+      const totalPages = {{ paginator.num_pages }};
+      const rangeSize = 30;  
+   
+      function updatePagination() {
+          const pages = pagination.querySelectorAll(".page-item");
+   
+          pages.forEach(page => {
+              const pageLink = page.querySelector(".page-link");
+              const pageNum = parseInt(pageLink?.getAttribute("data-page"));
+   
+              if (!isNaN(pageNum)) {
+                  
+                  if (pageNum === 1 || pageNum === totalPages || 
+                      (pageNum >= currentPage - Math.floor(rangeSize / 2) && 
+                       pageNum <= currentPage + Math.floor(rangeSize / 2))) {
+                      page.style.display = "block";
+                     
+                  } else {
+                      page.style.display = "none";
+                      
+                  }
+              }
+          });
+   
+         
+          const dots = pagination.querySelectorAll(".page-item.disabled");
+          dots.forEach(dot => {
+            
+              dot.remove();
+          });
+   
+         
+          const firstPage = pagination.querySelector(".page-item:first-child");
+          if (currentPage > rangeSize / 2 + 2 && firstPage) {
+              firstPage.insertAdjacentHTML("afterend", `<li class="page-item disabled"><span class="page-link">...</span></li>`);
+              
+          }
+   
+          
+          const lastPage = pagination.querySelector(".page-item:last-child");
+          if (currentPage < totalPages - Math.floor(rangeSize / 2) - 1 && lastPage) {
+              lastPage.insertAdjacentHTML("beforebegin", `<li class="page-item disabled"><span class="page-link">...</span></li>`);
+             
+          }
+      }
+   
+      updatePagination();
+   });
+   </script>
+   {% endblock %}

@@ -242,14 +242,14 @@ def fusi_dashboard(request):
     .annotate(total_registros=Count('id')) \
     .order_by('month')
 
-    
-
-    #----------------------------------------------------------------------
+    #------------------------------------------------------------------------------
 
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     open_fusi = open_fusi.exclude(fusi_code__in=filter_fusi_code)
+    open_fusi = open_fusi.order_by('-TimeStamp')
+    open_fusi = open_fusi.filter(TimeStamp__year=año_actual, TimeStamp__month=mes_actual)
     page = request.GET.get('page')
-    results = 30
+    results = 100
     paginator = Paginator(open_fusi, results)
     try:
         open_fusi = paginator.page(page)
@@ -259,6 +259,15 @@ def fusi_dashboard(request):
     except EmptyPage:
         page = paginator.num_pages
         open_fusi = paginator.page(page)
+    #-----------------------------------------------------------------------------------------
+    messages = FusiMessage.fusi.all()
+
+    for code in open_fusi:
+        for fusi_message in messages:
+            if code.fusi_code == fusi_message.fusi_code:
+                code.fusi_description = fusi_message.fusi_description
+                break
+    #-----------------------------------------------------------------------------------------
 
     context = {
         'active_fusi': open_fusi,
@@ -275,6 +284,7 @@ def fusi_dashboard(request):
          'worst_year': worst_year,
          'fusi_months': fusi_months,
          'meses_es': meses_es,
+         'message':messages,
 
         }
     return render(request, 'fusi/fusi-dashboard.html', context)
@@ -741,7 +751,6 @@ def create_fusi(request):
     context = {'form': form}
     return render(request, 'fusi/fusi-form.html', context)
 
-
 @login_required(login_url='login')
 def update_bus(request, pk):
     bus = Bus.bus.get(id=pk)
@@ -754,7 +763,6 @@ def update_bus(request, pk):
     context = {'form': form, 'bus': bus}
     return render(request, 'bus/bus-form.html', context)
 
-
 @login_required(login_url='login')
 def update_fusicode(request, pk):
     fusi_code = FusiCode.fusi.get(id=pk)
@@ -766,7 +774,6 @@ def update_fusicode(request, pk):
             return redirect('dashboard')
     context = {'form': form}
     return render(request, 'fusi/fusicode-form.html', context)
-
 
 @login_required(login_url='login')
 def update_fusi(request, pk):

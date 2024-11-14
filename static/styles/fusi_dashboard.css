@@ -47,3 +47,21 @@
 .bar {
    background-color: #ededed;
 }
+.page-link {
+   background-color: transparent !important;
+   color: #686868 !important;
+}
+
+.page-item.active .page-link {
+   background-color: #686868 !important;
+   color: #ffffff !important;
+   border-color: #686868 !important;
+}
+table .text-style {
+   font-size: 15px;
+   font-weight: 400;
+   color: #686868;
+}
+table .table-text-color {
+   color: #686868 !important;
+}
