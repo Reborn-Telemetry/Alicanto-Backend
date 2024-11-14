@@ -273,7 +273,8 @@ def fusi_dashboard(request):
     selected_bus = None 
     selected_bus_name = None
     recurrent_code = None
-    recurrent_description = None
+    labels_top_ten = None
+    labels_top_ten
     if request.method == "POST":
         selected_bus = request.POST.get('bus_id')
         bus = Bus.bus.filter(id=selected_bus).first()
@@ -293,12 +294,17 @@ def fusi_dashboard(request):
                                  .order_by('-code_count'))[:10]
     labels_top_ten = [item['fusi_code'] for item in top_ten_code_selected_bus]
     data_top_ten = [item['code_count'] for item in top_ten_code_selected_bus]
+    selected_bus_fusi = FusiCode.fusi.filter(TimeStamp__year=año_actual, TimeStamp__month=mes_actual, bus=selected_bus)
+   
+
+    
 
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'selected_bus_fusi':selected_bus_fusi,
         'labels_top_ten':labels_top_ten,
         'data_top_ten': data_top_ten,
         'top_ten_code_selected_bus':top_ten_code_selected_bus,

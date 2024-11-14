@@ -300,6 +300,38 @@
                            {% endif %}
                            {{nombre_mes}}
                         </h5>
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                                    <table class="table">
+                                        <thead class="table sticky">
+                                            <tr class="table sticky-top bar">
+                                                <th class='table-text-color'>Fecha</th>
+                                                <th class='table-text-color'>Codigo</th>
+                                                <th class='table-text-color'>Km Falla</th>
+                                                <th class='table-text-color'>Descripcion</th>
+                                             </tr>
+                                             <tbody>
+                                                {% for x in selected_bus_fusi %}
+                                                <tr>
+                                                   <td class='text-style'>{{x.TimeStamp|date:"d-m-Y H:m:s"}}</td>
+                                                   <td class='text-style'>{{x.fusi_code}}</td>
+                                                   <td class='text-style'>{{x.failure_odometer}} Km.</td>
+                                                   <td class='text-style description-cell'>  
+                                                      {% for mesa in message %}
+                                                      {% if mesa.fusi_code == x.fusi_code %}
+                                                      {{mesa.fusi_description|truncatechars:25 }} 
+                                                      {% endif %} 
+                                                      {% endfor %}
+                                                   </td>
+                                                </tr>
+                                                {% endfor %}
+                                             </tbody>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                </div>
@@ -310,7 +342,11 @@
                         <h5 class="card-header">Top Ten Fusi</h5>
                         <div class="card-body">
                            <div class="col-12 d-flex justify-content-center align-items-center">
-                              <canvas id="busCodeChart" width="400" height="200"></canvas>
+                            {% if labels_top_ten %}
+                            <canvas id="busCodeChart" width="400" height="200"></canvas>
+                            {% else %}
+                             Seleccionar Bus
+                            {% endif %}
                            </div>
                         </div>
                      </div>
