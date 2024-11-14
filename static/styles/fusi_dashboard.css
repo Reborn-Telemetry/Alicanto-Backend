@@ -65,3 +65,10 @@ table .text-style {
 table .table-text-color {
    color: #686868 !important;
 }
+
+table .description-cell {
+   max-width: 100%;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}

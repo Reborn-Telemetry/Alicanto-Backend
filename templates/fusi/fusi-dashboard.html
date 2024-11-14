@@ -138,10 +138,10 @@
                                  <td class='text-style'>{{x.fusi_code}}</td>
                                  <td class='text-style'>{{x.failure_odometer}} Km.</td>
                                  <td class='text-style' style='font-weight:500'>{{x.bus.bus_name}}</td>
-                                 <td class='text-style'>  
+                                 <td class='text-style description-cell'>  
                                     {% for mesa in message %}
                                     {% if mesa.fusi_code == x.fusi_code %}
-                                    {{mesa.fusi_description|truncatechars:20 }} 
+                                    {{mesa.fusi_description|truncatechars:25 }} 
                                     {% endif %} 
                                     {% endfor %}
                                  </td>
