@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="{% static 'styles/fusi_dashboard.css' %}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+
+
+
 <div class="container-fluid">
    <div class="row">
       <!--primera tarjeta -->
@@ -310,6 +314,7 @@
                                                 <th class='table-text-color'>Codigo</th>
                                                 <th class='table-text-color'>Km Falla</th>
                                                 <th class='table-text-color'>Descripcion</th>
+                                                <th></th>
                                              </tr>
                                              <tbody>
                                                 {% for x in selected_bus_fusi %}
@@ -323,6 +328,22 @@
                                                       {{mesa.fusi_description|truncatechars:25 }} 
                                                       {% endif %} 
                                                       {% endfor %}
+                                                   </td>
+                                                   <td>
+                                                      {% for mesa in message %}
+                                                      {% if mesa.fusi_code == x.fusi_code %}
+                                                      <button
+                                                      type="button" 
+                                                      class="btn btn-sm btn-primary" 
+                                                      data-bs-toggle="popover" 
+                                                      data-bs-title="{{mesa.fusi_code}}" 
+                                                      data-bs-content="{{mesa.fusi_description}} ">
+                                                      Click to toggle popover
+                                                     </button>
+                                                      
+                                                      {% endif %} 
+                                                      {% endfor %}
+                                                    
                                                    </td>
                                                 </tr>
                                                 {% endfor %}
@@ -360,7 +381,28 @@
 
 <!--Divisor de codigo-->
 
+<script>
+   document.addEventListener("DOMContentLoaded", function() {
+       const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+       
+       popoverTriggerList.forEach(popoverTriggerEl => {
+           const popoverInstance = new bootstrap.Popover(popoverTriggerEl);
+           
+          
+           const duration = 3000;
 
+           
+           popoverTriggerEl.addEventListener('click', () => {
+               popoverInstance.show();
+               
+               
+               setTimeout(() => {
+                   popoverInstance.hide();
+               }, duration);
+           });
+       });
+   });
+</script>
 <script>
    document.addEventListener("DOMContentLoaded", function() {
       const pagination = document.getElementById("pagination");
@@ -465,4 +507,5 @@
         }
     });
 </script>
+
    {% endblock %}

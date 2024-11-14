@@ -295,10 +295,6 @@ def fusi_dashboard(request):
     labels_top_ten = [item['fusi_code'] for item in top_ten_code_selected_bus]
     data_top_ten = [item['code_count'] for item in top_ten_code_selected_bus]
     selected_bus_fusi = FusiCode.fusi.filter(TimeStamp__year=año_actual, TimeStamp__month=mes_actual, bus=selected_bus)
-   
-
-    
-
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
     #-----------------------------------------------------------------------------------------
