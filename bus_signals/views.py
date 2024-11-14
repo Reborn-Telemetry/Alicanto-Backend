@@ -268,9 +268,16 @@ def fusi_dashboard(request):
                 code.fusi_description = fusi_message.fusi_description
                 break
     #-----------------------------------------------------------------------------------------
+    buses_name = Bus.bus.values('bus_name', 'id')
+    print(buses_name)
+    #-----------------------------------------------------------------------------------------
+    codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
+    #-----------------------------------------------------------------------------------------
 
     context = {
+        'codes':codes,
         'active_fusi': open_fusi,
+        'buses_name': buses_name,
         'paginator': paginator,
         'total_fusi': total_fusi,
         'cant_fusi_month':  cant_fusi_month,

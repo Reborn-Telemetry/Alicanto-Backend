@@ -179,6 +179,41 @@
         </div>
        </div>
    </div>
+   <div class="row" style="margin-top: 30px">
+      <div class="col-6">
+         <div class="card">
+            <h5 class="card-header">Estadisticas Codigo Mes {{nombre_mes}}</h5>
+            <div class="card-body"> 
+               <div class="col-12 d-flex justify-content-center align-items-center">
+                  <select class="form-select form-select-sm me-2" aria-label="Small select example" style="width: auto;">
+                     <option selected>Selecciona un Codigo</option>
+                     {% for i in codes %}
+                     <option value="{{i}}">{{i}}</option>
+                     {% endfor %}
+                  </select>
+                  <button type="button" class="btn btn-primary btn-sm">Ir Por Informacion Codigo</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--divisor-->
+      <div class="col-6">
+         <div class="card">
+            <h5 class="card-header">Estadisticas Codigos Bus Mes {{nombre_mes}}</h5>
+            <div class="card-body">
+               <div class="col-12 d-flex justify-content-center align-items-center">
+                  <select class="form-select form-select-sm me-2" aria-label="Small select example" style="width: auto;">
+                     <option selected>Selecciona un Bus</option>
+                     {% for i in buses_name %}
+                     <option value="{{i.id}}">{{i.bus_name}}</option>
+                     {% endfor %}
+                  </select>
+                  <button type="button" class="btn btn-primary btn-sm">Ir Por Informacion Bus</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
 
 <!--Divisor de codigo-->
