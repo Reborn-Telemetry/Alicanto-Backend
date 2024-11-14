@@ -196,6 +196,7 @@ def reports_page(request):
 def fusi_dashboard(request):
     fecha_actual = timezone.now()
     mes_actual = fecha_actual.month
+    año_actual = fecha_actual.year
     #---------------------------------------------------------------
     meses_es = {
     1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio",
@@ -219,9 +220,31 @@ def fusi_dashboard(request):
     baddest_bus_name = baddest_bus['bus__bus_name'] if baddest_bus else None
     total_badddest_bus_reg = baddest_bus['total_registros'] if baddest_bus else 0
     #-----------------------------------------------------------------------------
-    
+    worst_month = FusiCode.fusi.annotate(
+    year=F('TimeStamp__year'),
+    month=F('TimeStamp__month')
+    ).values('year', 'month').annotate(
+    total_registros=Count('id')
+    ).order_by('-total_registros').first()
+    if worst_month:
+        worst_year = worst_month['year']
+        worst_month_reg = worst_month['month']
+        total_reg_worst = worst_month['total_registros']
+    else:
+        worst_year = None
+        worst_month_reg = None
+        total_reg_worst = 0
+    worst_month_name = meses_es.get(worst_month_reg, "Mes desconocido")
     #--------------------------------------------------------------------------
+    fusi_months = FusiCode.fusi.filter(TimeStamp__year=año_actual) \
+    .annotate(month=F('TimeStamp__month')) \
+    .values('month') \
+    .annotate(total_registros=Count('id')) \
+    .order_by('month')
 
+    
+
+    #----------------------------------------------------------------------
 
     open_fusi = FusiCode.fusi.all().exclude(fusi_state='Cerrado')
     open_fusi = open_fusi.exclude(fusi_code__in=filter_fusi_code)
@@ -245,6 +268,14 @@ def fusi_dashboard(request):
         'nombre_mes': nombre_mes,
         'baddest_bus_name': baddest_bus_name,
         'total_baddest_bus_reg': total_badddest_bus_reg,
+        'worst_year': worst_year, 
+        'worst_month_reg': worst_month_reg,  
+        'total_reg_worst': total_reg_worst,  
+        'worst_month_name':worst_month_name,
+         'worst_year': worst_year,
+         'fusi_months': fusi_months,
+         'meses_es': meses_es,
+
         }
     return render(request, 'fusi/fusi-dashboard.html', context)
 

@@ -1,101 +1,171 @@
-{% extends "main.html" %} {% load humanize %}{% load static %} {% block page %}
+{% extends "main.html" %}
+{% load humanize %}
+{% load static %}
+{% block page %}
 <h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Fusi Dashboard.</h1>
-{% endblock page %} {% block content %}
+{% endblock page %} 
+{% block content %}
 <link rel="stylesheet" href="{% static 'styles/fusi_dashboard.css' %}" />
 <div class="container-fluid">
-    <div class="row">
-        <!--primera tarjeta -->
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-error icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Cantidad Total Registros</h5>
-                            <p class="card-text">{{total_fusi}} Codigos</p>
-                        </div>
-                    </div>
-                </div>
+   <div class="row">
+      <!--primera tarjeta -->
+      <div class="col-3">
+         <div class="card">
+            <div class="row g-0">
+               <div class="col-md-4">
+                  <div class="icon-card"><i class="bx bx-error icon-alert"></i></div>
+               </div>
+               <div class="col-md-8">
+                  <div class="card-body">
+                     <h5 class="card-title">Cantidad Total Registros</h5>
+                     <p class="card-text">{{total_fusi}} Codigos</p>
+                  </div>
+               </div>
             </div>
-        </div>
-        <!--divisor-->
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-info-circle icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Cantidad Fusi {{nombre_mes}}</h5>
-                            <p class="card-text">{{cant_fusi_month}} Codigos</p>
-                        </div>
-                    </div>
-                </div>
+         </div>
+      </div>
+      <!--divisor-->
+      <div class="col-3">
+         <div class="card">
+            <div class="row g-0">
+               <div class="col-md-4">
+                  <div class="icon-card"><i class="bx bx-info-circle icon-alert"></i></div>
+               </div>
+               <div class="col-md-8">
+                  <div class="card-body">
+                     <h5 class="card-title">Cantidad Fusi {{nombre_mes}}</h5>
+                     <p class="card-text">{{cant_fusi_month}} Codigos</p>
+                  </div>
+               </div>
             </div>
-        </div>
-        <!--divisor-->
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Bus {{baddest_bus_name}}</h5>
-                            <p class="card-text">{{total_baddest_bus_reg}} Codigos</p>
-                        </div>
-                    </div>
-                </div>
+         </div>
+      </div>
+      <!--divisor-->
+      <div class="col-3">
+         <div class="card">
+            <div class="row g-0">
+               <div class="col-md-4">
+                  <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
+               </div>
+               <div class="col-md-8">
+                  <div class="card-body">
+                     <h5 class="card-title">Bus {{baddest_bus_name}}</h5>
+                     <p class="card-text">{{total_baddest_bus_reg}} Codigos</p>
+                  </div>
+               </div>
             </div>
+         </div>
+      </div>
+      <!--divisor-->
+      <div class="col-3">
+         <div class="card">
+            <div class="row g-0">
+               <div class="col-md-4">
+                  <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
+               </div>
+               <div class="col-md-8">
+                  <div class="card-body">
+                     <h5 class="card-title">Mes {{worst_month_name}}, {{worst_year}}</h5>
+                     <p class="card-text">{{total_reg_worst}} Codigos</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--divisor-->
+   </div>
+   <div class="row" style="margin-top: 30px">
+      <div class="col-3">
+         <div class="card">
+            <h5 class="card-header">Fusi Mensual Año</h5>
+            <div class="card-body">
+               <div class="col-12 text-center">
+                  <div class="table-responsive overflow-y-scroll" style="max-height: 400px">
+                     <table class="table table-sticky">
+                        <thead class="table sticky-top bar">
+                           <tr>
+                              <th>Mes</th>
+                              <th>Cant. Registros</th>
+                           </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                           {% for i in fusi_months %}
+                           <tr>
+                              <td>
+                                 {% if i.month == 1 %}Enero
+                                 {% elif i.month == 2 %}Febrero 
+                                 {% elif i.month == 3 %}Marzo
+                                 {% elif i.month == 4 %}Abril 
+                                 {% elif i.month == 5 %}Mayo 
+                                 {% elif i.month == 6 %}Junio
+                                 {% elif i.month == 7 %}Julio 
+                                 {% elif i.month == 8 %}Agosto 
+                                 {% elif i.month == 9 %}Septiembre 
+                                 {% elif i.month == 10 %}Octubre 
+                                 {% elif i.month == 11 %}Noviembre 
+                                 {% elif i.month == 12 %}Diciembre 
+                                 {% endif %}
+                              </td>
+                              <td>{{ i.total_registros }}</td>
+                           </tr>
+                           {% endfor %}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-9">
+        <div class="card">
+            <h5 class="card-header">Listado Codigos Fusi Flota</h5>
+            <div class="card-body"></div>
         </div>
-        <!--divisor-->
-    </div>
+       </div>
+   </div>
 </div>
+
 <!--Divisor de codigo-->
 <div class="container text-center">
-    <div class="row">
-        <h2>Codigos Fusi Activos</h2>
-        <table class="table">
-            <tr>
-                <th>Fecha</th>
-                <th>Codigo</th>
-                <th>Comentario</th>
-                <th>Km Falla</th>
-                <th>Bus</th>
-                <th></th>
-            </tr>
-            {% for x in active_fusi %}
-            <tr>
-                <td>{{x.TimeStamp}}</td>
-                <td>{{x.fusi_code}}</td>
-                <td>{{x.fusi_comment}}</td>
-                <td>{{x.failure_odometer}}</td>
-                <td>{{x.bus.bus_name}}</td>
-                <td><a href="{% url 'update-fusi-code' x.id  %}">Editar Codigo Fusi</a></td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% if active_fusi.has_other_pages %}
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                {% if active_fusi.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{active_fusi.previous_page_number}}">Anterior</a>
-                </li>
-                {% endif %} {% for page in paginator.page_range %}
-                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
-                {% endfor %} {% if active_fusi.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{active_fusi.next_page_number}}">Siguiente</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
-    </div>
+   <div class="row">
+      <h2>Codigos Fusi Activos</h2>
+      <table class="table">
+         <tr>
+            <th>Fecha</th>
+            <th>Codigo</th>
+            <th>Comentario</th>
+            <th>Km Falla</th>
+            <th>Bus</th>
+            <th></th>
+         </tr>
+         {% for x in active_fusi %}
+         <tr>
+            <td>{{x.TimeStamp}}</td>
+            <td>{{x.fusi_code}}</td>
+            <td>{{x.fusi_comment}}</td>
+            <td>{{x.failure_odometer}}</td>
+            <td>{{x.bus.bus_name}}</td>
+            <td><a href="{% url 'update-fusi-code' x.id  %}">Editar Codigo Fusi</a></td>
+         </tr>
+         {% endfor %}
+      </table>
+      {% if active_fusi.has_other_pages %}
+      <nav aria-label="Page navigation example">
+         <ul class="pagination">
+            {% if active_fusi.has_previous %}
+            <li class="page-item">
+               <a class="page-link" href="?page={{active_fusi.previous_page_number}}">Anterior</a>
+            </li>
+            {% endif %} {% for page in paginator.page_range %}
+            <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+            {% endfor %} {% if active_fusi.has_next %}
+            <li class="page-item">
+               <a class="page-link" href="?page={{active_fusi.next_page_number}}">Siguiente</a>
+            </li>
+            {% endif %}
+         </ul>
+      </nav>
+      {% endif %}
+   </div>
 </div>
 {% endblock %}
