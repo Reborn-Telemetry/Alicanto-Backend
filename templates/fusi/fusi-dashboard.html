@@ -289,6 +289,22 @@
                </div>
                <!--divisor-->
                <div class='row' style="margin-top: 30px">
+                <div class='col-12'>
+                    <div class="card">
+                        <h5 class="card-header">
+                            Registro Bus
+                            {% if selected_bus_name == None %} 
+                           Seleccionar
+                           {% else %}
+                           Bus {{selected_bus_name}}
+                           {% endif %}
+                           {{nombre_mes}}
+                        </h5>
+                    </div>
+                </div>
+               </div>
+               <!--divisor-->
+               <div class='row' style="margin-top: 30px">
                   <div class='col-12'>
                      <div class="card">
                         <h5 class="card-header">Top Ten Fusi</h5>
