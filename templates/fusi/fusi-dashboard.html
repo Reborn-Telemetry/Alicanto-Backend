@@ -6,6 +6,8 @@
 {% endblock page %} 
 {% block content %}
 <link rel="stylesheet" href="{% static 'styles/fusi_dashboard.css' %}" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 <div class="container-fluid">
    <div class="row">
       <!--primera tarjeta -->
@@ -222,7 +224,13 @@
                <div class='row' style="margin-top: 30px">
                   <div class='col-12'>
                      <div class="card">
-                        <h5 class="card-header">Bus {{selected_bus_name}}</h5>
+                        <h5 class="card-header">
+                           {% if selected_bus_name == None %} 
+                           Seleccionar Bus
+                           {% else %}
+                           Bus {{selected_bus_name}}
+                           {% endif %}
+                        </h5>
                      </div>
                   </div>
                </div>
@@ -233,14 +241,41 @@
                         <h5 class="card-header">Cantidad Total Codigos</h5>
                         <div class="card-body">
                            <div class="col-12 d-flex justify-content-center align-items-center">
-                              {{selected_bus_code_count}}
+                              {% if selected_bus_code_count == 0 %}
+                              Seleccionar Bus
+                              {% else %}
+                              {{selected_bus_code_count}} Codigos.
+                              {% endif %}
                            </div>
                         </div>
                      </div>
                   </div>
                   <!--divisor-->
                   <div class='col-6'>
-                     hola
+                     <div class="card">
+                        <h5 class="card-header">Codigo Recurrente</h5>
+                        <div class="card-body">
+                           <div class="col-12 d-flex justify-content-center align-items-center">
+                              {% if recurrent_code == None %}
+                              Seleccionar Bus
+                              {% else %}
+                              {{recurrent_code.fusi_code}}
+                              {% endif %}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class='row' style="margin-top: 30px">
+                  <div class='col-12'>
+                     <div class="card">
+                        <h5 class="card-header">Top Ten Fusi</h5>
+                        <div class="card-body">
+                           <div class="col-12 d-flex justify-content-center align-items-center">
+                              <canvas id="busCodeChart" width="400" height="200"></canvas>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                </div>
             </div>
@@ -304,5 +339,56 @@
    
       updatePagination();
    });
-   </script>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Extrae datos del contexto de Django usando variables JavaScript
+    const labels = {{ labels_top_ten|safe }};
+    const data = {{ data_top_ten|safe }};
+    
+    // Configuración del gráfico de área
+    const ctx = document.getElementById('busCodeChart').getContext('2d');
+    const busCodeChart = new Chart(ctx, {
+        type: 'doughnut', // Usamos un gráfico de líneas para crear el efecto de área
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Top 10 códigos más frecuentes',
+                data: data,
+                fill: {
+                    target: 'origin',       // Relleno hasta el origen
+                    above: 'rgba(75, 192, 192, 0.2)',  // Color del área por encima de la línea
+                    below: 'rgba(255, 99, 132, 0.2)'   // Color del área por debajo de la línea
+                },
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                tension: 0.4 // Suaviza las líneas del gráfico
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Código'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cantidad'
+                    }
+                }
+            },
+            plugins: {
+                filler: {
+                    propagate: true // Relleno extendido incluso si algunos datos están ocultos
+                }
+            }
+        }
+    });
+</script>
    {% endblock %}

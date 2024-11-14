@@ -269,22 +269,41 @@ def fusi_dashboard(request):
                 break
     #-----------------------------------------------------------------------------------------
     buses_name = Bus.bus.values('bus_name', 'id')
+    top_ten_code_selected_bus = None
     selected_bus = None 
-    selected_bus_name= None
+    selected_bus_name = None
+    recurrent_code = None
     if request.method == "POST":
         selected_bus = request.POST.get('bus_id')
         bus = Bus.bus.filter(id=selected_bus).first()
         if bus:
           selected_bus_name = bus.bus_name
-
-        
-    
     selected_bus_code_count = FusiCode.fusi.filter(bus=selected_bus).count()
+    recurrent_code = (
+    FusiCode.fusi.filter(bus=selected_bus)
+    .values('fusi_code')  
+    .annotate(code_count=Count('fusi_code'))  
+    .order_by('-code_count')  
+    .first()  
+    )
+    top_ten_code_selected_bus = (FusiCode.fusi.filter(bus=selected_bus)
+                                 .values('fusi_code')
+                                 .annotate(code_count=Count('fusi_code'))
+                                 .order_by('-code_count'))[:10]
+    labels_top_ten = [item['fusi_code'] for item in top_ten_code_selected_bus]
+    data_top_ten = [item['code_count'] for item in top_ten_code_selected_bus]
+    
+   
+    
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'labels_top_ten':labels_top_ten,
+        'data_top_ten': data_top_ten,
+        'top_ten_code_selected_bus':top_ten_code_selected_bus,
+        'recurrent_code':recurrent_code,
         'selected_bus_name':selected_bus_name,
         'selected_bus_code_count':selected_bus_code_count,
         'codes':codes,
