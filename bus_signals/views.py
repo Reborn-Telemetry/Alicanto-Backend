@@ -269,12 +269,24 @@ def fusi_dashboard(request):
                 break
     #-----------------------------------------------------------------------------------------
     buses_name = Bus.bus.values('bus_name', 'id')
-    print(buses_name)
+    selected_bus = None 
+    selected_bus_name= None
+    if request.method == "POST":
+        selected_bus = request.POST.get('bus_id')
+        bus = Bus.bus.filter(id=selected_bus).first()
+        if bus:
+          selected_bus_name = bus.bus_name
+
+        
+    
+    selected_bus_code_count = FusiCode.fusi.filter(bus=selected_bus).count()
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'selected_bus_name':selected_bus_name,
+        'selected_bus_code_count':selected_bus_code_count,
         'codes':codes,
         'active_fusi': open_fusi,
         'buses_name': buses_name,
