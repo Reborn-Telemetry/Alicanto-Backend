@@ -136,6 +136,7 @@
                               <th class='table-text-color'>Km Falla</th>
                               <th class='table-text-color' style='width:100px'>Bus</th>
                               <th class='table-text-color'>Descripcion</th>
+                              <th></th>
                            </tr>
                            <tbody>
                               {% for x in active_fusi %}
@@ -148,6 +149,20 @@
                                     {% for mesa in message %}
                                     {% if mesa.fusi_code == x.fusi_code %}
                                     {{mesa.fusi_description|truncatechars:25 }} 
+                                    {% endif %} 
+                                    {% endfor %}
+                                 </td>
+                                 <td class='text-style'>  
+                                    {% for mesa in message %}
+                                    {% if mesa.fusi_code == x.fusi_code %}
+                                    <button
+                                    type="button" 
+                                    class="btn btn-sm btn-primary" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-title="{{mesa.fusi_code}}" 
+                                    data-bs-content="{{mesa.fusi_description}} ">
+                                    Descripcion
+                                   </button>
                                     {% endif %} 
                                     {% endfor %}
                                  </td>
@@ -314,7 +329,7 @@
                                                 <th class='table-text-color'>Codigo</th>
                                                 <th class='table-text-color'>Km Falla</th>
                                                 <th class='table-text-color'>Descripcion</th>
-                                                <th></th>
+                                                <th>hola</th>
                                              </tr>
                                              <tbody>
                                                 {% for x in selected_bus_fusi %}
@@ -322,10 +337,10 @@
                                                    <td class='text-style'>{{x.TimeStamp|date:"d-m-Y H:m:s"}}</td>
                                                    <td class='text-style'>{{x.fusi_code}}</td>
                                                    <td class='text-style'>{{x.failure_odometer}} Km.</td>
-                                                   <td class='text-style description-cell'>  
+                                                   <td class='text-style'>  
                                                       {% for mesa in message %}
                                                       {% if mesa.fusi_code == x.fusi_code %}
-                                                      {{mesa.fusi_description|truncatechars:25 }} 
+                                                      {{mesa.fusi_description|truncatechars:20 }} 
                                                       {% endif %} 
                                                       {% endfor %}
                                                    </td>
@@ -338,7 +353,7 @@
                                                       data-bs-toggle="popover" 
                                                       data-bs-title="{{mesa.fusi_code}}" 
                                                       data-bs-content="{{mesa.fusi_description}} ">
-                                                      Descripcion Fusi
+                                                      Descripcion
                                                      </button>
                                                       
                                                       {% endif %} 

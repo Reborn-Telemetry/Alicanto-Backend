@@ -260,13 +260,7 @@ def fusi_dashboard(request):
         page = paginator.num_pages
         open_fusi = paginator.page(page)
     #-----------------------------------------------------------------------------------------
-    messages = FusiMessage.fusi.all()
-
-    for code in open_fusi:
-        for fusi_message in messages:
-            if code.fusi_code == fusi_message.fusi_code:
-                code.fusi_description = fusi_message.fusi_description
-                break
+   
     #-----------------------------------------------------------------------------------------
     buses_name = Bus.bus.values('bus_name', 'id')
     top_ten_code_selected_bus = None
@@ -278,8 +272,18 @@ def fusi_dashboard(request):
     if request.method == "POST":
         selected_bus = request.POST.get('bus_id')
         bus = Bus.bus.filter(id=selected_bus).first()
+        bus_type = bus.bus_type
         if bus:
           selected_bus_name = bus.bus_name
+
+
+    messages = FusiMessage.fusi.all().filter(message_class=bus_type)
+
+    for code in open_fusi:
+        for fusi_message in messages:
+            if code.fusi_code == fusi_message.fusi_code:
+                code.fusi_description = fusi_message.fusi_description
+                break
     selected_bus_code_count = FusiCode.fusi.filter(bus=selected_bus).count()
     recurrent_code = (
     FusiCode.fusi.filter(bus=selected_bus)
@@ -295,6 +299,7 @@ def fusi_dashboard(request):
     labels_top_ten = [item['fusi_code'] for item in top_ten_code_selected_bus]
     data_top_ten = [item['code_count'] for item in top_ten_code_selected_bus]
     selected_bus_fusi = FusiCode.fusi.filter(TimeStamp__year=año_actual, TimeStamp__month=mes_actual, bus=selected_bus)
+    print(bus_type)
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
     #-----------------------------------------------------------------------------------------
