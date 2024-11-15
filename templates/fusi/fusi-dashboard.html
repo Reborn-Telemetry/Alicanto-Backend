@@ -201,6 +201,27 @@
        </div>
    </div>
    <div class="row" style="margin-top: 30px">
+      <div class="col-12">
+         <div class="card">
+            <h5 class="card-header">Codigo Recurrrente Mes {{nombre_mes}}</h5>
+            <div class="card-body">
+               <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+                  <div>Codigo: {{fleet_most_recurrent_code.fusi_code}}</div>
+                  <div>{{fleet_most_recurrent_code.code_count}} Repeticiones.</div>
+                  <div> 
+                      {% for mesa in message %}
+                      {% if mesa.fusi_code == fleet_most_recurrent_code.fusi_code %}
+                      {{mesa.fusi_description.}} 
+                      {% endif %}
+                      {% endfor %}
+                  </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+  </div>
+   <div class="row" style="margin-top: 30px">
       <div class="col-6">
          <div class="card">
             <h5 class="card-header">Estadisticas Codigo Mes {{nombre_mes}}</h5>
@@ -329,7 +350,7 @@
                                                 <th class='table-text-color'>Codigo</th>
                                                 <th class='table-text-color'>Km Falla</th>
                                                 <th class='table-text-color'>Descripcion</th>
-                                                <th>hola</th>
+                                                <th></th>
                                              </tr>
                                              <tbody>
                                                 {% for x in selected_bus_fusi %}
