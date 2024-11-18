@@ -268,6 +268,7 @@ def fusi_dashboard(request):
     selected_bus_name = None
     recurrent_code = None
     labels_top_ten = None
+    selected_code = None
     labels_top_ten
     if request.method == "POST":
         selected_bus = request.POST.get('bus_id')
@@ -305,10 +306,20 @@ def fusi_dashboard(request):
         )
    
     #-----------------------------------------------------------------------------------------
-    codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
+    codes = FusiCode.fusi.values_list('fusi_code', flat=True).distinct()
     if request.method == 'POST':
-        selected_code = request.POST.get('selected_code')
-    
+      selected_code = request.POST.get('selected_code')
+    if selected_code:
+        # Eliminar espacios no separables y otros caracteres no numéricos
+        selected_code = selected_code.replace('\xa0', '').strip()
+        # Convertir a entero si el campo `fusi_code` es numérico
+        try:
+            selected_code = int(selected_code)
+        except ValueError:
+            selected_code = None  # Si no es convertible, lo ignoramos
+       
+
+    fusi_code_counts_by_month = None
     most_recurrent_code = (
     FusiCode.fusi
     .values('fusi_code')  # Agrupamos por 'fusi_code'
@@ -316,10 +327,32 @@ def fusi_dashboard(request):
     .order_by('-code_count')  
     .first()  
     )
-    print(most_recurrent_code)
+
+    if selected_code:
+     fusi_code_counts_by_month = (
+        FusiCode.fusi.filter(TimeStamp__year=año_actual, fusi_code=selected_code)
+        .annotate(month=F('TimeStamp__month'))
+        .values('month')
+        .annotate(total_fusi_codes=Count('id'))
+        .order_by('month')
+    )
+
+     fusi_code_counts_dict = {
+        meses_es[item['month']]: item['total_fusi_codes'] for item in fusi_code_counts_by_month
+    }
+    else:
+       fusi_code_counts_dict = {}
+    print(selected_code)
+    print(fusi_code_counts_dict)
+    print(fusi_code_counts_by_month)
+    
+ # Si no hay código seleccionado, devolver un diccionario vacío
+
+    
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'fusi_code_counts_dict':fusi_code_counts_dict,
         'most_recurrent_code':most_recurrent_code,
         'fleet_most_recurrent_code': fleet_most_recurrent_code,
         'selected_bus_fusi':selected_bus_fusi,

@@ -265,6 +265,36 @@
                   <button type="submit" class="btn btn-primary btn-sm">Ir Por Informacion Codigo</button>
                </form>
                </div>
+               <div class='row' style="margin-top: 30px">
+                  <div class="col-6">
+                     <div class="card">
+                        <h5 class="card-header">Repeticiones Mes Codigo.</h5>
+                        <div class="card-body">
+                           <div class="col-12 text-center">
+                              <div class="table-responsive overflow-y-scroll" style="height: 475px">
+                                 <table class="table table-sticky">
+                                    <thead class="table sticky-top bar">
+                                       <tr>
+                                          <th class='table-text-color'>Mes</th>
+                                          <th class='table-text-color'>Cant. Registros</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                       {% for month, count in fusi_code_counts_dict.items %}
+                                       <tr>
+                                          <td class='text-style'>{{ month }}</td>
+                                          <td class='text-style'>{{ count }}</td>
+                                       </tr>
+                                       {% endfor %}
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        
+                     </div>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
