@@ -271,7 +271,7 @@
                         <h5 class="card-header">Repeticiones Mes Codigo.</h5>
                         <div class="card-body">
                            <div class="col-12 text-center">
-                              <div class="table-responsive overflow-y-scroll" style="height: 475px">
+                              <div class="table-responsive overflow-y-scroll" style="max-height: 475px">
                                  <table class="table table-sticky">
                                     <thead class="table sticky-top bar">
                                        <tr>
@@ -280,12 +280,22 @@
                                        </tr>
                                     </thead>
                                     <tbody class="table-group-divider">
+                                      {% if fusi_code_counts_dict %}
                                        {% for month, count in fusi_code_counts_dict.items %}
                                        <tr>
                                           <td class='text-style'>{{ month }}</td>
                                           <td class='text-style'>{{ count }}</td>
                                        </tr>
+                                       {% empty %}
+                                       <tr>
+                                          <td colspan="2" class='text-style'>Seleccionar código</td>
+                                       </tr>
                                        {% endfor %}
+                                    {% else %}
+                                       <tr>
+                                          <td colspan="2" class='text-style'>No hay datos disponibles.</td>
+                                       </tr>
+                                    {% endif %}
                                     </tbody>
                                  </table>
                               </div>
