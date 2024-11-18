@@ -272,7 +272,6 @@ def fusi_dashboard(request):
     if request.method == "POST":
         selected_bus = request.POST.get('bus_id')
         bus = Bus.bus.filter(id=selected_bus).first()
-        bus_type = bus.bus_type
         if bus:
           selected_bus_name = bus.bus_name
 
@@ -307,9 +306,21 @@ def fusi_dashboard(request):
    
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
+    if request.method == 'POST':
+        selected_code = request.POST.get('selected_code')
+    
+    most_recurrent_code = (
+    FusiCode.fusi
+    .values('fusi_code')  # Agrupamos por 'fusi_code'
+    .annotate(code_count=Count('fusi_code'))  
+    .order_by('-code_count')  
+    .first()  
+    )
+    print(most_recurrent_code)
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'most_recurrent_code':most_recurrent_code,
         'fleet_most_recurrent_code': fleet_most_recurrent_code,
         'selected_bus_fusi':selected_bus_fusi,
         'labels_top_ten':labels_top_ten,

@@ -230,14 +230,40 @@
          <div class="card">
             <h5 class="card-header">Estadisticas Codigo Mes {{nombre_mes}}</h5>
             <div class="card-body"> 
+               <div class="card" style="margin-bottom:30px">
+                  <h5 class="card-header">Codigo Recurrente Flota</h5>
+                  <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <div class="text-style">{{ most_recurrent_code.fusi_code}} Con {{most_recurrent_code.code_count}} Repeticiones</div>
+                     <div class="text-style">
+                     {% if most_recurrent_code %}
+                     {% for i in message %}
+                     {% if i.fusi_code == most_recurrent_code.fusi_code %}
+                     {{ i.fusi_description }}
+                     {% endif %}
+                     {% endfor %}
+                     {% endif %}
+                     </div>
+                </div>
+               </div>
                <div class="col-12 d-flex justify-content-center align-items-center">
-                  <select class="form-select form-select-sm me-2" aria-label="Small select example" style="width: auto;">
+                  <form 
+                  action=""
+                  method="POST" 
+                  class="col-12 d-flex justify-content-center align-items-center">
+                  {% csrf_token %}
+                  <select 
+                     name='selected_code'
+                     class="form-select form-select-sm me-2" 
+                     aria-label="Small select example" 
+                     style="width: auto";
+                     >
                      <option selected>Selecciona un Codigo</option>
                      {% for i in codes %}
                      <option value="{{i}}">{{i}}</option>
                      {% endfor %}
                   </select>
-                  <button type="button" class="btn btn-primary btn-sm">Ir Por Informacion Codigo</button>
+                  <button type="submit" class="btn btn-primary btn-sm">Ir Por Informacion Codigo</button>
+               </form>
                </div>
             </div>
          </div>
