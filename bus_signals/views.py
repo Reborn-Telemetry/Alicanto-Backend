@@ -306,23 +306,23 @@ def fusi_dashboard(request):
         )
    
     #-----------------------------------------------------------------------------------------
-    codes = FusiCode.fusi.values_list('fusi_code', flat=True).distinct()
+    codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
     if request.method == 'POST':
       selected_code = request.POST.get('selected_code')
     if selected_code:
-        # Eliminar espacios no separables y otros caracteres no numéricos
+      
         selected_code = selected_code.replace('\xa0', '').strip()
-        # Convertir a entero si el campo `fusi_code` es numérico
+       
         try:
             selected_code = int(selected_code)
         except ValueError:
-            selected_code = None  # Si no es convertible, lo ignoramos
+            selected_code = None  
        
 
     fusi_code_counts_by_month = None
     most_recurrent_code = (
     FusiCode.fusi
-    .values('fusi_code')  # Agrupamos por 'fusi_code'
+    .values('fusi_code')  
     .annotate(code_count=Count('fusi_code'))  
     .order_by('-code_count')  
     .first()  
@@ -347,7 +347,6 @@ def fusi_dashboard(request):
     print(fusi_code_counts_by_month)
     
  # Si no hay código seleccionado, devolver un diccionario vacío
-
     
     #-----------------------------------------------------------------------------------------
 
