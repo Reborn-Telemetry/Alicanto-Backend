@@ -351,6 +351,7 @@ def fusi_dashboard(request):
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'selected_code':selected_code,
         'fusi_code_counts_dict':fusi_code_counts_dict,
         'most_recurrent_code':most_recurrent_code,
         'fleet_most_recurrent_code': fleet_most_recurrent_code,
