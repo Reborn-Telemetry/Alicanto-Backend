@@ -270,8 +270,17 @@
                   <div class="col-12 text-center">
                      <div class="card">
                         <h5 class="card-header">Codigo Seleccionado.</h5>
-                        <div class="card-body">
-                           {{selected_code}}
+                        <div class="card-body  d-flex flex-column justify-content-center align-items-center">
+                           <div>{{selected_code}}</div>
+                           <div>
+                              {% if selected_code %}
+                              {% for i in message %}
+                              {% if i.fusi_code == selected_code %}
+                              {{ i.fusi_description }}
+                              {% endif %}
+                              {% endfor %}
+                              {% endif %}
+                           </div>
                         </div>
                      </div>
                   </div>
