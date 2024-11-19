@@ -316,6 +316,43 @@
                         
                      </div>
                   </div>
+                  <div class='col-6'>
+                     <div class="card">
+                        <h5 class="card-header">Buses Con Codigo Seleccionado</h5>
+                        <div class="card-body">
+                           <div class="col-12 text-center">
+                              <div class="table-responsive overflow-y-scroll" style="max-height: 453px">
+                                 <table class="table table-sticky">
+                                    <thead class="table sticky-top bar">
+                                        <tr>
+                                            <th class="table-text-color">Bus</th>
+                                            <th class="table-text-color">Repeticiones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                        {% if selected_code_bus %}
+                                            {% for bus in selected_code_bus %}
+                                                <tr>
+                                                    <td class="text-style">{{ bus.bus__bus_name }}</td>
+                                                    <td class="text-style">{{ bus.code_count }}</td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="2" class="text-style">Seleccionar código</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="2" class="text-style">No hay datos disponibles.</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
          </div>

@@ -342,15 +342,20 @@ def fusi_dashboard(request):
     }
     else:
        fusi_code_counts_dict = {}
-    print(selected_code)
-    print(fusi_code_counts_dict)
-    print(fusi_code_counts_by_month)
+    #-----------------------------------------------------------------------------------------
+    selected_code_bus = None
+    selected_code_bus = (
+        FusiCode.fusi.filter(fusi_code=selected_code)
+        .values('bus__bus_name')  
+        .annotate(code_count=Count('id'))
+        .order_by('-code_count')  
+    )
     
- # Si no hay código seleccionado, devolver un diccionario vacío
-    
+  
     #-----------------------------------------------------------------------------------------
 
     context = {
+        'selected_code_bus': selected_code_bus,
         'selected_code':selected_code,
         'fusi_code_counts_dict':fusi_code_counts_dict,
         'most_recurrent_code':most_recurrent_code,
