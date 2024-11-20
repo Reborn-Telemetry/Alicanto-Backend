@@ -269,6 +269,7 @@ def fusi_dashboard(request):
     recurrent_code = None
     labels_top_ten = None
     selected_code = None
+    bus = None
     labels_top_ten
     if request.method == "POST":
        selected_bus = int(request.POST.get('bus_id')) if request.POST.get('bus_id') else None
