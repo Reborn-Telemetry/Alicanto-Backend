@@ -207,7 +207,16 @@
             <h5 class="card-header">Código Recurrente Mes {{nombre_mes}}</h5>
             <div class="card-body">
                <div class="d-flex flex-column justify-content-center align-items-center">
-                  <div>{{fleet_most_recurrent_code.fusi_code}}</div>
+                  <div class='text-style'>{{fleet_most_recurrent_code.fusi_code}}</div>
+                  <div class="text-style">
+                     {% if fleet_most_recurrent_code.fusi_code %}
+                     {% for i in message %}
+                     {% if i.fusi_code == fleet_most_recurrent_code.fusi_code %}
+                     {{ i.fusi_description }}
+                     {% endif %}
+                     {% endfor %}
+                     {% endif %}
+                     </div>
                </div>
             </div>
          </div>
@@ -219,7 +228,8 @@
             <h5 class="card-header">Repeticiones Código Recurrente Mes {{nombre_mes}}</h5>
             <div class="card-body">
                <div class="d-flex flex-column justify-content-center align-items-center">
-                  <div>{{fleet_most_recurrent_code.code_count}} Repeticiones.</div>
+                  <div class='text-style'>{{fleet_most_recurrent_code.code_count}} </div>
+                  <div class='text-style'>Repeticiones.</div>
                </div>
             </div>
          </div>
@@ -271,12 +281,12 @@
                      <div class="card">
                         <h5 class="card-header">Codigo Seleccionado.</h5>
                         <div class="card-body  d-flex flex-column justify-content-center align-items-center">
-                           <div>{{selected_code}}</div>
+                           <div class='text-style'>{{selected_code}}</div>
                            <div>
                               {% if selected_code %}
                               {% for i in message %}
                               {% if i.fusi_code == selected_code %}
-                              {{ i.fusi_description }}
+                              <div class='text-style'>{{ i.fusi_description }}</div>
                               {% endif %}
                               {% endfor %}
                               {% endif %}
@@ -327,7 +337,7 @@
                   </div>
                   <div class='col-6'>
                      <div class="card">
-                        <h5 class="card-header">Buses Con Codigo Seleccionado</h5>
+                        <h5 class="card-header">Buses Codigo Seleccionado</h5>
                         <div class="card-body">
                            <div class="col-12 text-center">
                               <div class="table-responsive overflow-y-scroll" style="max-height: 453px">
@@ -462,7 +472,7 @@
                             {% if selected_bus_name == None %} 
                            Seleccionar
                            {% else %}
-                           Bus {{selected_bus_name}}
+                           {{selected_bus_name}}
                            {% endif %}
                            {{nombre_mes}}
                         </h5>
