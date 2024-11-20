@@ -272,19 +272,25 @@ def fusi_dashboard(request):
     bus = None
     labels_top_ten
     if request.method == "POST":
-       selected_bus = int(request.POST.get('bus_id')) if request.POST.get('bus_id') else None
-       bus = Bus.bus.filter(id=selected_bus).first()
+     selected_bus = int(request.POST.get('bus_id')) if request.POST.get('bus_id') else None
+     bus = Bus.bus.filter(id=selected_bus).first()
+
     if bus:
-          selected_bus_name = bus.bus_name
+     selected_bus_name = bus.bus_name
 
-
-    messages = FusiMessage.fusi.all()
+# Filtrar los mensajes basados en el bus seleccionado
+    if selected_bus_name == "Q1":
+        messages = FusiMessage.fusi.filter(message_class="Q1")
+        
+    else:
+    
+     messages = FusiMessage.fusi.filter(message_class="Q2")
 
     for code in open_fusi:
-        for fusi_message in messages:
-            if code.fusi_code == fusi_message.fusi_code:
-                code.fusi_description = fusi_message.fusi_description
-                break
+     for fusi_message in messages:
+        if code.fusi_code == fusi_message.fusi_code:
+            code.fusi_description = fusi_message.fusi_description
+            break
     selected_bus_code_count = FusiCode.fusi.filter(bus=selected_bus).count()
     recurrent_code = (
     FusiCode.fusi.filter(bus=selected_bus)

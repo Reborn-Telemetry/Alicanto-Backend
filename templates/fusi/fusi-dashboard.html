@@ -147,25 +147,25 @@
                                  <td class='text-style' style='font-weight:500'>{{x.bus.bus_name}}</td>
                                  <td class='text-style description-cell'>  
                                     {% for mesa in message %}
-                                    {% if mesa.fusi_code == x.fusi_code %}
-                                    {{mesa.fusi_description|truncatechars:25 }} 
-                                    {% endif %} 
+                                        {% if mesa.fusi_code == x.fusi_code %}
+                                            {{ mesa.fusi_description|truncatechars:25 }} 
+                                        {% endif %}
                                     {% endfor %}
-                                 </td>
-                                 <td class='text-style'>  
+                                </td>
+                                <td class='text-style'>  
                                     {% for mesa in message %}
-                                    {% if mesa.fusi_code == x.fusi_code %}
-                                    <button
-                                    type="button" 
-                                    class="btn btn-sm btn-primary" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-title="{{mesa.fusi_code}}" 
-                                    data-bs-content="{{mesa.fusi_description}} ">
-                                    Descripcion
-                                   </button>
-                                    {% endif %} 
+                                        {% if mesa.fusi_code == x.fusi_code %}
+                                            <button
+                                                type="button" 
+                                                class="btn btn-sm btn-primary" 
+                                                data-bs-toggle="popover" 
+                                                data-bs-title="{{ mesa.fusi_code }}" 
+                                                data-bs-content="{{ mesa.fusi_description }}">
+                                                Descripcion
+                                            </button>
+                                        {% endif %}
                                     {% endfor %}
-                                 </td>
+                                </td>
                               </tr>
                               {% endfor %}
                            </tbody>
@@ -501,22 +501,27 @@
                                                       {% endif %} 
                                                       {% endfor %}
                                                    </td>
-                                                   <td>
+                                                   <td class='text-style description-cell'>  
                                                       {% for mesa in message %}
-                                                      {% if mesa.fusi_code == x.fusi_code %}
-                                                      <button
-                                                      type="button" 
-                                                      class="btn btn-sm btn-primary" 
-                                                      data-bs-toggle="popover" 
-                                                      data-bs-title="{{mesa.fusi_code}}" 
-                                                      data-bs-content="{{mesa.fusi_description}} ">
-                                                      Descripcion
-                                                     </button>
-                                                      
-                                                      {% endif %} 
+                                                          {% if mesa.fusi_code == x.fusi_code %}
+                                                              {{ mesa.fusi_description|truncatechars:25 }} 
+                                                          {% endif %}
                                                       {% endfor %}
-                                                    
-                                                   </td>
+                                                  </td>
+                                                  <td class='text-style'>  
+                                                      {% for mesa in message %}
+                                                          {% if mesa.fusi_code == x.fusi_code %}
+                                                              <button
+                                                                  type="button" 
+                                                                  class="btn btn-sm btn-primary" 
+                                                                  data-bs-toggle="popover" 
+                                                                  data-bs-title="{{ mesa.fusi_code }}" 
+                                                                  data-bs-content="{{ mesa.fusi_description }}">
+                                                                  Descripcion
+                                                              </button>
+                                                          {% endif %}
+                                                      {% endfor %}
+                                                  </td>
                                                 </tr>
                                                 {% endfor %}
                                              </tbody>
