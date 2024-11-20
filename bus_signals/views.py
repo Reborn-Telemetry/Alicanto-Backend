@@ -299,9 +299,7 @@ def fusi_dashboard(request):
                                  .order_by('-code_count'))[:10]
     labels_top_ten = [item['fusi_code'] for item in top_ten_code_selected_bus]
     data_top_ten = [item['code_count'] for item in top_ten_code_selected_bus]
-    print(selected_bus)
-    print(año_actual)
-    print(mes_actual)
+   
     selected_bus_fusi = FusiCode.fusi.filter(TimeStamp__year=año_actual, TimeStamp__month=mes_actual, bus=selected_bus)
     fleet_most_recurrent_code = (FusiCode.fusi.filter(
         TimeStamp__year=año_actual,
@@ -309,7 +307,7 @@ def fusi_dashboard(request):
         .values('fusi_code').annotate(code_count=Count('fusi_code')).order_by('-code_count').first()
         )
    
-    print(selected_bus_fusi)
+    
    
     #-----------------------------------------------------------------------------------------
     codes = FusiMessage.fusi.values_list('fusi_code', flat=True)
