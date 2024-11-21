@@ -494,14 +494,18 @@ def bus_detail(request, pk):
                 break
 
     co2 = 0  # Valor predeterminado en caso de que bus.lts_odometer sea None
-    if bus.lts_odometer is not None and bus.bus_series == 'Tricahue':
+
+    if bus.lts_odometer is not None:
+      if bus.bus_series == 'Tricahue':
         co2 = (bus.lts_odometer * 857) / 1000
-        co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
-        co2 = round(co2, 2)
-    else: 
-        co2 = (bus.lts_odometer * 443) / 1000
-        co2 /= 1000
-        co2 = round(co2, 2)
+      if bus.bus_series =='Queltehue':
+          co2 = (bus.lts_odometer * 443) / 1000
+    else:
+        co2 = 0
+        
+    
+    co2 /= 1000  # Dividir nuevamente para obtener el resultado correcto
+    co2 = round(co2, 2)
 
     fusi_grafico = FusiCode.fusi.filter(bus_id=pk).values('fusi_code').annotate(total=Count('fusi_code')).order_by('-total')
     fusi_grafico2 = list(fusi_grafico.values('fusi_code', 'total'))
