@@ -1,4 +1,9 @@
-{% extends "main.html" %} {% load static %} {% block content %}
+{% extends "main.html" %}
+{% load static %}
+{% block page %}
+<h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Informes Historicos.</h1>
+{% endblock page %}  
+{% block content %}
 <link rel="stylesheet" href="{% static 'styles/historicos.css' %}" />
 <div style="margin-top: 50px" class="container-fluid">
     <div class="row">
