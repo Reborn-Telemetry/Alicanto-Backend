@@ -20,10 +20,6 @@ urlpatterns = [
   path("delete_bus/<str:pk>/", views.delete_bus, name="delete_bus"),
   path("reports_page/", views.reports_page, name="reports_page"),
   path('energy_record/', views.energy_record, name='energy-record'),
-
- 
-  
- 
   path("warnings/", views.warnings, name="warnings"),
   path("fusi_dashboard/", views.fusi_dashboard, name="fusi_dashboard"),
  

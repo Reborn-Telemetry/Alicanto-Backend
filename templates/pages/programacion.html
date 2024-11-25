@@ -1,0 +1,119 @@
+{% extends "main.html" %}
+{% load static %}
+{% block page %}
+<h1 class="page">Programación de Buses</h1>
+{% endblock page %} 
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<link rel="stylesheet" href="{% static 'styles/programacion.css' %}" />
+
+<div class="container">
+    <!-- Columna de Buses -->
+    <div class="buses">
+        <h2>Buses</h2>
+        <div id="buses-list" class="draggable-container">
+            {% for bus in buses %}
+                <div class="draggable-item" data-id="{{ bus.id }}">{{ bus.bus_name }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Columna Turno A -->
+    <div class="turnos">
+        <h2>Turno A</h2>
+        <div id="turno-a" class="draggable-container" data-turno="turno-a"></div>
+    </div>
+
+    <!-- Columna Turno B -->
+    <div class="turnos">
+        <h2>Turno B</h2>
+        <div id="turno-b" class="draggable-container" data-turno="turno-b"></div>
+    </div>
+
+    <!-- Columna Turno C -->
+    <div class="turnos">
+        <h2>Turno C</h2>
+        <div id="turno-c" class="draggable-container" data-turno="turno-c"></div>
+    </div>
+
+    <!-- Columna FS -->
+    <div class="turnos">
+        <h2>Bus FS</h2>
+        <div id="fs" class="draggable-container" data-turno="fs"></div>
+    </div>
+
+    <!-- Botón para guardar -->
+    <div>
+        <button id="save-button" class="btn btn-primary">Guardar Programación</button>
+        <button id="reset-button" class="btn btn-secondary">Resetear Programación</button>
+    </div>
+</div>
+
+<script>
+    // Inicializar Sortable.js para permitir drag and drop
+    const containers = document.querySelectorAll('.draggable-container');
+
+    containers.forEach(container => {
+        new Sortable(container, {
+            group: 'shared', // Grupo compartido para todas las columnas
+            animation: 150  // Animación de movimiento
+        });
+    });
+
+    // Evento del botón para guardar la programación
+    document.getElementById('save-button').addEventListener('click', function () {
+        const programacion = [];
+
+        // Recorremos todas las columnas de turnos y recolectamos los datos
+        containers.forEach(container => {
+            const turno = container.dataset.turno;
+            if (turno) {
+                const buses = container.querySelectorAll('.draggable-item');
+                buses.forEach(bus => {
+                    programacion.push({
+                        bus_id: bus.dataset.id,
+                        turno: turno
+                    });
+                });
+            }
+        });
+
+        console.log("Datos recolectados para guardar: ", programacion);
+
+        fetch('/guardar_programacion/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ programacion })
+        }).then(response => {
+            if (response.ok) {
+                alert('Programación guardada correctamente');
+            } else {
+                alert('Error al guardar la programación');
+            }
+        }).catch(error => {
+            console.error('Error en el envío:', error);
+            alert('Hubo un error al guardar la programación.');
+        });
+    });
+
+    // Evento del botón para resetear la programación
+    document.getElementById('reset-button').addEventListener('click', function () {
+        const busesColumn = document.getElementById('buses-list');
+        const containers = document.querySelectorAll('.draggable-container');
+
+        containers.forEach(container => {
+            if (container.id !== 'buses-list') {
+                const buses = container.querySelectorAll('.draggable-item');
+                buses.forEach(bus => {
+                    busesColumn.appendChild(bus); // Mover tarjeta a la columna de buses
+                });
+            }
+        });
+
+        console.log('Todas las tarjetas han sido reseteadas a la columna de Buses.');
+    });
+</script>
+{% endblock content %}

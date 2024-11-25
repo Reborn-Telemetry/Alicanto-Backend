@@ -1,0 +1,30 @@
+.container {
+   display: flex; /* Usamos flexbox para organizar las columnas */
+   gap: 20px; /* Espaciado entre las columnas */
+   padding: 20px;
+}
+
+.buses,
+.turnos {
+   border: 1px solid #ccc;
+   padding: 10px;
+   flex: 1; /* Cada columna tendrá el mismo tamaño */
+   background-color: #f9f9f9;
+}
+
+.draggable-container {
+   min-height: 300px; /* Altura mínima para las columnas */
+   border: 1px dashed #aaa;
+   padding: 10px;
+   background-color: #ffffff;
+   overflow-y: auto; /* Permite scroll si el contenido es mayor que el tamaño */
+}
+
+.draggable-item {
+   background: #f0f0f0;
+   margin-bottom: 10px;
+   padding: 10px;
+   text-align: center;
+   border: 1px solid #ddd;
+   cursor: grab;
+}

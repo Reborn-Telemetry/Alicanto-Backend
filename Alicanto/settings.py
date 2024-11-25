@@ -55,12 +55,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "corsheaders",
     'bus_signals.apps.BusSignalsConfig',
+    'programacion_bus.apps.ProgramacionBusConfig',
     'users.apps.UsersConfig',
     'reports.apps.ReportsConfig',
     'django.contrib.humanize',
     'link_apis.apps.LinkApisConfig',
     'rest_framework',
     'django_apscheduler',
+
 ]
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 

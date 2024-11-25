@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-{% extends "main.html" %} {% load humanize %} {% load static %} {% block page %}
-<h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Reporte de Energia</h1>
-{% endblock page %} {% block content %}
-=======
+
 {% extends "main.html" %}{% load humanize %}{% load static %}{% block page %}
 <h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Reporte de Energia</h1>
 {% endblock page %}{% block content %}
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
+
 <link rel="stylesheet" href="{% static 'styles/energy.css' %}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-pie-chart/2.1.6/jquery.easypiechart.min.js"></script>
@@ -23,11 +19,7 @@
                     <div class="col-md-9">
                         <div class="card-body">
                             <h5 class="card-title">Kwh Anual</h5>
-<<<<<<< HEAD
                             <p class="card-text">{{energia_anual}} Kwh</p>
-=======
-                            <p class="card-text">{{energia_anual}}Kwh</p>
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
                         </div>
                     </div>
                 </div>
@@ -47,12 +39,12 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-
-    <h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Chat de Inteligencia Artificial</h1>
+</div>
+    
+        <!--<h1 style="color: #0f8bfd; font-weight: 700; font-size: 30px">Chat de Inteligencia Artificial</h1>
     <div class="container-fluid">
         <div class="row">
-            <!-- Cuadro de chat de IA -->
+            
             <div class="col-md-6 offset-md-3">
                 <div class="card">
                     <div class="card-header">
@@ -63,7 +55,7 @@
                             id="chat-box"
                             style="height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px"
                         >
-                            <!-- Las respuestas de IA aparecerán aquí -->
+                            
                         </div>
                         <div class="mt-3">
                             <input
@@ -79,48 +71,13 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Script para enviar preguntas y mostrar respuestas
-    document.getElementById("send-btn").addEventListener("click", function () {
-        const question = document.getElementById("question").value;
-        if (!question) {
-            alert("Por favor escribe una pregunta.");
-            return;
-        }
 
-        // Mostrar pregunta en el cuadro de chat
-        const chatBox = document.getElementById("chat-box");
-        chatBox.innerHTML += `<div><strong>Tú:</strong> ${question}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Enviar la pregunta al backend
-        fetch("{% url 'ask_ai' %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({ question: question }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                // Mostrar respuesta de la IA
-                chatBox.innerHTML += `<div><strong>IA:</strong> ${data.answer}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            })
-            .catch((error) => console.error("Error:", error));
 
-        // Limpiar el campo de entrada
-        document.getElementById("question").value = "";
-    });
-</script>
-=======
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!--divisor codigo-->
->>>>>>> 2a89e5d7a058ff36b143b661ec00d3f6807d3efa
 {% endblock content %}
