@@ -1,184 +1,98 @@
-{% extends "main.html" %} {% load static %} {% block header %}Disponibilidad Flota{% endblock %} {% block content %}
+{% extends "main.html" %}
+{% load static %}
+{% block page %}Disponibilidad Flota{% endblock page%}
+{% block content %}
+
 <link rel="stylesheet" href="{% static 'styles/disponibilidad.css' %}" />
+<style>
+    .chat-container {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .message {
+        margin-bottom: 15px;
+    }
+    .message.user {
+        text-align: right;
+    }
+    .message.bot {
+        text-align: left;
+    }
+    .message .text {
+        display: inline-block;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+    .message.user .text {
+        background-color: #d1e7dd;
+    }
+    .message.bot .text {
+        background-color: #f8d7da;
+    }
+</style>
 
-<div style="height: 100vh" class="container">
-    {% if user.username == 'hurbx' or user.username == 'Bquilincheo'%}
-    <a href="{% url 'action-disponibilidad' %}" class="btn btn-primary"
-        ><button class="btn btn-primary">registar</button></a
-    >
-    {% else %}
-    <a href="{% url 'no-access' %}" class="btn btn-primary"><button class="btn btn-primary">registar</button></a>
-    {% endif %}
-    <br />
-    <br />
-    <!--divisor tarjetas-->
-    <div class="row">
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card">
-                            <i class="bx bx-x-circle icon-alert"></i>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Buses FS</h5>
-                            <p class="card-text">{{cant_fs}} Buses</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--divisor tarjetas-->
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-check-circle icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Buses Operativos</h5>
-                            <p class="card-text">{{operacion}} Buses</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--divisor tarjetas-->
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-bus icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Flota</h5>
-                            <p class="card-text">{{total_flota}} Buses</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--divisor tarjetas-->
-        <div class="col-3">
-            <div class="card">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="icon-card"><i class="bx bx-bar-chart-square icon-alert"></i></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Disponibilidad</h5>
-                            <p class="card-text">%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--divisor tarjetas-->
+<div class="container mt-5">
+    <h1 class="text-center">Reborn Chatbot</h1>
+    <div class="chat-container mb-3 p-3 border rounded" id="chatContainer" style="height: 400px; overflow-y: auto; background-color: #f8f9fa;">
+        <!-- Mensajes aparecerán aquí -->
     </div>
-    <!--inicio tablas-->
-    <div style="margin-top: 50px" class="row">
-        <div class="col-3">
-            <div class="card">
-                <h5 class="card-header">Buses Fuera de Servicio</h5>
-                <div class="card-body">
-                    <div class="col-12">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Bus</th>
-                                    <th>Causa</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                {% for i in fs %}
-                                <tr>
-                                    <td style="text-transform: capitalize">{{i.vehicle}}</td>
-                                    <td>
-                                        {% if i.state == 2 %}
-                                        <span class="badge rounded-pill text-bg-danger"> En Reparacion</span>
-
-                                        {% elif i.state == 3 %}
-                                        <span class="badge rounded-pill text-bg-warning">En Mantencion</span>
-                                        {%endif%}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <button id="cargarMas" class="btn btn-primary col-12">Cargar más</button>
-                </div>
-            </div>
-        </div>
-        <!--divisor tablas -->
-        <div class="col-9">
-            <div class="card">
-                <h5 class="card-header">Registro Buses</h5>
-                <div class="card-body">
-                    <div class="col-12">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Bus</th>
-                                    <th>Disponibilidad</th>
-                                    <th>Fecha</th>
-                                    <th>Observacion</th>
-                                    <th>Dias Fs</th>
-                                    <th>Dias OP</th>
-                                    <th>Total OP</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <tr></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="input-group">
+        <input type="text" id="userInput" class="form-control" placeholder="Escribe tu mensaje aquí...">
+        <button id="sendButton" class="btn btn-primary">Enviar</button>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    $(document).ready(function () {
-        var registrosPorPagina = 10;
-        var numRegistros = $(".table-group-divider tr").length;
-        var numRegistrosMostrados = 0;
-
-        // Ocultar todos los registros después del décimo
-        $(".table-group-divider tr:gt(" + (registrosPorPagina - 1) + ")").hide();
-
-        // Función para mostrar más registros
-        function mostrarMasRegistros() {
-            numRegistrosMostrados += registrosPorPagina;
-            $(".table-group-divider tr:lt(" + numRegistrosMostrados + ")").show();
-
-            // Ocultar el botón "Mostrar más" si ya se han mostrado todos los registros
-            if (numRegistrosMostrados >= numRegistros) {
-                $("#cargarMas").text("Mostrar menos");
-            }
-        }
-
-        // Función para mostrar menos registros
-        function mostrarMenosRegistros() {
-            $(".table-group-divider tr:gt(" + (registrosPorPagina - 1) + ")").hide();
-            numRegistrosMostrados = 0;
-            $("#cargarMas").text("Mostrar más");
-        }
-
-        // Al hacer clic en el botón "Cargar más"
-        $("#cargarMas").click(function () {
-            if ($("#cargarMas").text() === "Mostrar más") {
-                mostrarMasRegistros();
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+    
+    function addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = sender === 'user' ? 'text-end mb-2' : 'text-start mb-2';
+        const messageText = document.createElement('span');
+        messageText.className = sender === 'user' ? 'badge bg-primary' : 'badge bg-secondary';
+        messageText.innerText = text;
+        messageDiv.appendChild(messageText);
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    async function sendMessage() {
+        const userMessage = userInput.value.trim();
+        if (!userMessage) return;
+    
+        addMessage(userMessage, 'user');
+        userInput.value = '';
+    
+        try {
+            const response = await fetch('/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userMessage }),
+            });
+    
+            const data = await response.json();
+    
+            if (data.response) {
+                addMessage(data.response, 'bot');
             } else {
-                mostrarMenosRegistros();
+                addMessage('Error: No response from server.', 'bot');
             }
-        });
+        } catch (error) {
+            addMessage('Error: Could not connect to server.', 'bot');
+        }
+    }
+    
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
     });
 </script>
 

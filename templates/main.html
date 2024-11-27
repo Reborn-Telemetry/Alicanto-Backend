@@ -16,6 +16,49 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
         <style>
+            .floating-button {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1050;
+             }
+
+             .chat-container {
+                font-size: 14px;
+                max-height: 400px;
+                overflow-y: auto;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f8f9fa;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+             }
+             .chat-container .message {
+                font-size: 14px;
+                max-width: 100%;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                padding: 10px;
+                border-radius: 10px;
+                display: inline-block;
+             }
+             .chat-container .message.user {
+                font-size: 14px;
+                align-self: flex-end;
+                background-color: #d1e7dd;
+                color: #000;
+             }
+             
+             /* Estilos para el mensaje del bot */
+             .chat-container .message.bot {
+                align-self: flex-start;
+                background-color: #f8d7da;
+                color: #000;
+             }
+             
+
             /* Estilos de la barra lateral */
             .sidebar {
                 width: 5.5rem;
@@ -221,6 +264,99 @@
 
             {% block content %}{% endblock content %}
         </div>
+        <!--chatbot offcanvas-->
+        <button
+            class="btn btn-primary floating-button"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#chatOffcanvas"
+            aria-controls="chatOffcanvas"
+        >
+            <i class="bx bx-chat"></i>
+        </button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="chatOffcanvas" aria-labelledby="chatOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="chatOffcanvasLabel">Reborn Chatbot</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div style='font-size: 14px' class="offcanvas-body d-flex flex-column">
+                <!-- Contenedor de mensajes del chatbot -->
+                <div style='font-size: 14px' class="chat-container flex-grow-1 mb-3" id="chatContainer">
+                    <!-- Los mensajes del chatbot aparecerán aquí -->
+                </div>
+                <!-- Input para escribir mensajes -->
+                <div style='font-size: 14px' class="input-group">
+                    <input type="text" id="userInput" class="form-control" placeholder="Escribe tu mensaje aquí..." />
+                    <button id="sendButton" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        </div>
+
+        <!--chatbot off canvas-->
+        <script>
+            const chatContainer = document.getElementById("chatContainer");
+            const userInput = document.getElementById("userInput");
+            const sendButton = document.getElementById("sendButton");
+            
+            const LINE_LENGTH = 80; // Número de caracteres por línea
+            
+            // Función para dividir texto en líneas
+            function formatMessage(message, lineLength) {
+                const regex = new RegExp(`.{1,${lineLength}}`, "g"); // Divide el texto en bloques de tamaño `lineLength`
+                return message.match(regex).join("\n"); // Une los bloques con saltos de línea
+            }
+            
+            // Función para añadir mensajes al contenedor del chat
+            function addMessage(text, sender) {
+                const formattedText = formatMessage(text, LINE_LENGTH); // Da formato al texto
+                const messageDiv = document.createElement("div");
+                messageDiv.className = sender === "user" ? "text-end mb-2 message user" : "text-start mb-2 message bot";
+                const messageText = document.createElement("span");
+                messageText.className = "text";
+                messageText.innerText = formattedText; // Añade el texto formateado
+                messageDiv.appendChild(messageText);
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Desplaza automáticamente hacia abajo
+            }
+            
+            // Función para enviar el mensaje
+            async function sendMessage() {
+                const userMessage = userInput.value.trim();
+                if (!userMessage) return;
+            
+                addMessage(userMessage, "user"); // Muestra el mensaje del usuario
+                userInput.value = "";
+            
+                try {
+                    const response = await fetch("/chatbot/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ message: userMessage }),
+                    });
+            
+                    const data = await response.json();
+            
+                    if (data.response) {
+                        addMessage(data.response, "bot"); // Muestra la respuesta del bot
+                    } else {
+                        addMessage("Error: No response from server.", "bot");
+                    }
+                } catch (error) {
+                    addMessage("Error: Could not connect to server.", "bot");
+                }
+            }
+            
+            // Maneja el clic del botón "Enviar"
+            sendButton.addEventListener("click", sendMessage);
+            
+            // Maneja el envío al presionar la tecla Enter
+            userInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") sendMessage();
+            });
+        </script>
 
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"

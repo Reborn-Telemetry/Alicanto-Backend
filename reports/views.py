@@ -10,7 +10,7 @@ import io
 from reportlab.platypus import Spacer
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from reportlab.lib.pagesizes import letter, landscape
 from datetime import datetime
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
@@ -22,6 +22,9 @@ from django.db.models import Max
 from datetime import datetime
 from django.utils import timezone
 import requests
+from django.views.decorators.csrf import csrf_exempt
+from openai import ChatCompletion
+from judini import CodeGPTPlus
 from django.contrib.auth.decorators import login_required
 import pytz
 from django.db.models import Max, Case, When, Value
@@ -36,6 +39,7 @@ from django.http import FileResponse
 import xlwt
 from datetime import datetime
 from .models import Bus, DailyMatrizKmAutoReport
+import json
 
 # esta funcion entrega la matriz de kilometraje de mes seleccionado de toda la flota
 def historical_data(request):
@@ -186,45 +190,47 @@ def dashboard_disponibilidad_flota(request):
    }
    return render(request, 'reports/disponibilidad_flota.html', context)
 
-@login_required(login_url='login')
-def disponbilidad_flota(request):
-   headers = { 'User-Agent': 'Alicanto/1.0', }
-   api_url = 'https://reborn.assay.cl/api/v1/fs_elec'
-   response = requests.get(api_url, headers=headers)
-   data = response.json()
-   bus_fs = []
-   for i in data['data']:
-      bus_fs.append(i['vehicle'].capitalize())
-   bus_operativo = Bus.bus.all().exclude(bus_name__in=bus_fs)
-   bus_operativo = bus_operativo.exclude(id__in=no_update_list)
-   
-   for bus in bus_operativo:
-    disponibilidad_flota1 = DisponibilidadFlota(
-        bus=str(bus.bus_name),
-        serie=str(bus.bus_series),
-        disponibilidad=True,
-        dias_operativos=1,
-        dias_fs=0,
-    )
-    disponibilidad_flota1.save()
-  
 
-   for bus in bus_fs:
-      disponibilidad_flota = DisponibilidadFlota(
-         bus=str(bus),
-         disponibilidad=False,
-         dias_operativos=0,
-         dias_fs=1,
-      )
-      disponibilidad_flota.save()
+@csrf_exempt
+def chatbot(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            print(f"Received message: {data}")
+            user_message = data.get("message")
 
-   
+            # Preparar la solicitud a la API de CodeGPT
+            print("Preparing request to CodeGPT API...")
+            url = "https://api.codegpt.co/api/v1/chat/completions"
+            headers = {
+                "Authorization": "Bearer sk-dc8a8b1f-53bd-4eea-bc5d-26bee19cd783",
+                "accept": "application/json",
+                "content-type": "application/json",
+            }
+            payload = {
+                "agentId": "1a289149-d981-4a10-be8d-c7c690e737f5",
+                "messages": [{"role": "user", "content": user_message}],
+                "format": "json",
+                "stream": False
+            }
+            print(f"Payload: {payload}")
 
-   
+            response = requests.post(url, headers=headers, json=payload)
+            print(f"Response status: {response.status_code}")
+            print(f"Response data: {response.text}")
 
-   
-   messages.success(request, 'Los registros se actualizaron correctamente.')
-   return redirect('disponibilidad-flota')
+            if response.status_code != 200:
+                return JsonResponse({"error": "Error from API"}, status=response.status_code)
+
+            response_data = response.json()
+            bot_response = response_data["choices"][0]["message"]["completion"]
+            return JsonResponse({"response": bot_response})
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
 @login_required(login_url='login')
