@@ -191,6 +191,50 @@
         </div>
         <!--fin row 1 -->
     </div>
+    <div class='row'>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div style="height: 60px" class="col-3">
+                            <div style="margin-right: 20px" class="icon-card">
+                                <i class="bx bx-tachometer icon-alert"></i>
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <h5 style="margin-right: 20px; margin-top:30px" class="card-title">
+                                Recorrido Buses Año
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <form action="{% url 'recorrido-mes-año' %}" method="POST">
+                            {% csrf_token %}
+                            <select name="mes" class="form-select" aria-label="Default select example">
+                                <option selected>Mes</option>
+                                {% for i in meses2 %}
+                                <option value="{{i.numero}}">{{i.mes}}</option>
+                                {% endfor %}
+                            </select>
+                            <select
+                                name="año"
+                                style="margin-top: 10px"
+                                class="form-select"
+                                aria-label="Default select example"
+                            >
+                                <option selected>Año</option>
+                                <option value="2024">2024</option>
+                            </select>
+                            <a href="" class="card-link d-flex justify-content-end"
+                                ><button style="margin-top: 10px" type="submit" class="btn btn-primary">
+                                    Descargar
+                                </button></a
+                            >
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
 </div>
 
 {% endblock content %}

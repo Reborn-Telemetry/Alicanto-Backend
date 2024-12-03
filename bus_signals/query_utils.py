@@ -503,6 +503,36 @@ def recorrido_mensual_año(año):
     return formatted_result
 
 
+def recorrido_mensual_mes_año(mes, año):
+    # Filtrar los datos por mes y año
+    buses_kilometraje = Recorrido.objects.filter(mes=mes, año=año).values('bus__bus_name') \
+        .annotate(
+            odometro_inicial=Min('min_odometer'),
+            odometro_final=Max('max_odometer')
+        ).order_by('bus__bus_name')
+
+    # Crear el formato deseado
+    resultado = {}
+
+    for entry in buses_kilometraje:
+        bus_name = entry['bus__bus_name']
+        if bus_name not in resultado:
+            resultado[bus_name] = {}
+
+        # Guardar los valores del odómetro para el mes específico
+        resultado[bus_name] = (entry['odometro_inicial'], entry['odometro_final'])
+
+    # Convertir el diccionario en una lista con el formato que necesitas
+    formatted_result = []
+    
+    for bus, km_data in resultado.items():
+        # Aplanar los resultados en la forma (bus_name, odometro_inicial, odometro_final)
+        formatted_entry = [bus, km_data[0], km_data[1]]
+        formatted_result.append(formatted_entry)
+
+    return formatted_result
+
+
 
 
 

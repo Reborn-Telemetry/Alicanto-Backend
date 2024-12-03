@@ -41,6 +41,68 @@ from datetime import datetime
 from .models import Bus, DailyMatrizKmAutoReport
 import json
 
+def recorrido_informe_recorrido_mensual_año_xls(request):
+    from bus_signals.query_utils import recorrido_mensual_mes_año
+
+    if request.method == 'GET':
+        context = {
+            'bus': Bus.objects.all(),  # Ajustar según tu modelo
+            'meses2': [
+                {'mes': 'Enero', 'numero': 1}, {'mes': 'Febrero', 'numero': 2}, {'mes': 'Marzo', 'numero': 3},
+                {'mes': 'Abril', 'numero': 4}, {'mes': 'Mayo', 'numero': 5}, {'mes': 'Junio', 'numero': 6},
+                {'mes': 'Julio', 'numero': 7}, {'mes': 'Agosto', 'numero': 8}, {'mes': 'Septiembre', 'numero': 9},
+                {'mes': 'Octubre', 'numero': 10}, {'mes': 'Noviembre', 'numero': 11}, {'mes': 'Diciembre', 'numero': 12},
+            ],
+        }
+        return render(request, 'reports/historicos.html', context)
+
+    if request.method == 'POST':
+        # Obtener los parámetros mes y año desde el formulario
+        mes = int(request.POST['mes'])
+        año = int(request.POST['año'])
+        
+        # Obtener los datos del método
+        data = recorrido_mensual_mes_año(mes, año)
+
+        # Crear el archivo Excel en memoria
+        current_datetime = datetime.now()
+        filename = f"Recorrido_Buses_{mes}_{año}.xls"
+        buf = io.BytesIO()
+        workbook = xlwt.Workbook(encoding='utf-8')
+        worksheet = workbook.add_sheet('Report')
+
+        # Escribir los encabezados
+        headers = ["Mes", "Bus", "Kilometraje inicial", "Kilometraje final", "Recorrido"]
+        for col_num, header in enumerate(headers):
+            worksheet.write(0, col_num, header)
+
+        # Escribir los datos
+        row_num = 1
+        for row in data:
+            bus = row[0]
+            initial_km = row[1]
+            final_km = row[2]
+            recorrido = final_km - initial_km
+            worksheet.write(row_num, 0, mes)
+            worksheet.write(row_num, 1, bus)
+            worksheet.write(row_num, 2, initial_km)
+            worksheet.write(row_num, 3, final_km)
+            worksheet.write(row_num, 4, recorrido)
+            row_num += 1
+
+        # Guardar el archivo en el buffer
+        workbook.save(buf)
+        buf.seek(0)
+
+        # Crear la respuesta HTTP para descargar el archivo
+        response = HttpResponse(buf, content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        return response
+    #---------------------------------------------------------------------------------
+
+    
+
 # esta funcion entrega la matriz de kilometraje de mes seleccionado de toda la flota
 def historical_data(request):
     if request.method == 'GET':
