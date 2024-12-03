@@ -36,6 +36,9 @@ class ReportsConfig(AppConfig):
             if not DjangoJob.objects.filter(id="eliminar_duplicados_diarios").exists():
                 self._iniciar_eliminar_duplicados_diarios()
 
+            if not DjangoJob.objects.filter(id="update_max_odometer_past_days").exists():
+                self._iniciar_actualizacion_odometro_pasado()
+
             # Iniciar el scheduler
             self.scheduler.start()
 
@@ -104,6 +107,19 @@ class ReportsConfig(AppConfig):
             eliminar_duplicados_diarios,
             trigger=CronTrigger(hour=9, minute=40, timezone=pytz.timezone('America/Santiago')),
             id="eliminar_duplicados_diarios",
+            replace_existing=True,
+            misfire_grace_time=300,
+            max_instances=1,
+        )
+    def _iniciar_actualizacion_odometro_pasado(self):
+        from bus_signals.threads.past_days_recolector import update_max_odometer_past_days  # Importar la nueva función
+        from apscheduler.triggers.cron import CronTrigger
+
+        # Configurar el trigger para la actualización de días pasados del mes en curso
+        self.scheduler.add_job(
+            update_max_odometer_past_days,
+            trigger=CronTrigger(hour=0, minute=5, timezone=pytz.timezone('America/Santiago')),  # Ajusta la hora según tu necesidad
+            id="update_max_odometer_past_days",
             replace_existing=True,
             misfire_grace_time=300,
             max_instances=1,

@@ -5,6 +5,10 @@ from bus_signals.models import Odometer, BatteryHealth
 from collections import defaultdict
 from reports.models import DailyMatrizKmAutoReport, Recorrido
 from django.db import models
+from datetime import datetime, timedelta
+from django.utils import timezone
+
+
 
 
 dbname = 'alicanto-db-dev'
@@ -497,4 +501,71 @@ def recorrido_mensual_año(año):
         formatted_result.append(formatted_entry)
 
     return formatted_result
+
+
+
+
+
+
+
+
+def test_max_odometer_past_days(month, year):
+    """
+    Función para probar la actualización de valores máximos de odómetro
+    en un mes específico. Imprime los resultados en lugar de guardarlos.
+    """
+    # Obtener el rango de fechas para el mes
+    start_of_month = datetime(year, month, 1)
+    now = timezone.now()
+    
+    # Determinar el último día del mes especificado
+    if month == now.month and year == now.year:
+        last_day = now.day - 1  # Hasta el día anterior al actual si es el mes en curso
+    else:
+        next_month = start_of_month.replace(day=28) + timedelta(days=4)  # Ir al siguiente mes
+        last_day = (next_month - timedelta(days=next_month.day)).day  # Retroceder al último día del mes anterior
+
+    # Iterar sobre cada día del mes especificado
+    for day in range(1, last_day + 1):
+        current_date = start_of_month.replace(day=day)
+        next_date = current_date + timedelta(days=1)
+
+        # Consulta para obtener los valores máximos del odómetro para cada bus en el día iterado
+        odometer_max_values = (
+            Odometer.odometer.filter(TimeStamp__range=(current_date, next_date))
+            .values('bus__bus_name')  # Cambiar a bus__bus_name
+            .annotate(max_odometer_value=Max('odometer_value'))
+        )
+
+        for entry in odometer_max_values:
+            bus_name = entry['bus__bus_name']  # Cambiar a bus__bus_name
+            max_odometer_value = entry['max_odometer_value']
+
+            # Buscar el registro existente en DailyMatrizKmAutoReport
+            existing_record = DailyMatrizKmAutoReport.objects.filter(
+                bus__bus_name=bus_name,  # Cambiar a bus__bus_name
+                dia=current_date.day,
+                mes=current_date.month,
+                año=current_date.year,
+            ).first()
+
+            if existing_record:
+                # Comparar con el valor existente
+                if max_odometer_value > existing_record.max_odometer:
+                    print(
+                        f"Día {day}/{month}/{year}, Bus {bus_name}: "
+                        f"Valor actual {existing_record.max_odometer}, "
+                        f"Nuevo valor {max_odometer_value} (SE ACTUALIZARÍA)"
+                    )
+                else:
+                    print(
+                        f"Día {day}/{month}/{year}, Bus {bus_name}: "
+                        f"Valor actual {existing_record.max_odometer}, "
+                        f"Nuevo valor {max_odometer_value} (NO SE ACTUALIZARÍA)"
+                    )
+            else:
+                print(
+                    f"Día {day}/{month}/{year}, Bus {bus_name}: "
+                    f"Valor nuevo {max_odometer_value} (NUEVO REGISTRO SE CREARÍA)"
+                )
 

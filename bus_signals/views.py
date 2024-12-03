@@ -172,6 +172,10 @@ def warnings(request):
 
 @login_required(login_url='login')
 def reports_page(request):
+
+    from bus_signals.query_utils import test_max_odometer_past_days
+
+    test_max_odometer_past_days(11,2024)
     
     bus = Bus.bus.all()
     bus = bus.exclude(id__in=no_update_list)
